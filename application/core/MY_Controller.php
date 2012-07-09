@@ -7,7 +7,7 @@
 class MY_Controller extends CI_Controller{
     
     private $pagetitle;
-    
+
     function GET($matches){
         if(file_exists("pages/" .strtolower(get_class($this)) .".html")){
             $this->pagetitle = get_class($this);
