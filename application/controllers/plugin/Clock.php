@@ -8,18 +8,20 @@ class Clock extends CI_Controller
 {
 
     function add($host){
+        $this->load->library('xmpp');
         $method = $_SERVER['REQUEST_METHOD'];
 
         if($method == "POST"){
-            sendMessage($host, "Clock.add();");
+            $this->xmpp->sendMessage($host, "Clock.add();");
         }
     }
 
     function remove($host){
+        $this->load->library('xmpp');
         $method = $_SERVER['REQUEST_METHOD'];
 
         if($method == "POST"){
-            sendMessage($host, "Clock.remove();");
+            $this->xmpp->sendMessage($host, "Clock.remove();");
         }
     }
 }

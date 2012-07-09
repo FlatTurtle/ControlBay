@@ -34,11 +34,11 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  * 
- * @package jaxl
+ * @package core
  * @subpackage xmpp
  * @author Abhinav Singh <me@abhinavsingh.com>
  * @copyright Abhinav Singh
- * @link http://code.google.com/p/jaxl 
+ * @link http://code.google.com/p/core
  */
 
     // include required classes
@@ -305,7 +305,7 @@
                 else $now = time();
 
                 foreach($read as $k=>$r) {
-                    // get jaxl instance we are dealing with
+                    // get core instance we are dealing with
                     $ret = $payload = '';
                     $key = array_search($r, $streams);
                     $jaxl = $jaxls[$key];
