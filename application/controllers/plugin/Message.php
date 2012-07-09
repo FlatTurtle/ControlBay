@@ -4,14 +4,14 @@
  * Author: Nik Torfs
  * Licence: AGPLv3
  */
-class Notification extends CI_Controller
+class Message extends CI_Controller
 {
 
     function add($host, $message){
         $method = $_SERVER['REQUEST_METHOD'];
 
         if($method == "POST"){
-            sendMessage($host, "Notification.add(".$message.");");
+            sendMessage($host, "Message.add(".$message.");");
         }
     }
 
@@ -19,7 +19,7 @@ class Notification extends CI_Controller
         $method = $_SERVER['REQUEST_METHOD'];
 
         if($method == "POST"){
-            sendMessage($host, "Notification.remove();");
+            sendMessage($host, "Message.remove();");
         }
     }
 }
