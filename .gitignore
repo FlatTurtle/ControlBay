@@ -3,3 +3,4 @@ Config.xmpp.php
 application/config/config.php
 application/config/database.php
 .idea/
+/core/jaxl.pid
