@@ -66,10 +66,10 @@
             'JAXLException' => '/core/jaxl.exception.php',
             'XML' => '/core/jaxl.xml.php',  
             // xmpp classes
-            'XMPP' => '/xmpp/xmpp.class.php',
-            'XMPPGet' => '/xmpp/xmpp.get.php',
-            'XMPPSend' => '/xmpp/xmpp.send.php',
-            'XMPPAuth' => '/xmpp/xmpp.auth.php'
+            'XMPP' => '/xmpp.class.php',
+            'XMPPGet' => '/xmpp.get.php',
+            'XMPPSend' => '/xmpp.send.php',
+            'XMPPAuth' => '/xmpp.auth.php'
         );
         
         if(!is_array($classNames)) $classNames = array('0'=>$classNames);

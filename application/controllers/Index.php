@@ -1,8 +1,8 @@
 <?php
 
-class Index extends AController{
-    function GET($matches){
-        header("location: index");
+class Index extends CI_Controller{
+    function index(){
+        $this->load->view('index');
     }
 }
 ?>

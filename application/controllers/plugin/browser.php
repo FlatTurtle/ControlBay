@@ -6,11 +6,15 @@
  */
 class Browser extends CI_Controller
 {
-    function browse($host, $url){
+    function browse($host){
         $method = $_SERVER['REQUEST_METHOD'];
 
+        if(!$url = $this->input->post('url')){
+            show_error("No url was given");
+        }
+
         if($method == "POST"){
-            sendMessage($host, "Browser.go(" . $url . ");");
+            $this->xmpp_lib->sendMessage($host, "Browser.go(" . $url . ");");
         }
     }
 }

@@ -6,11 +6,15 @@
  */
 class Overlay extends CI_Controller
 {
-    function add($host, $url){
+    function add($host){
         $method = $_SERVER['REQUEST_METHOD'];
 
+        if(!$url = $this->input->post('url')){
+            show_error("No url was given");
+        }
+
         if($method == "POST"){
-            sendMessage($host, "Overlay.add('".$url."');");
+            $this->xmpp_lib->sendMessage($host, "Overlay.add('".$url."');");
         }
     }
 
@@ -18,7 +22,7 @@ class Overlay extends CI_Controller
         $method = $_SERVER['REQUEST_METHOD'];
 
         if($method == "POST"){
-            sendMessage($host, "Overlay.remove();");
+            $this->xmpp_lib->sendMessage($host, "Overlay.remove();");
         }
     }
 }

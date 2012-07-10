@@ -6,11 +6,15 @@
  */
 class Switcher extends CI_Controller
 {
-    function select($host, $id){
+    function focus($host){
         $method = $_SERVER['REQUEST_METHOD'];
 
+        if(!$id = $this->input->post('turtle')){
+            show_error("No turtle id was given");
+        }
+
         if($method == "POST"){
-            sendMessage($host, "Switcher.turtle(" . $$id . ");");
+            $this->xmpp_lib->sendMessage($host, "Switcher.turtle(" . $$id . ");");
         }
     }
 
@@ -18,7 +22,7 @@ class Switcher extends CI_Controller
         $method = $_SERVER['REQUEST_METHOD'];
 
         if($method == "POST"){
-            sendMessage($host, "Switcher.rotate();");
+            $this->xmpp_lib->sendMessage($host, "Switcher.rotate();");
         }
     }
 
@@ -26,7 +30,7 @@ class Switcher extends CI_Controller
         $method = $_SERVER['REQUEST_METHOD'];
 
         if($method == "POST"){
-            sendMessage($host, "Switcher.start();");
+            $this->xmpp_lib->sendMessage($host, "Switcher.start();");
         }
     }
 
@@ -34,7 +38,7 @@ class Switcher extends CI_Controller
         $method = $_SERVER['REQUEST_METHOD'];
 
         if($method == "POST"){
-            sendMessage($host, "Switcher.stop();");
+            $this->xmpp_lib->sendMessage($host, "Switcher.stop();");
         }
     }
 }
