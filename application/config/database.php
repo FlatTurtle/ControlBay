@@ -48,10 +48,10 @@
 $active_group = 'default';
 $active_record = TRUE;
 
-$db['default']['hostname'] = 'localhost';
-$db['default']['username'] = 'root';
-$db['default']['password'] = '&ç!(gb';
-$db['default']['database'] = 'database1';
+$db['default']['hostname'] = $_SERVER["DB1_HOST"];
+$db['default']['username'] = $_SERVER["DB1_USER"];
+$db['default']['password'] = $_SERVER["DB1_PASS"];
+$db['default']['database'] = $_SERVER["DB1_NAME"];
 $db['default']['dbdriver'] = 'mysql';
 $db['default']['dbprefix'] = '';
 $db['default']['pconnect'] = TRUE;
@@ -63,6 +63,7 @@ $db['default']['dbcollat'] = 'utf8_general_ci';
 $db['default']['swap_pre'] = '';
 $db['default']['autoinit'] = TRUE;
 $db['default']['stricton'] = FALSE;
+$db['default']['port'] = 3307;
 
 
 /* End of file database.php */
