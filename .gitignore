@@ -1,5 +1,4 @@
-xmpp.php
-Config.xmpp.php
+application/config/Config.xmpp.php
 application/config/config.php
 application/config/database.php
 .idea/

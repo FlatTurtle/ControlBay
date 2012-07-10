@@ -4,14 +4,14 @@
  * Author: Nik Torfs
  * Licence: AGPLv3
  */
-class Message extends CI_Controller
+class Clock extends CI_Controller
 {
 
-    function add($host, $message){
+    function add($host){
         $method = $_SERVER['REQUEST_METHOD'];
 
         if($method == "POST"){
-            sendMessage($host, "Message.add(".$message.");");
+            $this->xmpp_lib->sendMessage($host, "Clock.add();");
         }
     }
 
@@ -19,7 +19,7 @@ class Message extends CI_Controller
         $method = $_SERVER['REQUEST_METHOD'];
 
         if($method == "POST"){
-            sendMessage($host, "Message.remove();");
+            $this->xmpp_lib->sendMessage($host, "Clock.remove();");
         }
     }
 }

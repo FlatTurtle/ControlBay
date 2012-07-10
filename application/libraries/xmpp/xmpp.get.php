@@ -34,11 +34,11 @@
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  *
- * @package core
+ * @package jaxl
  * @subpackage xmpp
  * @author Abhinav Singh <me@abhinavsingh.com>
  * @copyright Abhinav Singh
- * @link http://code.google.com/p/core
+ * @link http://code.google.com/p/jaxl 
  */
     
     // include required classes

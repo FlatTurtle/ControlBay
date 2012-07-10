@@ -3,7 +3,7 @@
  * This file routes all requests in the right direction
  *
  */
-include_once("config.xmpp.php");
+include_once("application/config/Config.xmpp.php");
 // Send message after successful authentication
 function postAuth($payload, $jaxl) {
     global $recipient,$message;
