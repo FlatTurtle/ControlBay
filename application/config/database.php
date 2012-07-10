@@ -63,7 +63,7 @@ $db['default']['dbcollat'] = 'utf8_general_ci';
 $db['default']['swap_pre'] = '';
 $db['default']['autoinit'] = TRUE;
 $db['default']['stricton'] = FALSE;
-$db['default']['port'] = 3307;
+$db['default']['port'] = 3306;
 
 
 /* End of file database.php */
