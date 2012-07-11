@@ -2,8 +2,7 @@
 /**
 * XMPP Config
 */
-class Config{
-    static $xmpparray =array(
+ $config =array(
         'user'=>'***',
         'pass'=>'****************',
         'host'=>'*****************',
@@ -11,5 +10,3 @@ class Config{
         'authType'=>'PLAIN',
         'logLevel'=>4
     );
-
-}

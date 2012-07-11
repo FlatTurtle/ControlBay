@@ -4,6 +4,7 @@
 application/config/development/
 .idea/
 jaxl.pid
+application/config/xmpp.php
 
 ######################
 # OS generated files #

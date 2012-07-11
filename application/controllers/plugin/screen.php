@@ -4,7 +4,7 @@
  * Author: Nik Torfs
  * Licence: AGPLv3
  */
-class Screen
+class Screen extends CI_Controller
 {
     function power($host){
         $method = $_SERVER['REQUEST_METHOD'];

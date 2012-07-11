@@ -3,7 +3,7 @@
  * This file routes all requests in the right direction
  *
  */
-include_once("application/config/Config.xmpp.php");
+include_once("application/config/xmpp.php");
 // Send message after successful authentication
 function postAuth($payload, $jaxl) {
     global $recipient,$message;
@@ -33,7 +33,7 @@ function print_manual(){
 //this starts the xmpp connection
 // Include and initialize Jaxl core
 require_once 'core/jaxl.class.php';
-$jaxl = new JAXL(Config::$xmpparray);
+$jaxl = new JAXL($config);
 // Register callback on required hook (callback'd method will always receive 2 params)
 $jaxl->addPlugin('jaxl_post_auth', 'postAuth');
 // Start Jaxl core
