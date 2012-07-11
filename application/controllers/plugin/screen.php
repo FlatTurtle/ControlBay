@@ -4,28 +4,22 @@
  * Author: Nik Torfs
  * Licence: AGPLv3
  */
-class Screen extends CI_Controller
-{
-    function power($host){
-        $method = $_SERVER['REQUEST_METHOD'];
+require (APPPATH . '/libraries/rest.php');
 
+class Screen extends REST_Controller
+{
+    function power_post($host){
         if(!$action = $this->input->post('action')){
             show_error("No action was given");
         }
 
-        if($method == "POST"){
-            if($action == "on")
-                $this->xmpp_lib->sendMessage($host, "application.enableScreen(true);");
-            else
-                $this->xmpp_lib->sendMessage($host, "application.enableScreen(false);");
-        }
+        if($action == "on")
+            $this->xmpp_lib->sendMessage($host, "application.enableScreen(true);");
+        else
+            $this->xmpp_lib->sendMessage($host, "application.enableScreen(false);");
     }
 
-    function reload($host){
-        $method = $_SERVER['REQUEST_METHOD'];
-
-        if($method == "POST"){
-            $this->xmpp_lib->sendMessage($host, "location.reload(true);");
-        }
+    function reload_post($host){
+        $this->xmpp_lib->sendMessage($host, "location.reload(true);");
     }
 }

@@ -4,17 +4,15 @@
  * Author: Nik Torfs
  * Licence: AGPLv3
  */
-class Browser extends CI_Controller
-{
-    function browse($host){
-        $method = $_SERVER['REQUEST_METHOD'];
+require (APPPATH . '/libraries/rest.php');
 
+class Browser extends REST_Controller
+{
+    function browse_post($host){
         if(!$url = $this->input->post('url')){
             show_error("No url was given");
         }
 
-        if($method == "POST"){
-            $this->xmpp_lib->sendMessage($host, "Browser.go(" . $url . ");");
-        }
+        $this->xmpp_lib->sendMessage($host, "Browser.go('" . $url . "');");
     }
 }

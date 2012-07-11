@@ -4,27 +4,20 @@
  * Author: Nik Torfs
  * Licence: AGPLv3
  */
-class Message extends CI_Controller
+require (APPPATH . '/libraries/rest.php');
+
+class Message extends REST_Controller
 {
 
-    function add($host){
-        $method = $_SERVER['REQUEST_METHOD'];
-
+    function add_post($host){
         if(!$message = $this->input->post('message')){
             show_error("No message was given");
         }
 
-
-        if($method == "POST"){
-            $this->xmpp_lib->sendMessage($host, "Message.add(".$message.");");
-        }
+        $this->xmpp_lib->sendMessage($host, "Message.add('".$message."');");
     }
 
-    function remove($host){
-        $method = $_SERVER['REQUEST_METHOD'];
-
-        if($method == "POST"){
-            $this->xmpp_lib->sendMessage($host, "Message.remove();");
-        }
+    function remove_post($host){
+        $this->xmpp_lib->sendMessage($host, "Message.remove();");
     }
 }

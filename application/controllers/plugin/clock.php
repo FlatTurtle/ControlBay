@@ -4,22 +4,16 @@
  * Author: Nik Torfs
  * Licence: AGPLv3
  */
-class Clock extends CI_Controller
+require (APPPATH . '/libraries/rest.php');
+
+class Clock extends REST_Controller
 {
 
-    function add($host){
-        $method = $_SERVER['REQUEST_METHOD'];
-
-        if($method == "POST"){
+    function add_post($host){
             $this->xmpp_lib->sendMessage($host, "Clock.add();");
-        }
     }
 
-    function remove($host){
-        $method = $_SERVER['REQUEST_METHOD'];
-
-        if($method == "POST"){
+    function remove_post($host){
             $this->xmpp_lib->sendMessage($host, "Clock.remove();");
-        }
     }
 }
