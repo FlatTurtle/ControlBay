@@ -1,5 +1,26 @@
-application/config/Config.xmpp.php
-application/config/config.php
-application/config/database.php
+###############
+# CodeIgniter #
+###############
+application/config/development/
 .idea/
 jaxl.pid
+
+######################
+# OS generated files #
+######################
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+Icon?
+ehthumbs.db
+Thumbs.db
+*~
+
+##########################
+# Editor generated files #
+##########################
+.settings
+.buildpath
+.project
