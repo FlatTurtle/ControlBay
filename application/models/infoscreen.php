@@ -52,14 +52,23 @@ class InfoScreen extends CI_Model
         /*foreach ($query->result() as $row) {
             echo $row->title;
         }*/
+        if ($query->num_rows() > 0) return $query->result();
+        else return 0;
+    }
+    public function get_by_pin($pincode)
+    {
+        $query = $this->db->get_where($this->table, array('pincode' => $pincode));
+        /*foreach ($query->result() as $row) {
+            echo $row->title;
+        }*/
         return $query->result();
     }
 
     public function edit($id, $data)
     {
         $this->db->where('id', $id);
-        unset($args_array['id']);
-        unset($args_array['customer_id']);
+        unset($data['id']);
+        unset($data['customer_id']);
         $this->db->update($this->table, $data);
     }
 
