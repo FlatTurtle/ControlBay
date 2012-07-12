@@ -6,7 +6,6 @@
  * Time: 11:37 AM
  * To change this template use File | Settings | File Templates.
  */
-
 class authcontroller extends MY_Controller
 {
     /*

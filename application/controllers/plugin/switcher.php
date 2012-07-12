@@ -4,9 +4,7 @@
  * Author: Nik Torfs
  * Licence: AGPLv3
  */
-require (APPPATH . '/libraries/rest.php');
-
-class Switcher extends REST_Controller
+class Switcher extends MY_Controller
 {
     function focus_post($host){
         if(!$id = $this->input->post('turtle')){

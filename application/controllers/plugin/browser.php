@@ -4,9 +4,7 @@
  * Author: Nik Torfs
  * Licence: AGPLv3
  */
-require (APPPATH . '/libraries/rest.php');
-
-class Browser extends REST_Controller
+class Browser extends MY_Controller
 {
     function browse_post($host){
         if(!$url = $this->input->post('url')){
