@@ -6,9 +6,8 @@
  * Time: 11:37 AM
  * To change this template use File | Settings | File Templates.
  */
-require (APPPATH . '/libraries/rest.php');
 
-class authcontroller extends REST_Controller
+class authcontroller extends MY_Controller
 {
     /*
      * give access for mobile devices
