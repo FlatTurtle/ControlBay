@@ -5,10 +5,10 @@ class P_token extends CI_Model
 
     var $table = 'P_tokens';
 
-    public function get_by_id($id)
+    public function get_by_screen_id($id)
     {
-        $query = $this->db->get_where($this->table, array('id' => $id));
-        return $query->result();
+        $query = $this->db->get_where($this->table, array('screen_id' => $id));
+        return array('result'=>$query->result(),'success'=>1);
     }
 
     public function get_by_token($token)
@@ -20,7 +20,7 @@ class P_token extends CI_Model
     public function edit($id, $data)
     {
         $this->db->where('id', $id);
-        unset($args_array['id']);
+        unset($data['id']);
         $this->db->update($this->table, $data);
     }
 

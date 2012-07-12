@@ -19,6 +19,14 @@ class InfoScreen extends CI_Model
         return $query->result();
     }
 
+    public function get_by_pin($pin)
+    {
+        $this->db->where('pin',$pin);
+        $query = $this->db->get($this->table);
+        //echo json_encode(array('result' => $query->result(), 'success'=>1));
+        return array('result' => $query->result(), 'success'=>1);
+    }
+
     public function get_by_alias($alias)
     {
         $query = $this->db->get_where($this->table, array('alias' => $alias));
@@ -54,14 +62,6 @@ class InfoScreen extends CI_Model
         }*/
         if ($query->num_rows() > 0) return $query->result();
         else return 0;
-    }
-    public function get_by_pin($pincode)
-    {
-        $query = $this->db->get_where($this->table, array('pincode' => $pincode));
-        /*foreach ($query->result() as $row) {
-            echo $row->title;
-        }*/
-        return $query->result();
     }
 
     public function edit($id, $data)

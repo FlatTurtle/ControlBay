@@ -4,7 +4,6 @@
  * Author: Nik Torfs
  * Licence: AGPLv3
  */
-require (APPPATH . '/libraries/rest.php');
 
 class Pincode extends CI_Controller
 {
@@ -12,14 +11,18 @@ class Pincode extends CI_Controller
     {
         parent::__construct();
         //check if its executed from cronjob
-        /*if(!(php_sapi_name() == 'cli' && empty($_SERVER['REMOTE_ADDR']))) {
-            show_error('not on CLI');
-        }*/
-    }
-
-    function index()
-    {
-
+        if(defined('ENVIRONMENT')){
+            switch (ENVIRONMENT)
+            {
+                case 'development':
+                    break;
+                default:
+                    if(!(php_sapi_name() == 'cli' && empty($_SERVER['REMOTE_ADDR']))) {
+                        show_error('not on CLI');
+                    }
+                    break;
+            }
+        }
     }
 
     function refresh_pin($host)
