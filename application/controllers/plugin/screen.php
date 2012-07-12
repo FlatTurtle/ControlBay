@@ -4,9 +4,7 @@
  * Author: Nik Torfs
  * Licence: AGPLv3
  */
-require (APPPATH . '/libraries/rest.php');
-
-class Screen extends REST_Controller
+class Screen extends MY_Controller
 {
     function power_post($host){
         if(!$action = $this->input->post('action')){

@@ -4,9 +4,7 @@
  * Author: Nik Torfs
  * Licence: AGPLv3
  */
-require (APPPATH . '/libraries/rest.php');
-
-class Magnify extends REST_Controller
+class Magnify extends MY_Controller
 {
     function turtle_post($host){
         if(!$turtle = $this->input->post('turtle')){

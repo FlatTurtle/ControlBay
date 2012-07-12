@@ -4,9 +4,7 @@
  * Author: Nik Torfs
  * Licence: AGPLv3
  */
-require (APPPATH . '/libraries/rest.php');
-
-class Clock extends REST_Controller
+class Clock extends MY_Controller
 {
 
     function add_post($host){

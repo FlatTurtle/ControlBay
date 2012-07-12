@@ -4,9 +4,7 @@
  * Author: Nik Torfs
  * Licence: AGPLv3
  */
-require (APPPATH . '/libraries/rest.php');
-
-class Message extends REST_Controller
+class Message extends MY_Controller
 {
 
     function add_post($host){
