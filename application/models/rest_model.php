@@ -34,6 +34,7 @@ abstract class REST_Model extends CI_Model
      * Insert a new row in the table
      *
      * @param $data associative array of field values
+     * @throws ErrorException : if a database error occurs
      * @return bool
      */
     function insert($data){
@@ -59,7 +60,6 @@ abstract class REST_Model extends CI_Model
         if($this->db->_error_number())
             throw new ErrorException($this->db->_error_message());
         return $result->result();
-
     }
 
     /**
@@ -102,9 +102,6 @@ abstract class REST_Model extends CI_Model
      * @throws ErrorException : if a database error occurs
      */
     function delete($id){
-        if(!$this->isAllowed($id)){
-            return false;
-        }
         $this->db->where('id', $id);
         $this->db->delete($this->_table);
         if($this->db->_error_number())

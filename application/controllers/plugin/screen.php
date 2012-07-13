@@ -8,7 +8,7 @@ class Screen extends MY_Controller
 {
     function power_post($host){
         if(!$action = $this->input->post('action')){
-            show_error("No action was given");
+            $this->output->set_response_header('400');
         }
 
         if($action == "on")

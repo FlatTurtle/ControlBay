@@ -8,7 +8,7 @@ class Switcher extends MY_Controller
 {
     function focus_post($host){
         if(!$id = $this->input->post('turtle')){
-            show_error("No turtle id was given");
+            $this->output->set_response_header('400');
         }
 
         $this->xmpp_lib->sendMessage($host, "Switcher.turtle(" . $$id . ");");

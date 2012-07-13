@@ -8,7 +8,7 @@ class Magnify extends MY_Controller
 {
     function turtle_post($host){
         if(!$turtle = $this->input->post('turtle')){
-            show_error("No turtle id was given");
+            $this->output->set_response_header('400');
         }
 
         $this->xmpp_lib->sendMessage($host, "Magnify.turtle(".$turtle.");");

@@ -9,7 +9,7 @@ class Overlay extends MY_Controller
 
     function add_post($host){
         if(!$url = $this->input->post('url')){
-            show_error("No url was given");
+            $this->output->set_response_header('400');
         }
 
         if(!$timeout = $this->input->post('timeout')){

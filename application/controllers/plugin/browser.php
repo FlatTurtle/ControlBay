@@ -8,7 +8,7 @@ class Browser extends MY_Controller
 {
     function browse_post($host){
         if(!$url = $this->input->post('url')){
-            show_error("No url was given");
+            $this->output->set_response_header('400');
         }
 
         $this->xmpp_lib->sendMessage($host, "Browser.go('" . $url . "');");

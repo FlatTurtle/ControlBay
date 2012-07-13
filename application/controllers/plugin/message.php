@@ -9,7 +9,7 @@ class Message extends MY_Controller
 
     function add_post($host){
         if(!$message = $this->input->post('message')){
-            show_error("No message was given");
+            $this->output->set_response_header('400');
         }
 
         $this->xmpp_lib->sendMessage($host, "Message.add('".$message."');");

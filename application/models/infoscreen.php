@@ -4,16 +4,19 @@ require APPPATH . "models/rest_model.php";
 
 class InfoScreen extends REST_model
 {
+    const TABLET = "tablet";
+    const MOBILE = "mobile";
+    const ADMIN = "admin";
+
     function __construct()
     {
         parent::__construct();
         $this->_table = 'infoscreens';
     }
 
-
     public function get_by_customer_id($customer_id)
     {
-        $query = $this->db->get_where($this->table, array('customer_id' => $customer_id));
+        $query = $this->db->get_where($this->_table, array('customer_id' => $customer_id));
         if($this->db->_error_number())
             throw new ErrorException($this->db->_error_message());
         return $query->result();
@@ -21,7 +24,7 @@ class InfoScreen extends REST_model
 
     public function get_by_id($id)
     {
-        $query = $this->db->get_where($this->table, array('id' => $id));
+        $query = $this->db->get_where($this->_table, array('id' => $id));
         if($this->db->_error_number())
             throw new ErrorException($this->db->_error_message());
         return $query->result();
@@ -29,7 +32,7 @@ class InfoScreen extends REST_model
 
     public function get_by_alias($alias)
     {
-        $query = $this->db->get_where($this->table, array('alias' => $alias));
+        $query = $this->db->get_where($this->_table, array('alias' => $alias));
         if($this->db->_error_number())
             throw new ErrorException($this->db->_error_message());
         return $query->result();
@@ -37,7 +40,7 @@ class InfoScreen extends REST_model
 
     public function get_by_title($title)
     {
-        $query = $this->db->get_where($this->table, array('title' => $title));
+        $query = $this->db->get_where($this->_table, array('title' => $title));
         if($this->db->_error_number())
             throw new ErrorException($this->db->_error_message());
         return $query->result();
@@ -45,7 +48,7 @@ class InfoScreen extends REST_model
 
     public function get_by_hostname($hostname)
     {
-        $query = $this->db->get_where($this->table, array('hostname' => $hostname));
+        $query = $this->db->get_where($this->_table, array('hostname' => $hostname));
         if($this->db->_error_number())
             throw new ErrorException($this->db->_error_message());
         return $query->result();
@@ -53,7 +56,8 @@ class InfoScreen extends REST_model
 
     public function get_by_pin($pincode)
     {
-        $query = $this->db->get_where($this->table, array('pincode' => $pincode));
+        $this->db->where('pincode', $pincode);
+        $query = $this->db->get($this->_table);
         if($this->db->_error_number())
             throw new ErrorException($this->db->_error_message());
         return $query->result();
