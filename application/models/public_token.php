@@ -1,15 +1,11 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class P_token extends REST_model
+class Public_token extends REST_model
 {
-    // expiration in minutes
-    const TABLET_EXPIRATION = 9999999999;//TODO
-    const MOBILE_EXPIRATION = 600;
-
     function __construct()
     {
         parent::__construct();
-        $this->_table='P_tokens';
+        $this->_table='public_tokens';
     }
 
 
@@ -23,6 +19,17 @@ class P_token extends REST_model
     {
         $query = $this->db->get_where($this->_table, array('token' => $token));
         return $query->result();
+    }
+
+    static function getMobileExpiration(){
+        $datetime = new DateTime();
+        $interval = DateInterval::createFromDateString('10 minutes');
+        $datetime = $datetime->add($interval);
+        return $datetime->format('Y-m-d H:i:s');
+    }
+
+    static function getTabletExpiration(){
+        return DateTime::createFromFormat('Y', '3000')->format('Y-m-d H:i:s');
     }
 
     /**

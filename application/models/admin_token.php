@@ -1,8 +1,8 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class A_token extends CI_Model
+class Admin_token extends CI_Model
 {
-    var $table = 'A_tokens';
+    var $table = 'admin_tokens';
 
     public function get_by_id($id)
     {

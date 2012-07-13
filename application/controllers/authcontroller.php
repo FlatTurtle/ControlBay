@@ -39,12 +39,12 @@ class AuthController extends MY_Controller
             return;
         }
 
-        $this->load->model('p_token');
+        $this->load->model('public_token');
         // if user already had a token remove it from the database
         if($token = $this->input->post('token')){
-            $dbtokens = $this->p_token->get_by_token($token);
+            $dbtokens = $this->public_token->get_by_token($token);
             if(count($dbtokens) == 1){
-                $this->p_token->delete($dbtokens[0]->id);
+                $this->public_token->delete($dbtokens[0]->id);
             }
         }
 
@@ -63,12 +63,12 @@ class AuthController extends MY_Controller
         $data['ip'] = $this->input->ip_address();
         if($this->_isTabletPin($pin)){
             $data['role'] = InfoScreen::TABLET;
-            $data['expiration'] = P_token::TABLET_EXPIRATION;
+            $data['expiration'] = Public_token::getTabletExpiration();
         }else{
             $data['role'] = InfoScreen::MOBILE;
-            $data['expiration'] = P_token::MOBILE_EXPIRATION;
+            $data['expiration'] = Public_token::getMobileExpiration();
         }
-        $this->p_token->insert($data);
+        $this->public_token->insert($data);
         return $data['token'];
     }
 
