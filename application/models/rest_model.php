@@ -4,7 +4,7 @@
  * Author: Nik Torfs
  * Licence: AGPLv3
  */
-abstract class MY_Model extends CI_Model
+abstract class REST_Model extends CI_Model
 {
     /*
      * table name
