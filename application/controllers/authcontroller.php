@@ -53,7 +53,7 @@ class AuthController extends MY_Controller
         }catch(ErrorException $e){
             $this->output->set_status_header('500');
         }
-        return $token;
+        $this->output->set_output(json_encode($token));
     }
 
     private function _storeToken($pin, $screen_id){
