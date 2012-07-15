@@ -7,11 +7,11 @@
 class Clock extends MY_Controller
 {
 
-    function add_post($host){
-            $this->xmpp_lib->sendMessage($host, "Clock.add();");
+    function add_post(){
+            $this->xmpp_lib->sendMessage($this->host, "Clock.add();");
     }
 
     function remove_post($host){
-            $this->xmpp_lib->sendMessage($host, "Clock.remove();");
+            $this->xmpp_lib->sendMessage($this->host, "Clock.remove();");
     }
 }

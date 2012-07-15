@@ -7,7 +7,7 @@
 class Overlay extends MY_Controller
 {
 
-    function add_post($host){
+    function add_post(){
         if(!$url = $this->input->post('url')){
             $this->output->set_response_header('400');
         }
@@ -16,10 +16,10 @@ class Overlay extends MY_Controller
             $timeout = 0;
         }
 
-        $this->xmpp_lib->sendMessage($host, "Overlay.add('$url', $timeout);");
+        $this->xmpp_lib->sendMessage($this->host, "Overlay.add('$url', $timeout);");
     }
 
-    function remove_post($host){
-        $this->xmpp_lib->sendMessage($host, "Overlay.remove();");
+    function remove_post(){
+        $this->xmpp_lib->sendMessage($this->host, "Overlay.remove();");
     }
 }

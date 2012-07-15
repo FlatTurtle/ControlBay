@@ -40,7 +40,7 @@
 
 $route['default_controller'] = "index";
 $route['404_override'] = '';
-$route['(\w+)/(plugin|turtle)/(\w+)/(\w+)/*(.*)'] = "$2/$3/$4/$1/$5";
+$route['(plugin|turtle)/(\w+)/(\w+)/*(.*)'] = "$2/$3/$4/$5";
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */
