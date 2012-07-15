@@ -41,6 +41,8 @@
 $route['default_controller'] = "index";
 $route['404_override'] = '';
 $route['(plugin|turtle)/(\w+)/(\w+)/*(.*)'] = "$1/$2/$3/$4";
+$route['auth/mobile/*'] = "authcontroller/auth";
+$route['auth/admin/*'] = "authcontroller/auth_login";
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */
