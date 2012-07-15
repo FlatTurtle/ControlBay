@@ -3,6 +3,7 @@
 class MY_Controller extends CI_Controller {
 
     protected $host;
+    protected $role;
 
     public function __construct() {
         parent::__construct();
@@ -15,46 +16,44 @@ class MY_Controller extends CI_Controller {
                 default :
                     if (array_key_exists('HTTPS', $_SERVER)) {
                         if ($_SERVER['HTTPS'] != 'on') {
-                            show_error('not on ssl');
+                            $this->output->set_status_header('403');
+                            exit;
                         }
                     } //check on https connection, could also check $_SERVER['HTTPS'] but isn't provided on every server
 					else if ($_SERVER['SERVER_PORT'] != 443) {
-                        show_error('not on ssl');
+                        $this->output->set_status_header('403');
+                        exit;
                     }
                     break;
             }
         }
 
         if(!$this->_isAuthorized()){
-            //stop
+            $this->output->set_status_header('403');
+            exit;
         }
     }
 
     private function _isAuthorized(){
-        if(!$token = $this->input->post('token')){
-            $this->output->set_status_header('403');
+        if(!$token = $this->input->post('token'))
             return false;
-        }
 
         //TODO differentiate between public tokens and admin tokens
-        $this->db->load('public_token');
+        $this->load->model('public_token');
         $dbtoken = $this->public_token->get_by_token($token);
-        if(count($dbtoken) < 1){
-            $this->output->set_status_header('403');
+        if(count($dbtoken) < 1)
             return false;
-        }
 
-        if( $dbtoken->expiration < new DateTime() ||
+        $dbtoken = $dbtoken[0];
+        if( $dbtoken->expiration < date(new DateTime()) ||
             $dbtoken->ip != $this->input->ip_address() ||
             $dbtoken->user_agent != $this->input->user_agent())
         {
             try{
                 $this->public_token->delete($dbtoken->id);
             }catch(ErrorException $e){
-                $this->output->set_status_header('500');
-                return false;
+                // log database error
             }
-            $this->output->set_status_header('403');
             return false;
         }
 
@@ -62,10 +61,10 @@ class MY_Controller extends CI_Controller {
         $infoscreen = $this->infoscreen->get($dbtoken->screen_id);
         if(count($infoscreen) == 1){
             $this->host = $infoscreen[0]->hostname;
-        }else{
-            $this->output->set_status_header('403');
+            $this->role = $dbtoken->role;
+        }else
             return false;
-        }
+
         return true;
     }
 

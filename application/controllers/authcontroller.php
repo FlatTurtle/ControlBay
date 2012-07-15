@@ -72,7 +72,7 @@ class AuthController extends MY_Controller
         return $data['token'];
     }
 
-    // TODO determine if the pin is used by a tablet
+    // TODO determine if the pin is used by a tablet (only needed when mobile apps are made to connect with the screens)
     private function _isTabletPin($pin){
         return true;
     }

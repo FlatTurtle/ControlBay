@@ -1,5 +1,6 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
+require_once APPPATH . "models/rest_model.php";
 class Public_token extends REST_model
 {
     function __construct()

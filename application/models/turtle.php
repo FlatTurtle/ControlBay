@@ -1,6 +1,6 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-require APPPATH . "models/rest_model.php";
+require_once APPPATH . "models/rest_model.php";
 class Turtle extends REST_model
 {
     function __construct()

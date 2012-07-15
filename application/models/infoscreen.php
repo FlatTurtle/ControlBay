@@ -1,6 +1,6 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-require APPPATH . "models/rest_model.php";
+require_once APPPATH . "models/rest_model.php";
 
 class InfoScreen extends REST_model
 {
