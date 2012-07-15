@@ -6,16 +6,24 @@
  */
 class Message extends MY_Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+        if(!$this->_authorized){
+            $this->output->set_status_header('403');
+            exit;
+        }
+    }
 
     function add_post(){
         if(!$message = $this->input->post('message')){
             $this->output->set_response_header('400');
         }
 
-        $this->xmpp_lib->sendMessage($this->host, "Message.add('".$message."');");
+        $this->xmpp_lib->sendMessage($this->_host, "Message.add('".$message."');");
     }
 
     function remove_post(){
-        $this->xmpp_lib->sendMessage($this->host, "Message.remove();");
+        $this->xmpp_lib->sendMessage($this->_host, "Message.remove();");
     }
 }

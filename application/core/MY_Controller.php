@@ -2,8 +2,9 @@
 
 class MY_Controller extends CI_Controller {
 
-    protected $host;
-    protected $role;
+    protected $_host;
+    protected $_role;
+    protected $_authorized;
 
     public function __construct() {
         parent::__construct();
@@ -28,10 +29,7 @@ class MY_Controller extends CI_Controller {
             }
         }
 
-        if(!$this->_isAuthorized()){
-            $this->output->set_status_header('403');
-            exit;
-        }
+        $this->_authorized = $this->_isAuthorized();
     }
 
     private function _isAuthorized(){
@@ -40,12 +38,11 @@ class MY_Controller extends CI_Controller {
 
         //TODO differentiate between public tokens and admin tokens
         $this->load->model('public_token');
-        $dbtoken = $this->public_token->get_by_token($token);
-        if(count($dbtoken) < 1)
+        if(!$dbtoken = $this->public_token->get_by_token($token))
             return false;
 
         $dbtoken = $dbtoken[0];
-        if( $dbtoken->expiration < date(new DateTime()) ||
+        if( $dbtoken->expiration < date('Y-m-d H:i:s', time()) ||
             $dbtoken->ip != $this->input->ip_address() ||
             $dbtoken->user_agent != $this->input->user_agent())
         {
@@ -60,8 +57,8 @@ class MY_Controller extends CI_Controller {
         $this->load->model('infoscreen');
         $infoscreen = $this->infoscreen->get($dbtoken->screen_id);
         if(count($infoscreen) == 1){
-            $this->host = $infoscreen[0]->hostname;
-            $this->role = $dbtoken->role;
+            $this->_host = $infoscreen[0]->hostname;
+            $this->_role = $dbtoken->role;
         }else
             return false;
 

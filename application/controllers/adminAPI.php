@@ -7,6 +7,15 @@
 
 class AdminAPI extends MY_Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+        if(!$this->_authorized){
+            $this->output->set_status_header('403');
+            exit;
+        }
+    }
+
     /**
      *  Get all the infoscreens owned by the authenticated customer
      */

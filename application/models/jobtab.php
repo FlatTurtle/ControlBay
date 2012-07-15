@@ -1,9 +1,14 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Jobtab extends CI_Model
+require_once APPPATH . "models/rest_model.php";
+class Jobtab extends REST_Model
 {
+    function __construct()
+    {
+        parent::__construct();
+        $this->_table = 'jobtabs';
+    }
 
-    var $table = 'jobtab';
 
     public function get_by_id($id)
     {
@@ -23,21 +28,14 @@ class Jobtab extends CI_Model
         return $query->result();
     }
 
-    public function edit($id, $data)
+    /**
+     * Filter columns that are not allowed to be changed from row
+     *
+     * @param $data
+     * @return mixed
+     */
+    function filter($data)
     {
-        $this->db->where('id', $id);
-        unset($args_array['id']);
-        $this->db->update($this->table, $data);
+        // TODO: Implement filter() method.
     }
-
-    public function delete($id)
-    {
-        $this->db->delete($this->table, array('id' => $id));
-    }
-
-    public function insert($data)
-    {
-        $this->db->insert($this->table, $data);
-    }
-
 }

@@ -6,6 +6,14 @@
  */
 class Overlay extends MY_Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+        if(!$this->_authorized){
+            $this->output->set_status_header('403');
+            exit;
+        }
+    }
 
     function add_post(){
         if(!$url = $this->input->post('url')){
@@ -16,10 +24,10 @@ class Overlay extends MY_Controller
             $timeout = 0;
         }
 
-        $this->xmpp_lib->sendMessage($this->host, "Overlay.add('$url', $timeout);");
+        $this->xmpp_lib->sendMessage($this->_host, "Overlay.add('$url', $timeout);");
     }
 
     function remove_post(){
-        $this->xmpp_lib->sendMessage($this->host, "Overlay.remove();");
+        $this->xmpp_lib->sendMessage($this->_host, "Overlay.remove();");
     }
 }

@@ -1,17 +1,14 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
-class Admin_token extends CI_Model
+require_once APPPATH . "models/rest_model.php";
+class Admin_token extends REST_Model
 {
-    var $table = 'admin_tokens';
-
-    public function get_by_id($id)
+    function __construct()
     {
-        $query = $this->db->get_where($this->table, array('id' => $id));
-        /*foreach ($query->result() as $row) {
-            echo $row->key;
-        }*/
-        return $query->result();
+        parent::__construct();
+        $this->_table = 'admin_tokens';
     }
+
 
     public function get_by_token($token)
     {
@@ -19,21 +16,14 @@ class Admin_token extends CI_Model
         return $query->result();
     }
 
-    public function edit($id, $data)
+    /**
+     * Filter columns that are not allowed to be changed from row
+     *
+     * @param $data
+     * @return mixed
+     */
+    function filter($data)
     {
-        $this->db->where('id', $id);
-        unset($args_array['id']);
-        $this->db->update($this->table, $data);
+        // TODO: Implement filter() method.
     }
-
-    public function delete($id)
-    {
-        $this->db->delete($this->table, array('id' => $id));
-    }
-
-    public function insert($data)
-    {
-        $this->db->insert($this->table, $data);
-    }
-
 }

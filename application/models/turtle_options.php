@@ -6,7 +6,7 @@ class Turtle_options extends REST_model
     var $table = 'turtle_options';
 
     /**
-     * Filter primary keys from row
+     * Filter columns that are not allowed to be changed from row
      *
      * @param $data
      * @return mixed

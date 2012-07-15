@@ -6,20 +6,29 @@
  */
 class Switcher extends MY_Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+        if(!$this->_authorized){
+            $this->output->set_status_header('403');
+            exit;
+        }
+    }
+
     function focus_post(){
         if(!$id = $this->input->post('turtle')){
             $this->output->set_response_header('400');
         }
 
-        $this->xmpp_lib->sendMessage($this->host, "Switcher.turtle(" . $$id . ");");
+        $this->xmpp_lib->sendMessage($this->_host, "Switcher.turtle(" . $$id . ");");
     }
 
     function rotate_post(){
-        $this->xmpp_lib->sendMessage($this->host, "Switcher.rotate();");
+        $this->xmpp_lib->sendMessage($this->_host, "Switcher.rotate();");
     }
 
     function start_post(){
-        $this->xmpp_lib->sendMessage($this->host, "Switcher.start();");
+        $this->xmpp_lib->sendMessage($this->_host, "Switcher.start();");
     }
 
     function stop_post($host){

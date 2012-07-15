@@ -13,12 +13,13 @@ class Public_token extends REST_model
     public function get_by_screen_id($id)
     {
         $query = $this->db->get_where($this->_table, array('screen_id' => $id));
-        return array('result'=>$query->result(),'success'=>1);
+        return $query->result();
     }
 
     public function get_by_token($token)
     {
-        $query = $this->db->get_where($this->_table, array('token' => $token));
+        $this->db->where('token', $token);
+        $query = $this->db->get($this->_table);
         return $query->result();
     }
 
@@ -30,11 +31,11 @@ class Public_token extends REST_model
     }
 
     static function getTabletExpiration(){
-        return DateTime::createFromFormat('Y', '3000')->format('Y-m-d H:i:s');
+        return DateTime::createFromFormat('Y', '9999')->format('Y-m-d H:i:s');
     }
 
     /**
-     * Filter primary keys from row
+     * Filter columns that are not allowed to be changed from row
      *
      * @param $data
      * @return mixed

@@ -22,7 +22,7 @@ abstract class REST_Model extends CI_Model
     protected $_validation_rules = array();
 
     /**
-     * Filter primary keys from row
+     * Filter columns that are not allowed to be changed from row
      *
      * @abstract
      * @param $data
