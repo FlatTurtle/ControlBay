@@ -9,6 +9,13 @@ class Turtle extends REST_model
         $this->_table = 'turtles';
     }
 
+    public function get_by_screen_id($screen_id){
+        $query = $this->db->get_where($this->table, array('infoscreen_id' => $screen_id));
+        if($this->db->_error_number())
+            throw new ErrorException($this->db->_error_message());
+        return $query->result();
+    }
+
     public function get_by_customer_id($customer_id)
     {
         $query = $this->db->get_where($this->table, array('customer_id' => $customer_id));

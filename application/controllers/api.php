@@ -5,7 +5,7 @@
  * Licence: AGPLv3
  */
 
-class AdminAPI extends MY_Controller
+class API extends MY_Controller
 {
     public function __construct()
     {
@@ -47,10 +47,26 @@ class AdminAPI extends MY_Controller
     }
 
     /**
-     * Get all registered Turtles for the currently authenticated customer
+     * Get all registered Turtles for the currently authenticated customer and the current screen
      */
     function turtles_get(){
+        if(!isset($this->_host)){
+            $this->output->set_status_header('400');
+            exit;
+        }
 
+        $this->load->model('infoscreen');
+        if(!$infoscreen = $this->infoscreen->get_by_hostname($this->_host)){
+            $this->output->set_status_header('400');
+            exit;
+        }
+        $this->load->model('turtle');
+        if(!$turtles = $this->turtle->get_by_screen_id($infoscreen[0]->id)){
+            $this->output->set_status_header('400');
+            exit;
+        }
+
+        $this->output->set_output(json_encode($turtles));
     }
 
     /**
