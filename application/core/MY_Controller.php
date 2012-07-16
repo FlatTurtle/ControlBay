@@ -33,7 +33,7 @@ class MY_Controller extends CI_Controller {
     }
 
     private function _isAuthorized(){
-        if(!$token = $this->input->post('token'))
+        if(!$token = $this->input->get_request_header('Authorization'))
             return false;
 
         //TODO differentiate between public tokens and admin tokens
