@@ -47,7 +47,7 @@ class API extends MY_Controller
     }
 
     /**
-     * Get all registered Turtles for the currently authenticated customer
+     * Get all registered Turtles for the currently authenticated customer for a specific screen
      */
     function turtles_get(){
         if(!isset($this->_host)){
@@ -62,7 +62,7 @@ class API extends MY_Controller
         }
 
         $this->load->model('turtle');
-        if(!$turtles = $this->turtle->get_by_screen_id($infoscreen[0]->id)){
+        if(!$turtles = $this->turtle->get_by_screen_id_with_options($infoscreen[0]->id)){
             $this->output->set_status_header('400');
             return;
         }
