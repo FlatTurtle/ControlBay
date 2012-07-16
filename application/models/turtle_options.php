@@ -3,7 +3,12 @@
 require_once APPPATH . "models/rest_model.php";
 class Turtle_options extends REST_model
 {
-    var $table = 'turtle_options';
+    function __construct()
+    {
+        parent::__construct();
+        $this->_table('turtle_options');
+    }
+
 
     /**
      * Filter columns that are not allowed to be changed from row

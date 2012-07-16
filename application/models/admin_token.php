@@ -12,7 +12,7 @@ class Admin_token extends REST_Model
 
     public function get_by_token($token)
     {
-        $query = $this->db->get_where($this->table, array('token' => $token));
+        $query = $this->db->get_where($this->_table, array('token' => $token));
         return $query->result();
     }
 

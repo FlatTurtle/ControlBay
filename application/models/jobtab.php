@@ -12,19 +12,19 @@ class Jobtab extends REST_Model
 
     public function get_by_id($id)
     {
-        $query = $this->db->get_where($this->table, array('id' => $id));
+        $query = $this->db->get_where($this->_table, array('id' => $id));
         return $query->result();
     }
 
     public function get_by_infoscreen_id($infoscreen_id)
     {
-        $query = $this->db->get_where($this->table, array('infoscreen_id' => $infoscreen_id));
+        $query = $this->db->get_where($this->_table, array('infoscreen_id' => $infoscreen_id));
         return $query->result();
     }
 
     public function get_by_job_id($job_id)
     {
-        $query = $this->db->get_where($this->table, array('job_id' => $job_id));
+        $query = $this->db->get_where($this->_table, array('job_id' => $job_id));
         return $query->result();
     }
 
