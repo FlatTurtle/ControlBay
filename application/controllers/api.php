@@ -57,13 +57,13 @@ class API extends MY_Controller
 
         $this->load->model('infoscreen');
         if(!$infoscreen = $this->infoscreen->get_by_hostname($this->_host)){
-            $this->output->set_status_header('400');
+            $this->output->set_status_header('404');
             return;
         }
 
         $this->load->model('turtle');
         if(!$turtles = $this->turtle->get_by_screen_id_with_options($infoscreen[0]->id)){
-            $this->output->set_status_header('400');
+            $this->output->set_status_header('404');
             return;
         }
 
