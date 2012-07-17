@@ -16,6 +16,8 @@ class Magnify extends MY_Controller
     }
 
     function turtle_post(){
+        enforceRole($this->_role, AUTH_ALL, $this->output);
+
         if(!$turtle = $this->input->post('turtle')){
             $this->output->set_response_header('400');
         }

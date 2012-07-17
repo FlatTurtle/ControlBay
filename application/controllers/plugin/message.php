@@ -16,6 +16,8 @@ class Message extends MY_Controller
     }
 
     function add_post(){
+        enforceRole($this->_role, AUTH_ADMIN, $this->output);
+
         if(!$message = $this->input->post('message')){
             $this->output->set_response_header('400');
         }
@@ -24,6 +26,8 @@ class Message extends MY_Controller
     }
 
     function remove_post(){
+        enforceRole($this->_role, AUTH_ADMIN, $this->output);
+
         $this->xmpp_lib->sendMessage($this->_host, "Message.remove();");
     }
 }

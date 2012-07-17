@@ -16,7 +16,9 @@ class Clock extends MY_Controller
     }
 
     function add_post(){
-            $this->xmpp_lib->sendMessage($this->_host, "Clock.add();");
+        enforceRole($this->_role, AUTH_ADMIN, $this->output);
+
+        $this->xmpp_lib->sendMessage($this->_host, "Clock.add();");
     }
 
     function remove_post($host){

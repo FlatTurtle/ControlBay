@@ -62,10 +62,10 @@ class AuthController extends MY_Controller
         $data['user_agent'] = $this->input->user_agent();
         $data['ip'] = $this->input->ip_address();
         if($this->_isTabletPin($pin)){
-            $data['role'] = InfoScreen::TABLET;
+            $data['role'] = AUTH_TABLET;
             $data['expiration'] = Public_token::getTabletExpiration();
         }else{
-            $data['role'] = InfoScreen::MOBILE;
+            $data['role'] = AUTH_MOBILE;
             $data['expiration'] = Public_token::getMobileExpiration();
         }
         $this->public_token->insert($data);

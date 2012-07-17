@@ -7,6 +7,7 @@
 
 class API extends MY_Controller
 {
+
     public function __construct()
     {
         parent::__construct();
@@ -18,8 +19,11 @@ class API extends MY_Controller
 
     /**
      *  Get all the infoscreens owned by the authenticated customer
+     *
+     *  accessible by ADMIN role
      */
     function infoscreens_get(){
+        enforceRole($this->_role, AUTH_ADMIN, $this->output);
 
     }
 
@@ -27,8 +31,11 @@ class API extends MY_Controller
      * Get a specific infoscreen owned by the authenticated customer
      *
      * @param $id
+     *
+     *  accessible by ADMIN role
      */
     function infoscreen_get($id){
+        enforceRole($this->_role, AUTH_ADMIN, $this->output);
 
     }
 
@@ -41,15 +48,22 @@ class API extends MY_Controller
 
     /**
      * Change the details of the given infoscreen
+     *
+     *  accessible by ADMIN role
      */
     function infoscreen_put(){
+        enforceRole($this->_role, AUTH_ADMIN, $this->output);
 
     }
 
     /**
      * Get all registered Turtles for the currently authenticated customer for a specific screen
+     *
+     *  accessible by ALL roles
      */
     function turtles_get(){
+        enforceRole($this->_role, AUTH_ALL, $this->output);
+
         if(!isset($this->_host)){
             $this->output->set_status_header('400');
             return;
@@ -71,32 +85,40 @@ class API extends MY_Controller
     }
 
     /**
-     * Get a specific turtle registered to the currently authenticated customer
+     * Get a specific turtle with turtle options registered to the currently authenticated customer
      *
      * @param $id
+     *
+     * accessible by ADMIN role
      */
     function turtle_get($id){
-
+        enforceRole($this->_role, AUTH_ADMIN, $this->output);
     }
 
     /**
      * Register a new turtle to a screen owned by the authenticated customer
+     *
+     * accessible by ADMIN role
      */
     function turtle_post(){
-
+        enforceRole($this->_role, AUTH_ADMIN, $this->output);
     }
 
     /**
-     * Unregister a turtle to a screen owned by the authenticated customer
+     * Remove a turtle from a screen owned by the authenticated customer
+     *
+     * accessible by ADMIN role
      */
     function turtle_delete(){
-
+        enforceRole($this->_role, AUTH_ADMIN, $this->output);
     }
 
     /**
-     * Edit a turtle
+     * Edit a turtle with turtle options included
+     *
+     * accessible by ADMIN role
      */
-    function turtle_put($id, $data){
-
+    function turtle_put($id){
+        enforceRole($this->_role, AUTH_ADMIN, $this->output);
     }
 }

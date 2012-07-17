@@ -16,6 +16,8 @@ class Switcher extends MY_Controller
     }
 
     function focus_post(){
+        enforceRole($this->_role, AUTH_ADMIN, $this->output);
+
         if(!$id = $this->input->post('turtle')){
             $this->output->set_response_header('400');
         }
@@ -24,14 +26,20 @@ class Switcher extends MY_Controller
     }
 
     function rotate_post(){
+        enforceRole($this->_role, AUTH_ADMIN, $this->output);
+
         $this->xmpp_lib->sendMessage($this->_host, "Switcher.rotate();");
     }
 
     function start_post(){
+        enforceRole($this->_role, AUTH_ADMIN, $this->output);
+
         $this->xmpp_lib->sendMessage($this->_host, "Switcher.start();");
     }
 
     function stop_post($host){
+        enforceRole($this->_role, AUTH_ADMIN, $this->output);
+
         $this->xmpp_lib->sendMessage($host, "Switcher.stop();");
     }
 }

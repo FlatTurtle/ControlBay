@@ -16,6 +16,8 @@ class Overlay extends MY_Controller
     }
 
     function add_post(){
+        enforceRole($this->_role, AUTH_ADMIN, $this->output);
+
         if(!$url = $this->input->post('url')){
             $this->output->set_response_header('400');
         }
@@ -28,6 +30,8 @@ class Overlay extends MY_Controller
     }
 
     function remove_post(){
+        enforceRole($this->_role, AUTH_ADMIN, $this->output);
+
         $this->xmpp_lib->sendMessage($this->_host, "Overlay.remove();");
     }
 }

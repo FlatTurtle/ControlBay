@@ -37,5 +37,21 @@ define('FOPEN_WRITE_CREATE_STRICT',				'xb');
 define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 
 
+
+/*
+ * Authentication roles
+ */
+
+define('AUTH_TABLET', 'tablet');
+define('AUTH_MOBILE', 'mobile');
+define('AUTH_ADMIN', 'admin');
+define('AUTH_ALL', array(AUTH_TABLET, AUTH_MOBILE, AUTH_ADMIN));
+
+/*
+ * Error messages
+ */
+
+define('ERROR_ROLE', 'You dont have the right permissions to access this resource!');
+
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */

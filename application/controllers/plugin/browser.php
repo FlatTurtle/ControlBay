@@ -16,6 +16,8 @@ class Browser extends MY_Controller
     }
 
     function browse_post(){
+        enforceRole($this->_role, AUTH_ADMIN, $this->output);
+
         if(!$url = $this->input->post('url')){
             $this->output->set_response_header('400');
         }

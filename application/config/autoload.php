@@ -64,7 +64,7 @@ $autoload['libraries'] = array('database','xmpp_lib');
 |	$autoload['helper'] = array('url', 'file');
 */
 
-$autoload['helper'] = array();
+$autoload['helper'] = array('authentication');
 
 
 /*
