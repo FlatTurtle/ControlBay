@@ -6,22 +6,16 @@
  */
 class Clock extends MY_Controller
 {
-    public function __construct()
-    {
-        parent::__construct();
-        if(!$this->_authorized){
-            $this->output->set_status_header('403');
-            exit;
-        }
-    }
 
     function add_post(){
-        enforceRole($this->_role, AUTH_ADMIN, $this->output);
+        $this->authorization->authorize($this->_role, AUTH_ADMIN);
 
         $this->xmpp_lib->sendMessage($this->_host, "Clock.add();");
     }
 
-    function remove_post($host){
-            $this->xmpp_lib->sendMessage($this->_host, "Clock.remove();");
+    function remove_post(){
+        $this->authorization->authorize($this->_role, AUTH_ADMIN);
+
+        $this->xmpp_lib->sendMessage($this->_host, "Clock.remove();");
     }
 }

@@ -6,17 +6,9 @@
  */
 class Magnify extends MY_Controller
 {
-    public function __construct()
-    {
-        parent::__construct();
-        if(!$this->_authorized){
-            $this->output->set_status_header('403');
-            exit;
-        }
-    }
 
     function turtle_post(){
-        enforceRole($this->_role, AUTH_ALL, $this->output);
+        $this->authorization->authorize($this->_role, array(AUTH_MOBILE, AUTH_TABLET, AUTH_ADMIN));
 
         if(!$turtle = $this->input->post('turtle')){
             $this->output->set_response_header('400');
