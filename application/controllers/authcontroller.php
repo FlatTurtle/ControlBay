@@ -49,14 +49,14 @@ class AuthController extends MY_Controller
         }
 
         try{
-            $token = $this->_storeToken($pin, $infoscreen[0]->id);
+            $token = $this->_storePublicToken($pin, $infoscreen[0]->id);
         }catch(ErrorException $e){
             $this->output->set_status_header('500');
         }
         $this->output->set_output(json_encode($token));
     }
 
-    private function _storeToken($pin, $screen_id){
+    private function _storePublicToken($pin, $screen_id){
         $data['token'] = sha1(time() . uniqid('', true));
         $data['screen_id'] = $screen_id;
         $data['user_agent'] = $this->input->user_agent();
@@ -82,6 +82,37 @@ class AuthController extends MY_Controller
      */
     function auth_login_post()
     {
-        //give admin access with token
+        if(!$username = $this->input->post('username') ||
+           $password = $this->input->post('password')){
+            $this->output->set_status_header('400');
+            return;
+        }
+
+        $this->load->model('customer');
+        $userRow = $this->customer->get_by_username($username);
+
+        if(count($userRow)<1){
+            $this->output->set_status_header('403');
+            return;
+        }
+
+        $passHash = "";
+
+        if($passHash === $userRow->password){
+            $this->_storePrivateToken($userRow);
+        }
     }
+
+    private function _storePrivateToken($user){
+        $data['token'] = sha1(time() . uniqid($user['username'], true));
+        $date['customer_id'] = $user->id;
+        $data['user_agent'] = $this->input->user_agent();
+        $data['ip'] = $this->input->ip_address();
+        $data['role'] = AUTH_ADMIN;
+        $data['expiration'] = Admin_token::getAdminExpiration();
+        $this->load->model('admin_token');
+        $this->admin_token->insert($data);
+        return $data['token'];
+    }
+
 }
