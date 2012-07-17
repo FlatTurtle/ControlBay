@@ -29,7 +29,7 @@ class MY_Controller extends CI_Controller {
             }
         }
 
-        $this->_authorized = $this->_isAuthorized();
+        //$this->_authorized = $this->_isAuthorized();
     }
 
     private function _isAuthorized(){

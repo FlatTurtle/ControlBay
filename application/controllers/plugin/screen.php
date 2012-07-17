@@ -16,7 +16,7 @@ class Screen extends MY_Controller
     }
 
     function power_post(){
-        enforceRole($this->_role, AUTH_ADMIN, $this->output);
+        $this->authorization->authorize($this->_role, AUTH_ADMIN);
 
         if(!$action = $this->input->post('action')){
             $this->output->set_response_header('400');
@@ -29,7 +29,7 @@ class Screen extends MY_Controller
     }
 
     function reload_post(){
-        enforceRole($this->_role, AUTH_ADMIN, $this->output);
+        $this->authorization->authorize($this->_role, AUTH_ADMIN);
 
         $this->xmpp_lib->sendMessage($this->_host, "location.reload(true);");
     }

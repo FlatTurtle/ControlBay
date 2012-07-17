@@ -11,10 +11,10 @@ class API extends MY_Controller
     public function __construct()
     {
         parent::__construct();
-        if(!$this->_authorized){
+       /* if(!$this->_authorized){
             $this->output->set_status_header('403');
             exit;
-        }
+        }*/
     }
 
     /**
@@ -23,7 +23,7 @@ class API extends MY_Controller
      *  accessible by ADMIN role
      */
     function infoscreens_get(){
-        enforceRole($this->_role, AUTH_ADMIN, $this->output);
+        $this->authorization->authorize($this->_role, AUTH_ADMIN);
 
     }
 
@@ -35,7 +35,7 @@ class API extends MY_Controller
      *  accessible by ADMIN role
      */
     function infoscreen_get($id){
-        enforceRole($this->_role, AUTH_ADMIN, $this->output);
+        $this->authorization->authorize($this->_role, AUTH_ADMIN);
 
     }
 
@@ -52,7 +52,7 @@ class API extends MY_Controller
      *  accessible by ADMIN role
      */
     function infoscreen_put(){
-        enforceRole($this->_role, AUTH_ADMIN, $this->output);
+        $this->authorization->authorize($this->_role, AUTH_ADMIN);
 
     }
 
@@ -62,15 +62,15 @@ class API extends MY_Controller
      *  accessible by ALL roles
      */
     function turtles_get(){
-        enforceRole($this->_role, AUTH_ALL, $this->output);
+        $this->authorization->authorize($this->_role, array(AUTH_ADMIN, AUTH_MOBILE, AUTH_TABLET));
 
-        if(!isset($this->_host)){
+        if(!$host = $this->input->post('host')){
             $this->output->set_status_header('400');
             return;
         }
 
         $this->load->model('infoscreen');
-        if(!$infoscreen = $this->infoscreen->get_by_hostname($this->_host)){
+        if(!$infoscreen = $this->infoscreen->get_by_hostname($host)){
             $this->output->set_status_header('404');
             return;
         }
@@ -92,7 +92,7 @@ class API extends MY_Controller
      * accessible by ADMIN role
      */
     function turtle_get($id){
-        enforceRole($this->_role, AUTH_ADMIN, $this->output);
+        $this->authorization->authorize($this->_role, AUTH_ADMIN);
     }
 
     /**
@@ -101,7 +101,7 @@ class API extends MY_Controller
      * accessible by ADMIN role
      */
     function turtle_post(){
-        enforceRole($this->_role, AUTH_ADMIN, $this->output);
+        $this->authorization->authorize($this->_role, AUTH_ADMIN);
     }
 
     /**
@@ -110,7 +110,7 @@ class API extends MY_Controller
      * accessible by ADMIN role
      */
     function turtle_delete(){
-        enforceRole($this->_role, AUTH_ADMIN, $this->output);
+        $this->authorization->authorize($this->_role, AUTH_ADMIN);
     }
 
     /**
@@ -119,6 +119,6 @@ class API extends MY_Controller
      * accessible by ADMIN role
      */
     function turtle_put($id){
-        enforceRole($this->_role, AUTH_ADMIN, $this->output);
+        $this->authorization->authorize($this->_role, AUTH_ADMIN);
     }
 }
