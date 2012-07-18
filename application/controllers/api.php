@@ -11,6 +11,8 @@ class API extends MY_Controller
     const ERROR_NO_INFOSCREEN = "The infoscreen linked to your token does not exist";
     const ERROR_NO_HOST_IN_POST = "No host found in POST";
     const ERROR_NO_OWNERSHIP_SCREEN= "You don't own this screen!";
+    const ERROR_NO_OWNERSHIP_TURTLE= "You don't own this turtle!";
+    const ERROR_NO_DATA_IN_POST = "You didn't supply any data in the POST body!";
 
     /**
      *  Get all the infoscreens owned by the authenticated customer
@@ -41,7 +43,6 @@ class API extends MY_Controller
     function infoscreen_get($id){
         $this->authorization->authorize(AUTH_ADMIN);
 
-        //todo check if customer has ownership
         $this->load->model('infoscreen');
         try{
             $result = $this->infoscreen->get($id);
@@ -52,15 +53,7 @@ class API extends MY_Controller
             $this->_throwError('403', self::ERROR_NO_OWNERSHIP_SCREEN);
 
         $this->output->set_output(json_encode($result));
-
     }
-
-    /**
-     * Insert a new infoscreen with as owner the currently authenticated customer
-     */
-    //function infoscreens_post(){
-
-    //}
 
     /**
      * Change the details of the given infoscreen
@@ -69,7 +62,6 @@ class API extends MY_Controller
      */
     function infoscreen_put(){
         $this->authorization->authorize(AUTH_ADMIN);
-
     }
 
     /**
