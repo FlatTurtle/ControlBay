@@ -120,7 +120,7 @@ class AuthController extends MY_Controller
         $data['ip'] = $this->input->ip_address();
         $data['role'] = AUTH_ADMIN;
         $data['expiration'] = Admin_token::getAdminExpiration();
-
+        $data['customer_id'] = $user->id;
         try {
             $this->admin_token->insert($data);
         }catch(ErrorException $e){
