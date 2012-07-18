@@ -1,11 +1,6 @@
 <?php
 
 class MY_Controller extends CI_Controller {
-
-    protected $_host;
-    protected $_role;
-    protected $_authorized;
-
     public function __construct() {
         parent::__construct();
         $this->output->set_content_type('application/json');
