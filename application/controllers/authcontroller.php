@@ -60,6 +60,7 @@ class AuthController extends MY_Controller
         $data['user_agent'] = $this->input->user_agent();
         $data['ip'] = $this->input->ip_address();
         if($this->_isTabletPin($pin)){
+            $this->_checkScreenForOthers($screen_id);
             $data['role'] = AUTH_TABLET;
             $data['expiration'] = Public_token::getTabletExpiration();
         }else{
@@ -81,5 +82,15 @@ class AuthController extends MY_Controller
     function auth_login_post()
     {
         //give admin access with token
+    }
+
+    private function _checkScreenForOthers($screen_id)
+    {
+        $this->load->model('public_token');
+        $tokens = $this->public_token->get_by_screen_id($screen_id);
+        foreach($tokens as $token){
+            if($token->role == AUTH_TABLET)
+                $this->public_token->delete($token->id);
+        }
     }
 }

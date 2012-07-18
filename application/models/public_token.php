@@ -20,7 +20,7 @@ class Public_token extends REST_model
     {
         $this->db->where('token', $token);
         $query = $this->db->get($this->_table);
-        return $query->result();
+            return $query->result();
     }
 
     static function getMobileExpiration(){
