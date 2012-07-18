@@ -10,7 +10,7 @@ class Authorization
     public $host;
     public $isAuthorized = false;
 
-    function authorize($userRole, $rolesToEnforce){
+    function authorize($rolesToEnforce){
         $ci =& get_instance();
         if(!$token = $ci->input->get_request_header('Authorization'))
             $this->_throwUnauthorized();
