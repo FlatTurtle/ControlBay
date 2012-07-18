@@ -7,6 +7,9 @@
 
 class API extends MY_Controller
 {
+    const ERROR_NO_TURTLES = "There are no turtles linked to that infoscreen";
+    const ERROR_NO_INFOSCREEN = "The infoscreen linked to your token does not exist";
+    const ERROR_NO_HOST_IN_POST = "No host found in POST";
 
     public function __construct()
     {
@@ -61,24 +64,20 @@ class API extends MY_Controller
      *
      *  accessible by ALL roles
      */
-    function turtles_get(){
+    function turtles_get($host = false){
         $this->authorization->authorize($this->_role, array(AUTH_ADMIN, AUTH_MOBILE, AUTH_TABLET));
 
-        if(!$host = $this->input->post('host')){
-            $this->output->set_status_header('400');
-            return;
-        }
+        if(!$host)
+            $host = $this->authorization->host;
 
         $this->load->model('infoscreen');
-        if(!$infoscreen = $this->infoscreen->get_by_hostname($host)){
-            $this->output->set_status_header('404');
-            return;
-        }
+        if(!$infoscreen = $this->infoscreen->get_by_hostname($host))
+            $this->_throwError('404', self::ERROR_NO_INFOSCREEN);
+
 
         $this->load->model('turtle');
         if(!$turtles = $this->turtle->get_by_screen_id_with_options($infoscreen[0]->id)){
-            $this->output->set_status_header('404');
-            return;
+            $this->_throwError('404', self::ERROR_NO_TURTLES);
         }
 
         $this->output->set_output(json_encode($turtles));
