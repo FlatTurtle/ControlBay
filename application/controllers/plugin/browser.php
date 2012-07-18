@@ -10,11 +10,11 @@ class Browser extends MY_Controller
     const ERROR_NO_URL_IN_POST = "No url specified in post!";
 
     function browse_post(){
-        $this->authorization->authorize($this->_role, AUTH_ADMIN);
+        $this->authorization->authorize(AUTH_ADMIN);
 
         if(!$url = $this->input->post('url'))
             $this->_throwError('400', self::ERROR_NO_URL_IN_POST);
 
-        $this->xmpp_lib->sendMessage($this->_host, "Browser.go('" . $url . "');");
+        $this->xmpp_lib->sendMessage($this->authorization->host, "Browser.go('" . $url . "');");
     }
 }

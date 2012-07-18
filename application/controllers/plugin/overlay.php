@@ -9,7 +9,7 @@ class Overlay extends MY_Controller
     const ERROR_NO_URL_IN_POST = "No url specified in post!";
 
     function add_post(){
-        $this->authorization->authorize($this->_role, AUTH_ADMIN);
+        $this->authorization->authorize(AUTH_ADMIN);
 
         if(!$url = $this->input->post('url'))
             $this->_throwError('400', self::ERROR_NO_URL_IN_POST);
@@ -17,12 +17,12 @@ class Overlay extends MY_Controller
         if(!$timeout = $this->input->post('timeout'))
             $timeout = 0;
 
-        $this->xmpp_lib->sendMessage($this->_host, "Overlay.add('$url', $timeout);");
+        $this->xmpp_lib->sendMessage($this->authorization->host, "Overlay.add('$url', $timeout);");
     }
 
     function remove_post(){
-        $this->authorization->authorize($this->_role, AUTH_ADMIN);
+        $this->authorization->authorize(AUTH_ADMIN);
 
-        $this->xmpp_lib->sendMessage($this->_host, "Overlay.remove();");
+        $this->xmpp_lib->sendMessage($this->authorization->host, "Overlay.remove();");
     }
 }

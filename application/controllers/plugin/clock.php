@@ -8,14 +8,14 @@ class Clock extends MY_Controller
 {
 
     function add_post(){
-        $this->authorization->authorize($this->_role, AUTH_ADMIN);
+        $this->authorization->authorize(AUTH_ADMIN);
 
-        $this->xmpp_lib->sendMessage($this->_host, "Clock.add();");
+        $this->xmpp_lib->sendMessage($this->authorization->host, "Clock.add();");
     }
 
     function remove_post(){
-        $this->authorization->authorize($this->_role, AUTH_ADMIN);
+        $this->authorization->authorize(AUTH_ADMIN);
 
-        $this->xmpp_lib->sendMessage($this->_host, "Clock.remove();");
+        $this->xmpp_lib->sendMessage($this->authorization->host, "Clock.remove();");
     }
 }
