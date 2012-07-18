@@ -64,13 +64,11 @@ class API extends MY_Controller
      *
      *  accessible by ALL roles
      */
-    function turtles_get(){
+    function turtles_get($host = false){
         $this->authorization->authorize($this->_role, array(AUTH_ADMIN, AUTH_MOBILE, AUTH_TABLET));
 
-        if(!$host = $this->input->post('host')){
-            // annoying situation, the hosts of mobile clients can be guessed with their token, but the admin token is for multiple screens so the admin should provide a host parameter in the post body...
-            $this->_throwError('400', self::ERROR_NO_HOST_IN_POST);
-        }
+        if(!$host)
+            $host = $this->authorization->host;
 
         $this->load->model('infoscreen');
         if(!$infoscreen = $this->infoscreen->get_by_hostname($host))

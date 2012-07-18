@@ -6,7 +6,9 @@
  */
 class Authorization
 {
-    var $role;
+    public $role;
+    public $host;
+    public $isAuthorized = false;
 
     function authorize($userRole, $rolesToEnforce){
         $ci =& get_instance();
@@ -34,12 +36,16 @@ class Authorization
         $ci->load->model('infoscreen');
         $infoscreen = $ci->infoscreen->get($dbtoken->screen_id);
         if(count($infoscreen) == 1){
-            $_POST['host'] = $infoscreen[0]->hostname;
+            $this->host = $infoscreen[0]->hostname;
+            $this->role = $dbtoken->role;
         }else
             $this->_throwUnauthorized();
 
-        if(!$this->correctRole($dbtoken->role, $rolesToEnforce))
+
+        if(!$this->correctRole($this->role, $rolesToEnforce))
             $this->_throwUnauthorized();
+
+        $this->isAuthorized = true;
     }
 
     function correctRole($userRole, $rolesToEnforce){
