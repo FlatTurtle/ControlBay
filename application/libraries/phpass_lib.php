@@ -4,13 +4,19 @@
  * Author: Nik Torfs
  * Licence: AGPLv3
  */
-class PHPass
+require_once APPPATH . 'libraries/phpass-0.3/PasswordHash.php';
+class PHPass_lib
 {
-    function hashPassword($pass){
+    const HASH_STRENGTH = 8;
+    const PORTABLE_HASH = true;
 
+    function hashPassword($pass){
+        $phpass = new PasswordHash(self::HASH_STRENGTH, self::PORTABLE_HASH);
+        return $phpass->HashPassword($pass);
     }
 
     function checkPassword($given, $stored){
-
+        $phpass = new PasswordHash(self::HASH_STRENGTH, self::PORTABLE_HASH);
+        return $phpass->CheckPassword($given, $stored);
     }
 }

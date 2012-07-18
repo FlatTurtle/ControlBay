@@ -11,7 +11,9 @@ class AuthController extends MY_Controller
     const ERROR_NO_PIN = "You forgot to pass a pincode in the POST body!";
     const ERROR_PIN_NOT_NUM = "The pincode you provided is not numeric!";
     const ERROR_WRONG_PIN = "The pincode you provided is wrong!";
-
+    const ERROR_NO_USERNAME = "No username in POST body!";
+    const ERROR_NO_PASSWORD = "No password in POST body!";
+    const ERROR_WRONG_USERNAME_PASSWORD = "The given username or password is wrong";
 
     /*
      * give access for mobile devices
@@ -80,11 +82,11 @@ class AuthController extends MY_Controller
      */
     function auth_login_post()
     {
-        if(!$username = $this->input->post('username') ||
-           $password = $this->input->post('password')){
-            $this->output->set_status_header('400');
-            return;
-        }
+        if(!$username = $this->input->post('username'))
+            $this->_throwError('400', self::ERROR_NO_USERNAME);
+
+        if(!$password = $this->input->post('password'))
+            $this->_throwError('400', self::ERROR_NO_PASSWORD);
 
         $this->load->model('customer');
         $userRow = $this->customer->get_by_username($username);
@@ -94,22 +96,37 @@ class AuthController extends MY_Controller
             return;
         }
 
-        $passHash = "";
+        $this->load->library('phpass_lib');
+        if(!$this->phpass_lib->checkPassword($password, $userRow[0]->password))
+            $this->_throwError("403", self::ERROR_WRONG_USERNAME_PASSWORD);
 
-        if($passHash === $userRow->password){
-            $this->_storePrivateToken($userRow);
+        $this->load->model('admin_token');
+        // if user already had a token remove it from the database
+        if($token = $this->input->post('token')){
+            $dbtokens = $this->admin_token->get_by_token($token);
+            if(count($dbtokens) == 1){
+                $this->public_token->delete($dbtokens[0]->id);
+            }
         }
+
+        $token = $this->_storeAdminToken($userRow[0]);
+        $this->output->set_output(json_encode($token));
     }
 
-    private function _storePrivateToken($user){
-        $data['token'] = sha1(time() . uniqid($user['username'], true));
+    private function _storeAdminToken($user){
+        $data['token'] = sha1(time() . uniqid('', true));
         $date['customer_id'] = $user->id;
         $data['user_agent'] = $this->input->user_agent();
         $data['ip'] = $this->input->ip_address();
         $data['role'] = AUTH_ADMIN;
         $data['expiration'] = Admin_token::getAdminExpiration();
-        $this->load->model('admin_token');
-        $this->admin_token->insert($data);
+
+        try {
+            $this->admin_token->insert($data);
+        }catch(ErrorException $e){
+            $this->_handleDatabaseException($e);
+        }
+
         return $data['token'];
     }
 
