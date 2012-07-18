@@ -17,7 +17,9 @@ class Authorization
 
         //TODO differentiate between public tokens and admin tokens
         $ci->load->model('public_token');
+        $ci->load->model('admin_token');
         if(!$dbtoken = $ci->public_token->get_by_token($token))
+            if(!$dbtoken = $ci->admin_token->get_by_token($token))
             $this->_throwUnauthorized();
 
         $dbtoken = $dbtoken[0];
@@ -33,14 +35,16 @@ class Authorization
             $this->_throwUnauthorized();
         }
 
-        $ci->load->model('infoscreen');
-        $infoscreen = $ci->infoscreen->get($dbtoken->screen_id);
-        if(count($infoscreen) == 1){
-            $this->host = $infoscreen[0]->hostname;
-            $this->role = $dbtoken->role;
-        }else
-            $this->_throwUnauthorized();
+        if(isset($dbtoken->screen_id)){
+            $ci->load->model('infoscreen');
+            $infoscreen = $ci->infoscreen->get($dbtoken->screen_id);
+            if(count($infoscreen) == 1)
+                $this->host = $infoscreen[0]->hostname;
+            else
+                $this->_throwUnauthorized();
 
+        }
+        $this->role = $dbtoken->role;
 
         if(!$this->correctRole($this->role, $rolesToEnforce))
             $this->_throwUnauthorized();
