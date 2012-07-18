@@ -8,36 +8,34 @@
  */
 class AuthController extends MY_Controller
 {
+    const ERROR_NO_PIN = "You forgot to pass a pincode in the POST body!";
+    const ERROR_PIN_NOT_NUM = "The pincode you provided is not numeric!";
+    const ERROR_WRONG_PIN = "The pincode you provided is wrong!";
+
+
     /*
      * give access for mobile devices
      */
     function auth_post()
     {
         // no pin parameter in POST -> 400 bad request
-        if(!$pin = $this->input->post('pin')){
-            $this->output->set_status_header('400');
-            return;
-        }
+        if(!$pin = $this->input->post('pin'))
+            $this->_throwError('400', self::ERROR_NO_PIN);
 
         // pincode not numeric -> 400 bad request
-        if(!is_numeric($pin)){
-            $this->output->set_status_header('400');
-            return;
-        }
+        if(!is_numeric($pin))
+            $this->_throwError('400', self::ERROR_PIN_NOT_NUM);
 
         $this->load->model('infoscreen');
         try{
             $infoscreen = $this->infoscreen->get_by_pin($pin);
         }catch(ErrorException $e){
-            $this->output->set_status_header('500');
-            return;
+            $this->_handleDatabaseException($e);
         }
 
         // no screen with that pincode -> 403 unauthorized
-        if(count($infoscreen) < 1){
-            $this->output->set_status_header('403');
-            return;
-        }
+        if(count($infoscreen) < 1)
+            $this->_throwError('403', self::ERROR_WRONG_PIN);
 
         $this->load->model('public_token');
         // if user already had a token remove it from the database
@@ -51,7 +49,7 @@ class AuthController extends MY_Controller
         try{
             $token = $this->_storeToken($pin, $infoscreen[0]->id);
         }catch(ErrorException $e){
-            $this->output->set_status_header('500');
+            $this->_handleDatabaseException($e);
         }
         $this->output->set_output(json_encode($token));
     }
