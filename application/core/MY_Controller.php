@@ -29,42 +29,19 @@ class MY_Controller extends CI_Controller {
             }
         }
 
-        $this->_authorized = $this->_isAuthorized();
+
     }
 
-    private function _isAuthorized(){
-        if(!$token = $this->input->post('token'))
-            return false;
-
-        //TODO differentiate between public tokens and admin tokens
-        $this->load->model('public_token');
-        if(!$dbtoken = $this->public_token->get_by_token($token))
-            return false;
-
-        $dbtoken = $dbtoken[0];
-        if( $dbtoken->expiration < date('Y-m-d H:i:s', time()) ||
-            $dbtoken->ip != $this->input->ip_address() ||
-            $dbtoken->user_agent != $this->input->user_agent())
-        {
-            try{
-                $this->public_token->delete($dbtoken->id);
-            }catch(ErrorException $e){
-                // log database error
-            }
-            return false;
-        }
-
-        $this->load->model('infoscreen');
-        $infoscreen = $this->infoscreen->get($dbtoken->screen_id);
-        if(count($infoscreen) == 1){
-            $this->_host = $infoscreen[0]->hostname;
-            $this->_role = $dbtoken->role;
-        }else
-            return false;
-
-        return true;
+    protected function _throwError($code, $message){
+        $this->output->set_status_header($code);
+        echo $message;
+        exit;
     }
 
+    protected function _handleDatabaseException($ex){
+        log_message("Database error: " . $ex->getMessage());
+        exit;
+    }
     /**
      * Remap methods with request method concatinated
      * @param string $method

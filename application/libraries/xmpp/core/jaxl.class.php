@@ -229,7 +229,7 @@
         /**
          * Absolute path of log file for this Jaxl instance
         */
-        var $logPath = '/var/log/jaxl.log';
+        var $logPath = 'jaxl.log';
 
         /**
          * Absolute path of pid file for this Jaxl instance

@@ -12,7 +12,7 @@ class Customer extends REST_Model
 
     public function get_by_id($id)
     {
-        $query = $this->db->get_where($this->table, array('id' => $id));
+        $query = $this->db->get_where($this->_table, array('id' => $id));
         /*foreach ($query->result() as $row) {
             echo $row->username;
         }*/
@@ -21,7 +21,7 @@ class Customer extends REST_Model
 
     public function get_by_username($username)
     {
-        $query = $this->db->get_where($this->table, array('username' => $username));
+        $query = $this->db->get_where($this->_table, array('username' => $username));
         return $query->result();
     }
 

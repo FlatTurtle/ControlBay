@@ -29,25 +29,14 @@ class Pincode extends CI_Controller
     {
         //adapt the database
         $new = false;
-        $length = 5;
         $pin = 0;
-        //echo 'works';
         while($new == false){
-            $pin = rand(11111, 99999);
+            $pin = rand(111111, 999999);
             $this->load->model('Infoscreen');
-            $query = $this->Infoscreen->get_by_pin($pin);
-            //echo 'helsdjfkdsf';
-            $found = false;
-            /*foreach($query->result() as $row){
-                $found = true;
-                echo 'true';
-            }*/
-            //echo $found;
-            if(!$found){
+            if(!$query = $this->Infoscreen->get_by_pin($pin))
                 $new = true;
-            }
         }
-        echo 'done';
+
         $result = $this->Infoscreen->get_by_hostname($host);
         if($result != 0){
             $this->Infoscreen->edit($result[0]->id,array("pincode" => $pin));

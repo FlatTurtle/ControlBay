@@ -12,13 +12,13 @@ class Job extends REST_Model
 
     public function get_by_id($id)
     {
-        $query = $this->db->get_where($this->table, array('id' => $id));
+        $query = $this->db->get_where($this->_table, array('id' => $id));
         return $query->result();
     }
 
     public function get_by_jobname($jobname)
     {
-        $query = $this->db->get_where($this->table, array('jobname' => $jobname));
+        $query = $this->db->get_where($this->_table, array('jobname' => $jobname));
         return $query->result();
     }
 
