@@ -11,22 +11,13 @@ class API extends MY_Controller
     const ERROR_NO_INFOSCREEN = "The infoscreen linked to your token does not exist";
     const ERROR_NO_HOST_IN_POST = "No host found in POST";
 
-    public function __construct()
-    {
-        parent::__construct();
-       /* if(!$this->_authorized){
-            $this->output->set_status_header('403');
-            exit;
-        }*/
-    }
-
     /**
      *  Get all the infoscreens owned by the authenticated customer
      *
      *  accessible by ADMIN role
      */
     function infoscreens_get(){
-        $this->authorization->authorize($this->_role, AUTH_ADMIN);
+        $this->authorization->authorize(AUTH_ADMIN);
 
     }
 
@@ -38,7 +29,7 @@ class API extends MY_Controller
      *  accessible by ADMIN role
      */
     function infoscreen_get($id){
-        $this->authorization->authorize($this->_role, AUTH_ADMIN);
+        $this->authorization->authorize(AUTH_ADMIN);
 
     }
 
@@ -55,7 +46,7 @@ class API extends MY_Controller
      *  accessible by ADMIN role
      */
     function infoscreen_put(){
-        $this->authorization->authorize($this->_role, AUTH_ADMIN);
+        $this->authorization->authorize(AUTH_ADMIN);
 
     }
 
@@ -65,7 +56,7 @@ class API extends MY_Controller
      *  accessible by ALL roles
      */
     function turtles_get($host = false){
-        $this->authorization->authorize($this->_role, array(AUTH_ADMIN, AUTH_MOBILE, AUTH_TABLET));
+        $this->authorization->authorize(array(AUTH_ADMIN, AUTH_MOBILE, AUTH_TABLET));
 
         if(!$host)
             $host = $this->authorization->host;
@@ -91,7 +82,7 @@ class API extends MY_Controller
      * accessible by ADMIN role
      */
     function turtle_get($id){
-        $this->authorization->authorize($this->_role, AUTH_ADMIN);
+        $this->authorization->authorize(AUTH_ADMIN);
     }
 
     /**
@@ -100,7 +91,7 @@ class API extends MY_Controller
      * accessible by ADMIN role
      */
     function turtle_post(){
-        $this->authorization->authorize($this->_role, AUTH_ADMIN);
+        $this->authorization->authorize(AUTH_ADMIN);
     }
 
     /**
@@ -109,7 +100,7 @@ class API extends MY_Controller
      * accessible by ADMIN role
      */
     function turtle_delete(){
-        $this->authorization->authorize($this->_role, AUTH_ADMIN);
+        $this->authorization->authorize(AUTH_ADMIN);
     }
 
     /**
@@ -118,6 +109,6 @@ class API extends MY_Controller
      * accessible by ADMIN role
      */
     function turtle_put($id){
-        $this->authorization->authorize($this->_role, AUTH_ADMIN);
+        $this->authorization->authorize(AUTH_ADMIN);
     }
 }
