@@ -9,13 +9,13 @@ class Authorization
     public $role;
     public $host;
     public $isAuthorized = false;
+    public $customer_id;
 
     function authorize($rolesToEnforce){
         $ci =& get_instance();
         if(!$token = $ci->input->get_request_header('Authorization'))
             $this->_throwUnauthorized();
 
-        //TODO differentiate between public tokens and admin tokens
         $ci->load->model('public_token');
         $ci->load->model('admin_token');
         if(!$dbtoken = $ci->public_token->get_by_token($token))
@@ -43,6 +43,8 @@ class Authorization
             else
                 $this->_throwUnauthorized();
 
+        }else{
+            $this->customer_id = $dbtoken->customer_id;
         }
         $this->role = $dbtoken->role;
 

@@ -10,6 +10,7 @@ class API extends MY_Controller
     const ERROR_NO_TURTLES = "There are no turtles linked to that infoscreen";
     const ERROR_NO_INFOSCREEN = "The infoscreen linked to your token does not exist";
     const ERROR_NO_HOST_IN_POST = "No host found in POST";
+    const ERROR_NO_OWNERSHIP_SCREEN= "You don't own this screen!";
 
     /**
      *  Get all the infoscreens owned by the authenticated customer
@@ -19,6 +20,15 @@ class API extends MY_Controller
     function infoscreens_get(){
         $this->authorization->authorize(AUTH_ADMIN);
 
+        $this->load->model('infoscreen');
+
+        try{
+            $result = $this->infoscreen->get_by_customer_id($this->authorization->customer_id);
+        }catch(ErrorException $e){
+            $this->_handleDatabaseException($e);
+        }
+
+        $this->output->set_output(json_encode($result));
     }
 
     /**
@@ -30,6 +40,18 @@ class API extends MY_Controller
      */
     function infoscreen_get($id){
         $this->authorization->authorize(AUTH_ADMIN);
+
+        //todo check if customer has ownership
+        $this->load->model('infoscreen');
+        try{
+            $result = $this->infoscreen->get($id);
+        }catch(ErrorException $e){
+            $this->_handleDatabaseException($e);
+        }
+        if($result[0]->customer_id != $this->authorization->customer_id)
+            $this->_throwError('403', self::ERROR_NO_OWNERSHIP_SCREEN);
+
+        $this->output->set_output(json_encode($result));
 
     }
 
