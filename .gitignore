@@ -3,6 +3,8 @@
 # CodeIgniter #
 ###############
 application/config/development/
+application/config/production/
+application/config/testing/
 .idea/
 jaxl.pid
 jaxl.log
