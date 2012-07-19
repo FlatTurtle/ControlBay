@@ -61,7 +61,7 @@ class AuthController extends MY_Controller
         $data['screen_id'] = $screen_id;
         $data['user_agent'] = $this->input->user_agent();
         $data['ip'] = $this->input->ip_address();
-        if($this->_isTabletPin($pin)){
+        if($this->_isTablet($pin)){
             $this->_checkScreenForOthers($screen_id);
             $data['role'] = AUTH_TABLET;
             $data['expiration'] = Public_token::getTabletExpiration();
@@ -73,9 +73,18 @@ class AuthController extends MY_Controller
         return $data['token'];
     }
 
-    // TODO determine if the pin is used by a tablet (only needed when mobile apps are made to connect with the screens)
-    private function _isTabletPin($pin){
-        return true;
+    private function _isTablet(){
+        if(!$key = $this->input->post('dedicated_key'))
+            return false;
+
+        return $this->_verifykey($key);
+    }
+
+    private function _verifyKey($key){
+        if($key === $this->config->item('tablet_key'))
+            return true;
+
+        return false;
     }
 
     /*
