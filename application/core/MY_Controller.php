@@ -13,15 +13,12 @@ class MY_Controller extends CI_Controller {
                 default :
                     if (array_key_exists('HTTPS', $_SERVER)) {
                         if ($_SERVER['HTTPS'] != 'on') {
-                            //echo base_url().uri_string();
-                            //$this->output->set_status_header('403');
-                            header('Location:'.base_url().uri_string());
+                            header('Location:'.base_url(uri_string()));
                             exit;
                         }
                     } //check on https connection, could also check $_SERVER['HTTPS'] but isn't provided on every server
 					else if ($_SERVER['SERVER_PORT'] != 443) {
-                        //echo base_url().uri_string();
-                        header('Location:'.base_url().uri_string());
+                        header('Location:'.base_url(uri_string()));
                         exit;
                     }
                     break;
