@@ -6,32 +6,32 @@
  */
 class Switcher extends MY_Controller
 {
-    public function __construct()
-    {
-        parent::__construct();
-        if(!$this->_authorized){
-            $this->output->set_status_header('403');
-            exit;
-        }
-    }
+    const ERROR_NO_TURTLE_ID_IN_POST = "No turtle id in POST body!";
 
     function focus_post(){
-        if(!$id = $this->input->post('turtle')){
-            $this->output->set_response_header('400');
-        }
+        $this->authorization->authorize(AUTH_ADMIN);
 
-        $this->xmpp_lib->sendMessage($this->_host, "Switcher.turtle(" . $$id . ");");
+        if(!$id = $this->input->post('turtle'))
+            $this->_throwError('400', self::ERROR_NO_TURTLE_ID_IN_POST);
+
+        $this->xmpp_lib->sendMessage($this->authorization->host, "Switcher.turtle(" . $$id . ");");
     }
 
     function rotate_post(){
-        $this->xmpp_lib->sendMessage($this->_host, "Switcher.rotate();");
+        $this->authorization->authorize(AUTH_ADMIN);
+
+        $this->xmpp_lib->sendMessage($this->authorization->host, "Switcher.rotate();");
     }
 
     function start_post(){
-        $this->xmpp_lib->sendMessage($this->_host, "Switcher.start();");
+        $this->authorization->authorize(AUTH_ADMIN);
+
+        $this->xmpp_lib->sendMessage($this->authorization->host, "Switcher.start();");
     }
 
     function stop_post($host){
+        $this->authorization->authorize(AUTH_ADMIN);
+
         $this->xmpp_lib->sendMessage($host, "Switcher.stop();");
     }
 }

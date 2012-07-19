@@ -4,10 +4,6 @@ require_once APPPATH . "models/rest_model.php";
 
 class InfoScreen extends REST_model
 {
-    const TABLET = "tablet";
-    const MOBILE = "mobile";
-    const ADMIN = "admin";
-
     function __construct()
     {
         parent::__construct();

@@ -9,16 +9,6 @@ class Customer extends REST_Model
         $this->_table = 'customers';
     }
 
-
-    public function get_by_id($id)
-    {
-        $query = $this->db->get_where($this->_table, array('id' => $id));
-        /*foreach ($query->result() as $row) {
-            echo $row->username;
-        }*/
-        return $query->result();
-    }
-
     public function get_by_username($username)
     {
         $query = $this->db->get_where($this->_table, array('username' => $username));
@@ -33,6 +23,7 @@ class Customer extends REST_Model
      */
     function filter($data)
     {
-        // TODO: Implement filter() method.
+        unset($data['id']);
+        return $data;
     }
 }

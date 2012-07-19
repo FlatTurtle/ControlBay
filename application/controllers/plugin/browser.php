@@ -6,20 +6,15 @@
  */
 class Browser extends MY_Controller
 {
-    public function __construct()
-    {
-        parent::__construct();
-        if(!$this->_authorized){
-            $this->output->set_status_header('403');
-            exit;
-        }
-    }
+
+    const ERROR_NO_URL_IN_POST = "No url specified in post!";
 
     function browse_post(){
-        if(!$url = $this->input->post('url')){
-            $this->output->set_response_header('400');
-        }
+        $this->authorization->authorize(AUTH_ADMIN);
 
-        $this->xmpp_lib->sendMessage($this->_host, "Browser.go('" . $url . "');");
+        if(!$url = $this->input->post('url'))
+            $this->_throwError('400', self::ERROR_NO_URL_IN_POST);
+
+        $this->xmpp_lib->sendMessage($this->authorization->host, "Browser.go('" . $url . "');");
     }
 }

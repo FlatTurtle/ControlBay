@@ -26,4 +26,12 @@ class Admin_token extends REST_Model
     {
         // TODO: Implement filter() method.
     }
+
+    public static function getAdminExpiration()
+    {
+        $datetime = new DateTime();
+        $interval = DateInterval::createFromDateString('60 minutes');
+        $datetime = $datetime->add($interval);
+        return $datetime->format('Y-m-d H:i:s');
+    }
 }

@@ -6,27 +6,23 @@
  */
 class Screen extends MY_Controller
 {
-    public function __construct()
-    {
-        parent::__construct();
-        if(!$this->_authorized){
-            $this->output->set_status_header('403');
-            exit;
-        }
-    }
+    const ERROR_NO_ACTION = "No action specified in the POST body";
 
     function power_post(){
-        if(!$action = $this->input->post('action')){
-            $this->output->set_response_header('400');
-        }
+        $this->authorization->authorize(AUTH_ADMIN);
+
+        if(!$action = $this->input->post('action'))
+            $this->_throwError('400', self::ERROR_NO_ACTION);
 
         if($action == "on")
-            $this->xmpp_lib->sendMessage($this->_host, "application.enableScreen(true);");
+            $this->xmpp_lib->sendMessage($this->authorization->host, "application.enableScreen(true);");
         else
-            $this->xmpp_lib->sendMessage($this->_host, "application.enableScreen(false);");
+            $this->xmpp_lib->sendMessage($this->authorization->host, "application.enableScreen(false);");
     }
 
     function reload_post(){
-        $this->xmpp_lib->sendMessage($this->_host, "location.reload(true);");
+        $this->authorization->authorize(AUTH_ADMIN);
+
+        $this->xmpp_lib->sendMessage($this->authorization->host, "location.reload(true);");
     }
 }

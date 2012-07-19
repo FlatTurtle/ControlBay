@@ -1,9 +1,11 @@
-###############
+#
+#############
 # CodeIgniter #
 ###############
 application/config/development/
 .idea/
 jaxl.pid
+jaxl.log
 application/config/xmpp.php
 
 ######################

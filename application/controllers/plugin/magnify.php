@@ -6,20 +6,14 @@
  */
 class Magnify extends MY_Controller
 {
-    public function __construct()
-    {
-        parent::__construct();
-        if(!$this->_authorized){
-            $this->output->set_status_header('403');
-            exit;
-        }
-    }
+    const ERROR_NO_TURTLE_ID_IN_POST = "No turtle id in POST body!";
 
     function turtle_post(){
-        if(!$turtle = $this->input->post('turtle')){
-            $this->output->set_response_header('400');
-        }
+        $this->authorization->authorize(array(AUTH_MOBILE, AUTH_TABLET, AUTH_ADMIN));
 
-        $this->xmpp_lib->sendMessage($this->_host, "Magnify.turtle(".$turtle.");");
+        if(!$turtle = $this->input->post('turtle'))
+            $this->_throwError('400', self::ERROR_NO_TURTLE_ID_IN_POST);
+
+        $this->xmpp_lib->sendMessage($this->authorization->host, "Magnify.turtle(".$turtle.");");
     }
 }
