@@ -6,13 +6,11 @@
  */
 class Message extends MY_Controller
 {
-    const ERROR_NO_MESSAGE_IN_POST = "No message given in POST body";
-
     function add_post(){
         $this->authorization->authorize(AUTH_ADMIN);
 
         if(!$message = $this->input->post('message'))
-            $this->_throwError('400', self::ERROR_NO_MESSAGE_IN_POST);
+            $this->_throwError('400', ERROR_NO_MESSAGE_IN_POST);
 
         $this->xmpp_lib->sendMessage($this->authorization->host, "Message.add('".$message."');");
     }

@@ -51,6 +51,21 @@ define('AUTH_ADMIN', 'admin');
  */
 
 define('ERROR_ROLE', 'You dont have the right permissions to access this resource!');
+define('ERROR_NO_URL_IN_POST', "No url has been specified in the POST body, add an url with 'url' as key.");
+define('ERROR_NO_TURTLE_ID_IN_POST', "No turtle id has been specified in the POST body, add it wich 'turtle' as key.");
+define('ERROR_NO_MESSAGE_IN_POST', "No message has been specified in the POST body, add it with 'message' as key");
+define('ERROR_NO_ACTION_IN_POST', "No action has been specified in the POST body, add it with 'action' as key");
+define('ERROR_NO_TURTLES', "There are no turtles linked to that infoscreen");
+define('ERROR_NO_INFOSCREEN',"The infoscreen linked to your token does not exist");
+define('ERROR_NO_OWNERSHIP_SCREEN', "You don't own this screen!");
+define('ERROR_NO_PIN', "No pincode has been specified in the POST body, add it with 'pin' as key");
+define('ERROR_PIN_NOT_NUM', "The pincode you provided is not numeric!");
+define('ERROR_WRONG_PIN', "The pincode you provided is wrong!");
+define('ERROR_NO_USERNAME', "No username specified in the POST body, add it with 'username' as key");
+define('ERROR_NO_PASSWORD', "No password specified in the POST body, add it with 'password' as key");
+define('ERROR_WRONG_USERNAME_PASSWORD', "The given username or password is wrong");
+define('ERROR_ACTION_DOES_NOT_EXIST', "This resource/action does not exist");
+
 
 
 /*

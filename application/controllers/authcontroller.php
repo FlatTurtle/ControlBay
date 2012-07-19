@@ -8,13 +8,6 @@
  */
 class AuthController extends MY_Controller
 {
-    const ERROR_NO_PIN = "You forgot to pass a pincode in the POST body!";
-    const ERROR_PIN_NOT_NUM = "The pincode you provided is not numeric!";
-    const ERROR_WRONG_PIN = "The pincode you provided is wrong!";
-    const ERROR_NO_USERNAME = "No username in POST body!";
-    const ERROR_NO_PASSWORD = "No password in POST body!";
-    const ERROR_WRONG_USERNAME_PASSWORD = "The given username or password is wrong";
-
     /*
      * give access for mobile devices
      */
@@ -22,11 +15,11 @@ class AuthController extends MY_Controller
     {
         // no pin parameter in POST -> 400 bad request
         if(!$pin = $this->input->post('pin'))
-            $this->_throwError('400', self::ERROR_NO_PIN);
+            $this->_throwError('400', ERROR_NO_PIN);
 
         // pincode not numeric -> 400 bad request
         if(!is_numeric($pin))
-            $this->_throwError('400', self::ERROR_PIN_NOT_NUM);
+            $this->_throwError('400', ERROR_PIN_NOT_NUM);
 
         $this->load->model('infoscreen');
         try{
@@ -37,7 +30,7 @@ class AuthController extends MY_Controller
 
         // no screen with that pincode -> 403 unauthorized
         if(count($infoscreen) < 1)
-            $this->_throwError('403', self::ERROR_WRONG_PIN);
+            $this->_throwError('403', ERROR_WRONG_PIN);
 
         $this->load->model('public_token');
         if($this->public_token->count() > TOKEN_TABLE_LIMIT){
@@ -97,10 +90,10 @@ class AuthController extends MY_Controller
     function auth_login_post()
     {
         if(!$username = $this->input->post('username'))
-            $this->_throwError('400', self::ERROR_NO_USERNAME);
+            $this->_throwError('400', ERROR_NO_USERNAME);
 
         if(!$password = $this->input->post('password'))
-            $this->_throwError('400', self::ERROR_NO_PASSWORD);
+            $this->_throwError('400', ERROR_NO_PASSWORD);
 
         $this->load->model('customer');
         $userRow = $this->customer->get_by_username($username);
@@ -112,7 +105,7 @@ class AuthController extends MY_Controller
 
         $this->load->library('phpass_lib');
         if(!$this->phpass_lib->checkPassword($password, $userRow[0]->password))
-            $this->_throwError("403", self::ERROR_WRONG_USERNAME_PASSWORD);
+            $this->_throwError("403", ERROR_WRONG_USERNAME_PASSWORD);
 
         $this->load->model('admin_token');
         if($this->admin_token->count() > TOKEN_TABLE_LIMIT){

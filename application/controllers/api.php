@@ -7,13 +7,6 @@
 
 class API extends MY_Controller
 {
-    const ERROR_NO_TURTLES = "There are no turtles linked to that infoscreen";
-    const ERROR_NO_INFOSCREEN = "The infoscreen linked to your token does not exist";
-    const ERROR_NO_HOST_IN_POST = "No host found in POST";
-    const ERROR_NO_OWNERSHIP_SCREEN= "You don't own this screen!";
-    const ERROR_NO_OWNERSHIP_TURTLE= "You don't own this turtle!";
-    const ERROR_NO_DATA_IN_POST = "You didn't supply any data in the POST body!";
-
     /**
      *  Get all the infoscreens owned by the authenticated customer
      *
@@ -50,7 +43,7 @@ class API extends MY_Controller
             $this->_handleDatabaseException($e);
         }
         if($result[0]->customer_id != $this->authorization->customer_id)
-            $this->_throwError('403', self::ERROR_NO_OWNERSHIP_SCREEN);
+            $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
 
         $this->output->set_output(json_encode($result));
     }
@@ -77,12 +70,12 @@ class API extends MY_Controller
 
         $this->load->model('infoscreen');
         if(!$infoscreen = $this->infoscreen->get_by_hostname($host))
-            $this->_throwError('404', self::ERROR_NO_INFOSCREEN);
+            $this->_throwError('404', ERROR_NO_INFOSCREEN);
 
 
         $this->load->model('turtle');
         if(!$turtles = $this->turtle->get_by_screen_id_with_options($infoscreen[0]->id)){
-            $this->_throwError('404', self::ERROR_NO_TURTLES);
+            $this->_throwError('404', ERROR_NO_TURTLES);
         }
 
         $this->output->set_output(json_encode($turtles));
