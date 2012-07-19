@@ -26,7 +26,6 @@ define('DIR_WRITE_MODE', 0777);
 | These modes are used when working with fopen()/popen()
 |
 */
-
 define('FOPEN_READ',							'rb');
 define('FOPEN_READ_WRITE',						'r+b');
 define('FOPEN_WRITE_CREATE_DESTRUCTIVE',		'wb'); // truncates existing file data, use with care
@@ -36,20 +35,17 @@ define('FOPEN_READ_WRITE_CREATE',				'a+b');
 define('FOPEN_WRITE_CREATE_STRICT',				'xb');
 define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 
-
-
 /*
  * Authentication roles
  */
-
 define('AUTH_TABLET', 'tablet');
 define('AUTH_MOBILE', 'mobile');
 define('AUTH_ADMIN', 'admin');
+define('AUTH_SUPER_ADMIN', 'super_admin');
 
 /*
  * Error messages
  */
-
 define('ERROR_ROLE', 'You dont have the right permissions to access this resource!');
 define('ERROR_NO_URL_IN_POST', "No url has been specified in the POST body, add an url with 'url' as key.");
 define('ERROR_NO_TURTLE_ID_IN_POST', "No turtle id has been specified in the POST body, add it wich 'turtle' as key.");

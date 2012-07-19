@@ -8,8 +8,9 @@
  */
 class AuthController extends MY_Controller
 {
-    /*
-     * give access for mobile devices
+    /**
+     * The POST method to authorize as mobile (smartphone / tablet)
+     * Accessed by the url "http://example.com/auth/mobile"
      */
     function auth_post()
     {
@@ -46,62 +47,34 @@ class AuthController extends MY_Controller
         }
 
         try{
-            $token = $this->_storePublicToken($pin, $infoscreen[0]->id);
+            $token = $this->_storePublicToken($infoscreen[0]->id);
         }catch(ErrorException $e){
             $this->_handleDatabaseException($e);
         }
         $this->output->set_output(json_encode($token));
     }
 
-    private function _storePublicToken($pin, $screen_id){
-        $data['token'] = sha1(time() . uniqid('', true));
-        $data['screen_id'] = $screen_id;
-        $data['user_agent'] = $this->input->user_agent();
-        $data['ip'] = $this->input->ip_address();
-        if($this->_isTablet($pin)){
-            $this->_checkScreenForOthers($screen_id);
-            $data['role'] = AUTH_TABLET;
-            $data['expiration'] = Public_token::getTabletExpiration();
-        }else{
-            $data['role'] = AUTH_MOBILE;
-            $data['expiration'] = Public_token::getMobileExpiration();
-        }
-        $this->public_token->insert($data);
-        return $data['token'];
-    }
 
-    private function _isTablet(){
-        if(!$key = $this->input->post('dedicated_key'))
-            return false;
-
-        return $this->_verifykey($key);
-    }
-
-    private function _verifyKey($key){
-        if($key == $this->config->item('tablet_key'))
-            return true;
-
-        $this->_throwError('403', ERROR_DONT_MESS_WITH_KEY);
-    }
-
-    /*
-     * give access to admin
+    /**
+     * The POST method to login
+     * Accessed by the url "http://example.com/auth/admin"
      */
     function auth_login_post()
     {
+        // no username in post -> bad request
         if(!$username = $this->input->post('username'))
             $this->_throwError('400', ERROR_NO_USERNAME);
 
+        // no password in post -> bad request
         if(!$password = $this->input->post('password'))
             $this->_throwError('400', ERROR_NO_PASSWORD);
 
         $this->load->model('customer');
         $userRow = $this->customer->get_by_username($username);
 
-        if(count($userRow)<1){
-            $this->output->set_status_header('403');
-            return;
-        }
+        // no user found with that username -> forbidden
+        if(count($userRow)<1)
+            $this->_throwError('403', ERROR_WRONG_USERNAME_PASSWORD);
 
         $this->load->library('phpass_lib');
         if(!$this->phpass_lib->checkPassword($password, $userRow[0]->password))
@@ -115,7 +88,7 @@ class AuthController extends MY_Controller
         if($token = $this->input->post('token')){
             $dbtokens = $this->admin_token->get_by_token($token);
             if(count($dbtokens) == 1){
-                $this->public_token->delete($dbtokens[0]->id);
+                $this->admin_token->delete($dbtokens[0]->id);
             }
         }
 
@@ -123,7 +96,58 @@ class AuthController extends MY_Controller
         $this->output->set_output(json_encode($token));
     }
 
-    private function _checkScreenForOthers($screen_id)
+
+    /**
+     * Create a new entry in the admin_tokens table and return the newly created token
+     *
+     * @param $screen_id the screen that the new token references
+     * @return mixed the newly created token
+     */
+    private function _storePublicToken($screen_id){
+        $data['token'] = sha1(time() . uniqid('', true));
+        $data['screen_id'] = $screen_id;
+        $data['user_agent'] = $this->input->user_agent();
+        $data['ip'] = $this->input->ip_address();
+        if($this->_isTablet()){
+            $this->_RemoveOthersOnScreen($screen_id);
+            $data['role'] = AUTH_TABLET;
+            $data['expiration'] = Public_token::getTabletExpiration();
+        }else{
+            $data['role'] = AUTH_MOBILE;
+            $data['expiration'] = Public_token::getMobileExpiration();
+        }
+        $this->public_token->insert($data);
+        return $data['token'];
+    }
+
+    /**
+     * Check if the post body contains a tablet key
+     * If it does it checks the key with the key defined in the config files
+     *
+     * If the keys are not the same it sends an unauthorized message,
+     * if a wrong key is given there is probably someone trying to get authenticated as tablet without being one
+     *
+     * @return bool | true if the keys are the same
+     *              | false if there is no key in the post
+     */
+    private function _isTablet(){
+        if(!$key = $this->input->post('dedicated_key'))
+            return false;
+
+        if($key == $this->config->item('tablet_key'))
+            return true;
+
+        $this->_throwError('403', ERROR_DONT_MESS_WITH_KEY);
+    }
+
+    /**
+     * Check if there are other tablets authenticated on the given screen
+     * and remove them from the database
+     * Only 1 tablet allowed
+     *
+     * @param $screen_id the screen id
+     */
+    private function _RemoveOthersOnScreen($screen_id)
     {
         $this->load->model('public_token');
         $tokens = $this->public_token->get_by_screen_id($screen_id);
@@ -132,7 +156,13 @@ class AuthController extends MY_Controller
                 $this->public_token->delete($token->id);
         }
     }
-    
+
+    /**
+     * Create a new entry in the admin_tokens table and return the newly created token
+     *
+     * @param $user the users database info
+     * @return mixed the created token
+     */
     private function _storeAdminToken($user){
         $data['token'] = sha1(time() . uniqid('', true));
         $date['customer_id'] = $user->id;

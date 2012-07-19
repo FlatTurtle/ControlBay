@@ -24,20 +24,30 @@ class MY_Controller extends CI_Controller {
                     break;
             }
         }
-
-
     }
 
+    /**
+     * Helper function to return errors and set the HTTP status code
+     *
+     * @param $code the HTTP status code
+     * @param $message the message to return to the user
+     */
     protected function _throwError($code, $message){
         $this->output->set_status_header($code);
         echo $message;
         exit;
     }
 
+    /**
+     * Helper function to log database exceptions and exit
+     *
+     * @param $ex the thrown exception
+     */
     protected function _handleDatabaseException($ex){
         log_message("Database error: " . $ex->getMessage());
         exit;
     }
+
     /**
      * Remap methods with request method concatinated
      * @param string $method
