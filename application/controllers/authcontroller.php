@@ -78,10 +78,10 @@ class AuthController extends MY_Controller
     }
 
     private function _verifyKey($key){
-        if($key == trim($this->config->item('tablet_key')))
+        if($key == $this->config->item('tablet_key'))
             return true;
 
-        return false;
+        $this->_throwError('403', ERROR_DONT_MESS_WITH_KEY);
     }
 
     /*

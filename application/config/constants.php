@@ -65,7 +65,7 @@ define('ERROR_NO_USERNAME', "No username specified in the POST body, add it with
 define('ERROR_NO_PASSWORD', "No password specified in the POST body, add it with 'password' as key");
 define('ERROR_WRONG_USERNAME_PASSWORD', "The given username or password is wrong");
 define('ERROR_ACTION_DOES_NOT_EXIST', "This resource/action does not exist");
-
+define('ERROR_DONT_MESS_WITH_KEY', "Your dedicated key is wrong, stop trying to be a tablet");
 
 
 /*
