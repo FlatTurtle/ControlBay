@@ -45,14 +45,18 @@ define('FOPEN_READ_WRITE_CREATE_STRICT',		'x+b');
 define('AUTH_TABLET', 'tablet');
 define('AUTH_MOBILE', 'mobile');
 define('AUTH_ADMIN', 'admin');
-// too bad... not allowed
-// define('AUTH_ALL', array(AUTH_TABLET, AUTH_MOBILE, AUTH_ADMIN));
 
 /*
  * Error messages
  */
 
 define('ERROR_ROLE', 'You dont have the right permissions to access this resource!');
+
+
+/*
+ * Limit of token tables (cleanup of expired tokens will happen when this limit is reached)
+ */
+define('TOKEN_TABLE_LIMIT', 0);
 
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */

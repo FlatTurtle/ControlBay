@@ -109,6 +109,16 @@ abstract class REST_Model extends CI_Model
     }
 
     /**
+     * Get the number of rows in the table
+     *
+     * @return int : the number of rows in the table
+     */
+    public function count(){
+        $this->db->from($this->_table);
+        return $this->db->count_all_results();
+    }
+
+    /**
      * Validate data
      *
      * @param $data :row data

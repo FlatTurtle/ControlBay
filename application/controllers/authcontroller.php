@@ -40,6 +40,10 @@ class AuthController extends MY_Controller
             $this->_throwError('403', self::ERROR_WRONG_PIN);
 
         $this->load->model('public_token');
+        if($this->public_token->count() > TOKEN_TABLE_LIMIT){
+            $this->public_token->delete_expired();
+        }
+
         // if user already had a token remove it from the database
         if($token = $this->input->post('token')){
             $dbtokens = $this->public_token->get_by_token($token);
@@ -111,6 +115,9 @@ class AuthController extends MY_Controller
             $this->_throwError("403", self::ERROR_WRONG_USERNAME_PASSWORD);
 
         $this->load->model('admin_token');
+        if($this->admin_token->count() > TOKEN_TABLE_LIMIT){
+            $this->admin_token->delete_expired();
+        }
         // if user already had a token remove it from the database
         if($token = $this->input->post('token')){
             $dbtokens = $this->admin_token->get_by_token($token);
@@ -149,5 +156,4 @@ class AuthController extends MY_Controller
 
         return $data['token'];
     }
-
 }

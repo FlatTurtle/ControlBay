@@ -27,6 +27,19 @@ class Admin_token extends REST_Model
         // TODO: Implement filter() method.
     }
 
+    /**
+     * delete all expired tokens from the table
+     *
+     * @throws ErrorException when a database error occured
+     */
+    public function delete_expired(){
+        $now = new DateTime();
+        $this->db->where('expiration <', $now->format('Y-m-d H:i:s'));
+        $this->db->delete($this->_table);
+        if($this->db->_error_number())
+            throw new ErrorException($this->db->_error_message());
+    }
+
     public static function getAdminExpiration()
     {
         $datetime = new DateTime();

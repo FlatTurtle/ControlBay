@@ -23,6 +23,19 @@ class Public_token extends REST_model
             return $query->result();
     }
 
+    /**
+     * delete all expired tokens from the table
+     *
+     * @throws ErrorException when a database error occured
+     */
+    public function delete_expired(){
+        $now = new DateTime();
+        $this->db->where('expiration <', $now->format('Y-m-d H:i:s'));
+        $this->db->delete($this->_table);
+        if($this->db->_error_number())
+            throw new ErrorException($this->db->_error_message());
+    }
+
     static function getMobileExpiration(){
         $datetime = new DateTime();
         $interval = DateInterval::createFromDateString('10 minutes');
