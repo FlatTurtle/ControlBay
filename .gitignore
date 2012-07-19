@@ -9,6 +9,7 @@ application/config/testing/
 jaxl.pid
 jaxl.log
 application/config/xmpp.php
+index.php
 
 ######################
 # OS generated files #
