@@ -48,7 +48,7 @@ class Authorization
             if(count($infoscreen) == 1)
                 $this->host = $infoscreen[0]->hostname;
             else
-                $this->_throwError('403', '');
+                $this->_throwError('403', ERROR_INVALID_TOKEN);
 
         }else{
             $this->customer_id = $dbtoken->customer_id;
