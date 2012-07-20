@@ -42,13 +42,8 @@ class AuthController extends MY_Controller
             $this->public_token->delete_expired();
         }
 
-        // if user already had a token remove it from the database
-        if($token = $this->input->post('token')){
-            $dbtokens = $this->public_token->get_by_token($token);
-            if(count($dbtokens) == 1){
-                $this->public_token->delete($dbtokens[0]->id);
-            }
-        }
+        if($token = $this->input->post('token'))
+            $this->_deletePublicTokenIfExists($token);
 
         try{
             $token = $this->_storePublicToken($infoscreen[0]->id);
@@ -56,6 +51,18 @@ class AuthController extends MY_Controller
             $this->_handleDatabaseException($e);
         }
         $this->output->set_output(json_encode($token));
+    }
+
+    /**
+     * If user already had a token remove it from the database
+     *
+     * @param $token
+     */
+    private function _deletePublicTokenIfExists($token){
+        $dbtokens = $this->public_token->get_by_token($token);
+        if(count($dbtokens) == 1){
+            $this->public_token->delete($dbtokens[0]->id);
+        }
     }
 
 

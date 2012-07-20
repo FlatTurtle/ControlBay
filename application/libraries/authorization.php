@@ -21,13 +21,13 @@ class Authorization
     function authorize($rolesToEnforce){
         $ci =& get_instance();
         if(!$token = $ci->input->get_request_header('Authorization'))
-            $this->_throwUnauthorized();
+            $this->_throwError('400', ERROR_NO_TOKEN_IN_AUTHORIZATION);
 
         $ci->load->model('public_token');
         $ci->load->model('admin_token');
         if(!$dbtoken = $ci->public_token->get_by_token($token))
             if(!$dbtoken = $ci->admin_token->get_by_token($token))
-            $this->_throwUnauthorized();
+                $this->_throwError('403', ERROR_INVALID_TOKEN);
 
         $dbtoken = $dbtoken[0];
         if( $dbtoken->expiration < date('Y-m-d H:i:s', time()) ||
@@ -39,7 +39,7 @@ class Authorization
             }catch(ErrorException $e){
                 log_message("Database error: " . $e);
             }
-            $this->_throwUnauthorized();
+            $this->_throwError('403', ERROR_INVALID_TOKEN);
         }
 
         if(isset($dbtoken->screen_id)){
@@ -48,7 +48,7 @@ class Authorization
             if(count($infoscreen) == 1)
                 $this->host = $infoscreen[0]->hostname;
             else
-                $this->_throwUnauthorized();
+                $this->_throwError('403', '');
 
         }else{
             $this->customer_id = $dbtoken->customer_id;
@@ -56,7 +56,7 @@ class Authorization
         $this->role = $dbtoken->role;
 
         if(!$this->correctRole($this->role, $rolesToEnforce))
-            $this->_throwUnauthorized();
+            $this->_throwError('403', ERROR_ROLE);
 
         return true;
     }
@@ -80,13 +80,10 @@ class Authorization
         return false;
     }
 
-    /**
-     * Return an unauthorized message
-     */
-    private function _throwUnauthorized(){
+    private function _throwError($code, $message){
         $ci =& get_instance();
-        $ci->output->set_status_header('403');
-        echo json_encode(ERROR_ROLE);
+        $ci->output->set_status_header($code);
+        echo $message;
         exit;
     }
 }
