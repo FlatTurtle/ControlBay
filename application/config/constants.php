@@ -62,7 +62,7 @@ define('ERROR_NO_PASSWORD', "No password specified in the POST body, add it with
 define('ERROR_WRONG_USERNAME_PASSWORD', "The given username or password is wrong");
 define('ERROR_ACTION_DOES_NOT_EXIST', "This resource/action does not exist");
 define('ERROR_DONT_MESS_WITH_KEY', "Your dedicated key is wrong, stop trying to be a tablet");
-
+define('ERROR_TURTLE_ID_NOT_NUMERIC', "The turtle id you've given is not numeric");
 
 /*
  * Limit of token tables (cleanup of expired tokens will happen when this limit is reached)

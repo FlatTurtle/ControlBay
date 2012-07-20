@@ -1,5 +1,7 @@
 <?php
 /**
+ * An authorisation library to authorize for a specific role
+ *
  * © 2012 FlatTurtle bvba
  * Author: Nik Torfs
  * Licence: AGPLv3
@@ -8,9 +10,14 @@ class Authorization
 {
     public $role;
     public $host;
-    public $isAuthorized = false;
     public $customer_id;
 
+    /**
+     * Check if a request is authorized
+     *
+     * @param $rolesToEnforce the roles that are allowed
+     * @return true if the authorization is successful
+     */
     function authorize($rolesToEnforce){
         $ci =& get_instance();
         if(!$token = $ci->input->get_request_header('Authorization'))
@@ -51,9 +58,17 @@ class Authorization
         if(!$this->correctRole($this->role, $rolesToEnforce))
             $this->_throwUnauthorized();
 
-        $this->isAuthorized = true;
+        return true;
     }
 
+    /**
+     * Check if the user has the right role
+     *
+     * @param $userRole the role of the user
+     * @param $rolesToEnforce the allowed roles
+     * @return bool true if the user has the right role
+     *              false if the user has the wrong role
+     */
     function correctRole($userRole, $rolesToEnforce){
         if(!is_array($rolesToEnforce))
             $rolesToEnforce = array($rolesToEnforce);
@@ -65,6 +80,9 @@ class Authorization
         return false;
     }
 
+    /**
+     * Return an unauthorized message
+     */
     private function _throwUnauthorized(){
         $ci =& get_instance();
         $ci->output->set_status_header('403');

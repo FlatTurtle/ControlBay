@@ -8,9 +8,10 @@
 class API extends MY_Controller
 {
     /**
-     *  Get all the infoscreens owned by the authenticated customer
+     * Get all the infoscreens owned by the authenticated customer
      *
-     *  accessible by ADMIN role
+     * HTTP method: GET
+     * Roles allowed: admin
      */
     function infoscreens_get(){
         $this->authorization->authorize(AUTH_ADMIN);
@@ -31,7 +32,8 @@ class API extends MY_Controller
      *
      * @param $id
      *
-     *  accessible by ADMIN role
+     * HTTP method: GET
+     * Roles allowed: admin
      */
     function infoscreen_get($id){
         $this->authorization->authorize(AUTH_ADMIN);
@@ -51,7 +53,8 @@ class API extends MY_Controller
     /**
      * Change the details of the given infoscreen
      *
-     *  accessible by ADMIN role
+     * HTTP method: PUT
+     * Roles allowed: admin
      */
     function infoscreen_put(){
         $this->authorization->authorize(AUTH_ADMIN);
@@ -60,7 +63,8 @@ class API extends MY_Controller
     /**
      * Get all registered Turtles for the currently authenticated customer for a specific screen
      *
-     *  accessible by ALL roles
+     * HTTP method: GET
+     * Roles allowed: admin
      */
     function turtles_get($host = false){
         $this->authorization->authorize(array(AUTH_ADMIN, AUTH_MOBILE, AUTH_TABLET));
@@ -86,7 +90,8 @@ class API extends MY_Controller
      *
      * @param $id
      *
-     * accessible by ADMIN role
+     * HTTP method: GET
+     * Roles allowed: admin
      */
     function turtle_get($id){
         $this->authorization->authorize(AUTH_ADMIN);
@@ -95,7 +100,8 @@ class API extends MY_Controller
     /**
      * Register a new turtle to a screen owned by the authenticated customer
      *
-     * accessible by ADMIN role
+     * HTTP method: POST
+     * Roles allowed: admin
      */
     function turtle_post(){
         $this->authorization->authorize(AUTH_ADMIN);
@@ -104,7 +110,8 @@ class API extends MY_Controller
     /**
      * Remove a turtle from a screen owned by the authenticated customer
      *
-     * accessible by ADMIN role
+     * HTTP method: DELETE
+     * Roles allowed: admin
      */
     function turtle_delete(){
         $this->authorization->authorize(AUTH_ADMIN);
@@ -113,7 +120,8 @@ class API extends MY_Controller
     /**
      * Edit a turtle with turtle options included
      *
-     * accessible by ADMIN role
+     * HTTP method: PUT
+     * Roles allowed: admin
      */
     function turtle_put($id){
         $this->authorization->authorize(AUTH_ADMIN);

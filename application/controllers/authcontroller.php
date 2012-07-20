@@ -10,7 +10,11 @@ class AuthController extends MY_Controller
 {
     /**
      * The POST method to authorize as mobile (smartphone / tablet)
-     * Accessed by the url "http://example.com/auth/mobile"
+     *
+     * HTTP method: POST
+     * POST vars:   'pin': 'a pincode'
+     * Roles allowed: All
+     * Url: example.com/auth/mobile
      */
     function auth_post()
     {
@@ -56,8 +60,13 @@ class AuthController extends MY_Controller
 
 
     /**
-     * The POST method to login
-     * Accessed by the url "http://example.com/auth/admin"
+     * The basic authentication for admins
+     *
+     * HTTP method: POST
+     * POST vars:   'username' : 'the username'
+     *              'password' : 'the password'
+     * Roles allowed: ALL
+     * Url: example.com/auth/admin
      */
     function auth_login_post()
     {

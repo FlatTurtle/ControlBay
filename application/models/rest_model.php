@@ -7,14 +7,9 @@
 abstract class REST_Model extends CI_Model
 {
     /*
-     * table name
+     * Table name
      */
     protected $_table;
-
-    /*
-     * table fields
-     */
-    protected $_fields;
 
     /*
      * Optional validation rules
@@ -38,7 +33,7 @@ abstract class REST_Model extends CI_Model
      * @return bool
      */
     function insert($data){
-        if(!$this->_isValid($data)){
+        if(!$this->isValid($data)){
             return false;
         }
 
@@ -83,7 +78,7 @@ abstract class REST_Model extends CI_Model
      * @throws ErrorException : if a database error occurs
      */
     function update($id, $data){
-        if(!$this->_isValid($data)){
+        if(!$this->isValid($data)){
             throw new ErrorException("the given data is not valid");
         }
 
@@ -116,28 +111,6 @@ abstract class REST_Model extends CI_Model
     public function count(){
         $this->db->from($this->_table);
         return $this->db->count_all_results();
-    }
-
-    /**
-     * Validate data
-     *
-     * @param $data :row data
-     * @return bool :   true if the validation passed
-     *                  false if the validation failed
-     */
-    protected function _isValid($data)
-    {
-        if(empty($this->_validation_rules))
-            return true;
-
-        foreach ($data as $key => $val) {
-            $_POST[$key] = $val;
-        }
-
-        $this->load->library('form_validation');
-
-        $this->form_validation->set_rules($this->_validation_rules);
-        return $this->form_validation->run();
     }
 
     /**

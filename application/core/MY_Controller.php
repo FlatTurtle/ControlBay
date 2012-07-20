@@ -21,7 +21,7 @@ class MY_Controller extends CI_Controller {
     /**
      * Helper function to log database exceptions and exit
      *
-     * @param $ex the thrown exception
+     * @param $ex the database exception
      */
     protected function _handleDatabaseException($ex){
         log_message("Database error: " . $ex->getMessage());
