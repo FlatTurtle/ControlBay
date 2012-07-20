@@ -1,7 +1,7 @@
 Installation
 ===========
 
-1. Put this forlder in your www root
+1. Put this folder in your www root
 2. Edit the config files
     - first set the environment in index.php to development|testing|production
     - make a folder in application/config/ and name it the same as the environment
