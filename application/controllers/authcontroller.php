@@ -181,10 +181,8 @@ class AuthController extends MY_Controller
      */
     private function _storeAdminToken($user){
         $data['token'] = sha1(time() . uniqid('', true));
-        $date['customer_id'] = $user->id;
         $data['user_agent'] = $this->input->user_agent();
         $data['ip'] = $this->input->ip_address();
-        $data['role'] = AUTH_ADMIN;
         $data['expiration'] = Admin_token::getAdminExpiration();
         $data['customer_id'] = $user->id;
         try {

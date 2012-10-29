@@ -1,3 +1,4 @@
+
 #
 #############
 # CodeIgniter #
@@ -30,3 +31,5 @@ Thumbs.db
 .settings
 .buildpath
 .project
+/nbproject/private/
+/nbproject

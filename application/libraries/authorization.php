@@ -49,11 +49,11 @@ class Authorization
                 $this->host = $infoscreen[0]->hostname;
             else
                 $this->_throwError('403', ERROR_INVALID_TOKEN);
-
+			$this->role = $dbtoken->role;
         }else{
             $this->customer_id = $dbtoken->customer_id;
+			$this->role = AUTH_ADMIN;
         }
-        $this->role = $dbtoken->role;
 
         if(!$this->correctRole($this->role, $rolesToEnforce))
             $this->_throwError('403', ERROR_ROLE);
