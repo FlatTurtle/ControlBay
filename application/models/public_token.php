@@ -6,13 +6,13 @@ class Public_token extends REST_model
     function __construct()
     {
         parent::__construct();
-        $this->_table='public_tokens';
+        $this->_table='public_token';
     }
 
 
     public function get_by_screen_id($id)
     {
-        $query = $this->db->get_where($this->_table, array('screen_id' => $id));
+        $query = $this->db->get_where($this->_table, array('infoscreen_id' => $id));
         return $query->result();
     }
 

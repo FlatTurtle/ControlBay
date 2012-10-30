@@ -6,14 +6,7 @@ class Jobtab extends REST_Model
     function __construct()
     {
         parent::__construct();
-        $this->_table = 'jobtabs';
-    }
-
-
-    public function get_by_id($id)
-    {
-        $query = $this->db->get_where($this->_table, array('id' => $id));
-        return $query->result();
+        $this->_table = 'jobtab';
     }
 
     public function get_by_infoscreen_id($infoscreen_id)
@@ -36,6 +29,7 @@ class Jobtab extends REST_Model
      */
     function filter($data)
     {
-        // TODO: Implement filter() method.
+        unset($data['jobtab_id']);
+        return $data;
     }
 }

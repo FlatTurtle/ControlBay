@@ -6,19 +6,12 @@ class Job extends REST_Model
     function __construct()
     {
         parent::__construct();
-        $this->_table = 'jobs';
-    }
-
-
-    public function get_by_id($id)
-    {
-        $query = $this->db->get_where($this->_table, array('id' => $id));
-        return $query->result();
+        $this->_table = 'job';
     }
 
     public function get_by_jobname($jobname)
     {
-        $query = $this->db->get_where($this->_table, array('jobname' => $jobname));
+        $query = $this->db->get_where($this->_table, array('name' => $jobname));
         return $query->result();
     }
 
@@ -30,6 +23,7 @@ class Job extends REST_Model
      */
     function filter($data)
     {
-        // TODO: Implement filter() method.
+        unset($data['id']);
+        return $data;
     }
 }

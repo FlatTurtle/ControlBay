@@ -9,7 +9,7 @@
 class Authorization
 {
     public $role;
-    public $host;
+    public $alias;
     public $customer_id;
 
     /**
@@ -46,7 +46,7 @@ class Authorization
             $ci->load->model('infoscreen');
             $infoscreen = $ci->infoscreen->get($dbtoken->screen_id);
             if(count($infoscreen) == 1)
-                $this->host = $infoscreen[0]->hostname;
+                $this->alias = $infoscreen[0]->alias;
             else
                 $this->_throwError('403', ERROR_INVALID_TOKEN);
 			$this->role = $dbtoken->role;

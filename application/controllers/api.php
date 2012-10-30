@@ -14,6 +14,9 @@ class API extends MY_Controller
      * Roles allowed: admin
      */
     function infoscreens_get(){
+        if(!$this->input->get_request_header('Authorization')){
+			redirect('http://flatturtle.com');
+		}
         $this->authorization->authorize(AUTH_ADMIN);
 
         $this->load->model('infoscreen');
@@ -30,17 +33,17 @@ class API extends MY_Controller
     /**
      * Get a specific infoscreen owned by the authenticated customer
      *
-     * @param $id
+     * @param $alias
      *
      * HTTP method: GET
      * Roles allowed: admin
      */
-    function infoscreen_get($id){
+    function infoscreen_get($alias){
         $this->authorization->authorize(AUTH_ADMIN);
 
         $this->load->model('infoscreen');
         try{
-            $result = $this->infoscreen->get($id);
+            $result = $this->infoscreen->get_by_alias($alias);
         }catch(ErrorException $e){
             $this->_handleDatabaseException($e);
         }
@@ -53,10 +56,12 @@ class API extends MY_Controller
     /**
      * Change the details of the given infoscreen
      *
+     * @param $alias
+	 * 
      * HTTP method: PUT
      * Roles allowed: admin
      */
-    function infoscreen_put(){
+    function infoscreen_put($alias){
         $this->authorization->authorize(AUTH_ADMIN);
     }
 
@@ -66,14 +71,14 @@ class API extends MY_Controller
      * HTTP method: GET
      * Roles allowed: admin
      */
-    function turtles_get($host = false){
+    function turtles_get($alias = false){
         $this->authorization->authorize(array(AUTH_ADMIN, AUTH_MOBILE, AUTH_TABLET));
 
-        if(!$host)
-            $host = $this->authorization->host;
+        if(!$alias)
+            $alias = $this->authorization->alias;
 
         $this->load->model('infoscreen');
-        if(!$infoscreen = $this->infoscreen->get_by_hostname($host))
+        if(!$infoscreen = $this->infoscreen->get_by_alias($alias))
             $this->_throwError('404', ERROR_NO_INFOSCREEN);
 
 
@@ -126,4 +131,13 @@ class API extends MY_Controller
     function turtle_put($id){
         $this->authorization->authorize(AUTH_ADMIN);
     }
+	
+	/**
+	 * Export DISCS JSON 
+	 */
+	function export_get($alias){
+        $this->authorization->authorize(AUTH_ADMIN);
+		
+		// TODO: implement
+	}
 }

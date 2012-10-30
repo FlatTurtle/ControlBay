@@ -1,12 +1,9 @@
 <?php
 /**
- * Created by JetBrains PhpStorm.
- * User: gbostoen
- * Date: 7/12/12
- * Time: 11:37 AM
- * To change this template use File | Settings | File Templates.
+ * FlatTurtle bvba
+ * Authors: gbostoen, michiel
  */
-class AuthController extends MY_Controller
+class Auth extends MY_Controller
 {
     /**
      * The POST method to authorize as mobile (smartphone / tablet)
@@ -16,7 +13,7 @@ class AuthController extends MY_Controller
      * Roles allowed: All
      * Url: example.com/auth/mobile
      */
-    function auth_post()
+    function mobile_post()
     {
         // no pin parameter in POST -> 400 bad request
         if(!$pin = $this->input->post('pin'))
@@ -52,21 +49,8 @@ class AuthController extends MY_Controller
         }
         $this->output->set_output(json_encode($token));
     }
-
-    /**
-     * If user already had a token remove it from the database
-     *
-     * @param $token
-     */
-    private function _deletePublicTokenIfExists($token){
-        $dbtokens = $this->public_token->get_by_token($token);
-        if(count($dbtokens) == 1){
-            $this->public_token->delete($dbtokens[0]->id);
-        }
-    }
-
-
-    /**
+	
+	/**
      * The basic authentication for admins
      *
      * HTTP method: POST
@@ -75,7 +59,7 @@ class AuthController extends MY_Controller
      * Roles allowed: ALL
      * Url: example.com/auth/admin
      */
-    function auth_login_post()
+    function admin_post()
     {
         // no username in post -> bad request
         if(!$username = $this->input->post('username'))
@@ -114,6 +98,18 @@ class AuthController extends MY_Controller
 
 
     /**
+     * If user already had a token remove it from the database
+     *
+     * @param $token
+     */
+    private function _deletePublicTokenIfExists($token){
+        $dbtokens = $this->public_token->get_by_token($token);
+        if(count($dbtokens) == 1){
+            $this->public_token->delete($dbtokens[0]->id);
+        }
+    }
+
+    /**
      * Create a new entry in the admin_tokens table and return the newly created token
      *
      * @param $screen_id the screen that the new token references
@@ -125,7 +121,7 @@ class AuthController extends MY_Controller
         $data['user_agent'] = $this->input->user_agent();
         $data['ip'] = $this->input->ip_address();
         if($this->_isTablet()){
-            $this->_RemoveOthersOnScreen($screen_id);
+            $this->_removeOthersOnScreen($screen_id);
             $data['role'] = AUTH_TABLET;
             $data['expiration'] = Public_token::getTabletExpiration();
         }else{
@@ -163,7 +159,7 @@ class AuthController extends MY_Controller
      *
      * @param $screen_id the screen id
      */
-    private function _RemoveOthersOnScreen($screen_id)
+    private function _removeOthersOnScreen($screen_id)
     {
         $this->load->model('public_token');
         $tokens = $this->public_token->get_by_screen_id($screen_id);

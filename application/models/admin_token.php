@@ -6,7 +6,7 @@ class Admin_token extends REST_Model
     function __construct()
     {
         parent::__construct();
-        $this->_table = 'admin_tokens';
+        $this->_table = 'admin_token';
     }
 
 
@@ -24,7 +24,8 @@ class Admin_token extends REST_Model
      */
     function filter($data)
     {
-        // TODO: Implement filter() method.
+        unset($data['id']);
+        return $data;
     }
 
     /**

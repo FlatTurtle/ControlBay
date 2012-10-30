@@ -6,7 +6,7 @@ class Customer extends REST_Model
     function __construct()
     {
         parent::__construct();
-        $this->_table = 'customers';
+        $this->_table = 'customer';
     }
 
     public function get_by_username($username)

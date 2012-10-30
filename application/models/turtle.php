@@ -6,14 +6,15 @@ class Turtle extends REST_model
     function __construct()
     {
         parent::__construct();
-        $this->_table = 'turtles';
+        $this->_table = 'turtle_link';
     }
 
 
     public function get_by_screen_id_with_options($screen_id)
     {
         $this->db->where('x.infoscreen_id', $screen_id);
-        $this->db->join('turtle_options y', 'x.id = y.turtle_id', 'left');
+        $this->db->join('turtle y', 'x.turtle_id = y.id', 'left');
+        $this->db->join('turtle_option z', 'x.turtle_option_id = z.id', 'left');
         $query = $this->db->get($this->_table . ' x');
         if($this->db->_error_number())
             throw new ErrorException($this->db->_error_message());
@@ -45,6 +46,8 @@ class Turtle extends REST_model
     function filter($data)
     {
         unset($data['id']);
+        unset($data['turtle_id']);
+        unset($data['turtle_option_id']);
         unset($data['infoscreen_id']);
         unset($data['module']);
         return $data;

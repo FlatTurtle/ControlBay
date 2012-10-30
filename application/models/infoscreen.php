@@ -7,7 +7,7 @@ class InfoScreen extends REST_model
     function __construct()
     {
         parent::__construct();
-        $this->_table = 'infoscreens';
+        $this->_table = 'infoscreen';
     }
 
     public function get_by_customer_id($customer_id)
@@ -17,15 +17,7 @@ class InfoScreen extends REST_model
             throw new ErrorException($this->db->_error_message());
         return $query->result();
     }
-
-    public function get_by_id($id)
-    {
-        $query = $this->db->get_where($this->_table, array('id' => $id));
-        if($this->db->_error_number())
-            throw new ErrorException($this->db->_error_message());
-        return $query->result();
-    }
-
+	
     public function get_by_alias($alias)
     {
         $query = $this->db->get_where($this->_table, array('alias' => $alias));

@@ -6,7 +6,7 @@ class Turtle_options extends REST_model
     function __construct()
     {
         parent::__construct();
-        $this->_table('turtle_options');
+        $this->_table('turtle_option');
     }
 
 
@@ -18,7 +18,7 @@ class Turtle_options extends REST_model
      */
     function filter($data)
     {
-        unset($data['turtle_id']);
+        unset($data['id']);
         unset($data['key']);
         return $data;
     }

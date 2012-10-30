@@ -39,9 +39,13 @@
 */
 
 $route['404_override'] = '';
-$route['(plugin|turtle)/(\w+)/(\w+)/*(.*)'] = "$1/$2/$3/$4";
-$route['auth/mobile/*'] = "authcontroller/auth";
-$route['auth/admin/*'] = "authcontroller/auth_login";
+$route['default_controller'] = 'api/infoscreens';
+$route['auth/(.*)'] = 'auth/$1';
+// Routes for aliases
+$route['(.*)/turtles'] = 'api/turtles/$1';
+$route['(.*)/turtles/(.*)'] = 'api/turtle/$1';
+$route['(.*).json'] = 'api/export/$1';
+$route['(.*)'] = 'api/infoscreen/$1';
 
 /* End of file routes.php */
 /* Location: ./application/config/routes.php */
