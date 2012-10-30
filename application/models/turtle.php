@@ -23,15 +23,8 @@ class Turtle extends REST_model
 
     public function get_by_screen_id($screen_id)
     {
+        $this->db->join('turtle y', 'x.turtle_id = y.id', 'left');
         $query = $this->db->get_where($this->_table, array('infoscreen_id' => $screen_id));
-        if($this->db->_error_number())
-            throw new ErrorException($this->db->_error_message());
-        return $query->result();
-    }
-
-    public function get_by_customer_id($customer_id)
-    {
-        $query = $this->db->get_where($this->_table, array('customer_id' => $customer_id));
         if($this->db->_error_number())
             throw new ErrorException($this->db->_error_message());
         return $query->result();

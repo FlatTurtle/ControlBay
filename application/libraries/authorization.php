@@ -42,9 +42,9 @@ class Authorization
             $this->_throwError('403', ERROR_INVALID_TOKEN);
         }
 
-        if(isset($dbtoken->screen_id)){
+        if(isset($dbtoken->infoscreen_id)){
             $ci->load->model('infoscreen');
-            $infoscreen = $ci->infoscreen->get($dbtoken->screen_id);
+            $infoscreen = $ci->infoscreen->get($dbtoken->infoscreen_id);
             if(count($infoscreen) == 1)
                 $this->alias = $infoscreen[0]->alias;
             else

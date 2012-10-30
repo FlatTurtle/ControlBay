@@ -43,8 +43,8 @@ $route['default_controller'] = 'api/infoscreens';
 $route['auth/(.*)'] = 'auth/$1';
 // Routes for aliases
 $route['(.*)/turtles'] = 'api/turtles/$1';
-$route['(.*)/turtles/(.*)'] = 'api/turtle/$1';
-$route['(.*).json'] = 'api/export/$1';
+$route['(.*)/turtles/(.*)'] = 'api/turtle/$1/$2';
+$route['(.*).json'] = 'api/export_json/$1';
 $route['(.*)'] = 'api/infoscreen/$1';
 
 /* End of file routes.php */

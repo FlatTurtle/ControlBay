@@ -1,7 +1,7 @@
 <?php
 /**
  * © 2012 FlatTurtle bvba
- * Author: Nik Torfs
+ * Author: Nik Torfs, Michiel Vancoillie
  * Licence: AGPLv3
  */
 
@@ -47,6 +47,8 @@ class API extends MY_Controller
         }catch(ErrorException $e){
             $this->_handleDatabaseException($e);
         }
+		
+		// Check ownership
         if($result[0]->customer_id != $this->authorization->customer_id)
             $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
 
@@ -55,8 +57,6 @@ class API extends MY_Controller
 
     /**
      * Change the details of the given infoscreen
-     *
-     * @param $alias
 	 * 
      * HTTP method: PUT
      * Roles allowed: admin
@@ -80,6 +80,13 @@ class API extends MY_Controller
         $this->load->model('infoscreen');
         if(!$infoscreen = $this->infoscreen->get_by_alias($alias))
             $this->_throwError('404', ERROR_NO_INFOSCREEN);
+		
+		// Check ownership
+		if($infoscreen[0]->customer_id != $this->authorization->customer_id){
+			if($infoscreen[0]->alias != $this->authorization->alias){
+				$this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
+			}
+		}
 
 
         $this->load->model('turtle');
@@ -93,12 +100,10 @@ class API extends MY_Controller
     /**
      * Get a specific turtle with turtle options registered to the currently authenticated customer
      *
-     * @param $id
-     *
      * HTTP method: GET
      * Roles allowed: admin
      */
-    function turtle_get($id){
+    function turtle_get($alias, $id){
         $this->authorization->authorize(AUTH_ADMIN);
     }
 
@@ -108,7 +113,7 @@ class API extends MY_Controller
      * HTTP method: POST
      * Roles allowed: admin
      */
-    function turtle_post(){
+    function turtle_post($alias, $id){
         $this->authorization->authorize(AUTH_ADMIN);
     }
 
@@ -118,7 +123,7 @@ class API extends MY_Controller
      * HTTP method: DELETE
      * Roles allowed: admin
      */
-    function turtle_delete(){
+    function turtle_delete($alias, $id){
         $this->authorization->authorize(AUTH_ADMIN);
     }
 
@@ -128,16 +133,27 @@ class API extends MY_Controller
      * HTTP method: PUT
      * Roles allowed: admin
      */
-    function turtle_put($id){
+    function turtle_put($alias, $id){
         $this->authorization->authorize(AUTH_ADMIN);
     }
 	
 	/**
 	 * Export DISCS JSON 
 	 */
-	function export_get($alias){
+	function export_json_get($alias){
         $this->authorization->authorize(AUTH_ADMIN);
 		
-		// TODO: implement
+		$this->load->model('infoscreen');
+        try{
+            $result = $this->infoscreen->get_by_alias($alias);
+        }catch(ErrorException $e){
+            $this->_handleDatabaseException($e);
+        }
+		
+		// Check ownership
+        if($result[0]->customer_id != $this->authorization->customer_id)
+            $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
+
+        $this->output->set_output($this->infoscreen->export_json($alias));
 	}
 }
