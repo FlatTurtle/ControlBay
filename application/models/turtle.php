@@ -7,6 +7,7 @@ class Turtle extends REST_model
     {
         parent::__construct();
         $this->_table = 'turtle_link';
+		$this->load->model('turtle_option');
     }
 
 
@@ -14,11 +15,14 @@ class Turtle extends REST_model
     {
         $this->db->where('x.infoscreen_id', $screen_id);
         $this->db->join('turtle y', 'x.turtle_id = y.id', 'left');
-        $this->db->join('turtle_option z', 'x.turtle_option_id = z.id', 'left');
         $query = $this->db->get($this->_table . ' x');
         if($this->db->_error_number())
             throw new ErrorException($this->db->_error_message());
-        return $query->result();
+		$result = $query->result();
+		foreach($result as $turtle){
+			$turtle->options = $this->turtle_option->get_for_turtle($turtle->id);
+		}
+        return $result;
     }
 
     public function get_by_screen_id($screen_id)
