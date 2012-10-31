@@ -71,7 +71,7 @@ class InfoScreen extends REST_model
 		$discs['interface'] = $result;
 	
 		$this->load->model('turtle');
-		$turtles = $this->turtle->get_by_screen_id_with_options($result->id);
+		$turtles = $this->turtle->get_by_infoscreen_id_with_options($result->id);
 		foreach($turtles as $turtle){
 			$turtle_id = $turtle->id;
 			unset($turtle->id);
@@ -85,7 +85,7 @@ class InfoScreen extends REST_model
 		}
 
 		$this->load->model('pane');
-		$panes = $this->pane->get_by_screen_id($result->id);
+		$panes = $this->pane->get_by_infoscreen_id($result->id);
 		foreach($panes as $pane){
 			$pane_id = $pane->id;
 			unset($pane->id);
@@ -95,6 +95,19 @@ class InfoScreen extends REST_model
 					
 			$discs['panes']->{$pane_id} = $pane;  
 		}
+		
+		
+		$this->load->model('jobtab');
+		$jobs = $this->jobtab->get_by_infoscreen_id($result->id);
+		foreach($jobs as $job){
+			$job_id = $job->id;
+			unset($job->id);
+			unset($job->infoscreen_id);
+			unset($job->job_id);
+					
+			$discs['jobs']->{$job_id} = $job;  
+		}
+		
 		$discs['plugins'] = null;
 		
 		

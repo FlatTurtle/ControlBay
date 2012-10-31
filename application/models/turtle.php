@@ -11,7 +11,7 @@ class Turtle extends REST_model
     }
 
 
-    public function get_by_screen_id_with_options($screen_id)
+    public function get_by_infoscreen_id_with_options($screen_id)
     {
         $this->db->where('x.infoscreen_id', $screen_id);
         $this->db->join('turtle y', 'x.turtle_id = y.id', 'left');
@@ -25,7 +25,7 @@ class Turtle extends REST_model
         return $result;
     }
 
-    public function get_by_screen_id($screen_id)
+    public function get_by_infoscreen_id($screen_id)
     {
         $this->db->join('turtle y', 'x.turtle_id = y.id', 'left');
         $query = $this->db->get_where($this->_table, array('infoscreen_id' => $screen_id));

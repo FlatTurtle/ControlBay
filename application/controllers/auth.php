@@ -161,7 +161,7 @@ class Auth extends MY_Controller
     private function _removeOthersOnScreen($screen_id)
     {
         $this->load->model('public_token');
-        $tokens = $this->public_token->get_by_screen_id($screen_id);
+        $tokens = $this->public_token->get_by_infoscreen_id($screen_id);
         foreach($tokens as $token){
             if($token->role == AUTH_TABLET)
                 $this->public_token->delete($token->id);

@@ -10,7 +10,7 @@ class Public_token extends REST_model
     }
 
 
-    public function get_by_screen_id($id)
+    public function get_by_infoscreen_id($id)
     {
         $query = $this->db->get_where($this->_table, array('infoscreen_id' => $id));
         return $query->result();

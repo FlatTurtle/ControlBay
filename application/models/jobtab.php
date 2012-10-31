@@ -11,13 +11,9 @@ class Jobtab extends REST_Model
 
     public function get_by_infoscreen_id($infoscreen_id)
     {
-        $query = $this->db->get_where($this->_table, array('infoscreen_id' => $infoscreen_id));
-        return $query->result();
-    }
-
-    public function get_by_job_id($job_id)
-    {
-        $query = $this->db->get_where($this->_table, array('job_id' => $job_id));
+        $query = $this->db->where('x.infoscreen_id', $infoscreen_id);
+		$this->db->join('job y','y.id = x.job_id','left');
+        $query = $this->db->get($this->_table . ' x');
         return $query->result();
     }
 

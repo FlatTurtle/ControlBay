@@ -69,7 +69,7 @@ class API extends MY_Controller
      * Roles allowed: admin
      */
     function panes_get($alias = false){
-        $this->authorization->authorize(array(AUTH_ADMIN, AUTH_MOBILE, AUTH_TABLET));
+        $this->authorization->authorize(array(AUTH_ADMIN));
 
         if(!$alias)
             $alias = $this->authorization->alias;
@@ -82,7 +82,7 @@ class API extends MY_Controller
             $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
 
         $this->load->model('pane');
-        if(!$panes = $this->pane->get_by_screen_id($infoscreen[0]->id)){
+        if(!$panes = $this->pane->get_by_infoscreen_id($infoscreen[0]->id)){
             $this->_throwError('404', ERROR_NO_TURTLES);
         }
 
@@ -109,7 +109,7 @@ class API extends MY_Controller
             $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
 
         $this->load->model('turtle');
-        if(!$turtles = $this->turtle->get_by_screen_id_with_options($infoscreen[0]->id)){
+        if(!$turtles = $this->turtle->get_by_infoscreen_id_with_options($infoscreen[0]->id)){
             $this->_throwError('404', ERROR_NO_TURTLES);
         }
 
@@ -162,6 +162,34 @@ class API extends MY_Controller
 	function redirect_view($alias){
 		redirect(base_url().$alias.'/view/stable');
 	}
+	
+	/**
+     * Get all jobs for the currently authenticated customer for a specific screen
+     *
+     * HTTP method: GET
+     * Roles allowed: admin
+     */
+    function jobs_get($alias = false){
+        $this->authorization->authorize(array(AUTH_ADMIN, AUTH_MOBILE, AUTH_TABLET));
+
+        if(!$alias)
+            $alias = $this->authorization->alias;
+		
+        if(!$infoscreen = $this->infoscreen->get_by_alias($alias))
+            $this->_throwError('404', ERROR_NO_INFOSCREEN);
+		
+		// Check ownership
+        if(!$this->infoscreen->isOwner($alias))
+            $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
+
+        $this->load->model('jobtab');
+        if(!$panes = $this->jobtab->get_by_infoscreen_id($infoscreen[0]->id)){
+            $this->_throwError('404', ERROR_NO_TURTLES);
+        }
+
+        $this->output->set_output(json_encode($panes));
+    }
+
 	
 	/**
 	 * Export DISCS JSON 
