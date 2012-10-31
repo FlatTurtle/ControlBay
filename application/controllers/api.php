@@ -61,6 +61,33 @@ class API extends MY_Controller
     function infoscreen_put($alias){
         $this->authorization->authorize(AUTH_ADMIN);
     }
+	
+	  /**
+     * Get all registered panes for the currently authenticated customer for a specific screen
+     *
+     * HTTP method: GET
+     * Roles allowed: admin
+     */
+    function panes_get($alias = false){
+        $this->authorization->authorize(array(AUTH_ADMIN, AUTH_MOBILE, AUTH_TABLET));
+
+        if(!$alias)
+            $alias = $this->authorization->alias;
+		
+        if(!$infoscreen = $this->infoscreen->get_by_alias($alias))
+            $this->_throwError('404', ERROR_NO_INFOSCREEN);
+		
+		// Check ownership
+        if(!$this->infoscreen->isOwner($alias))
+            $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
+
+        $this->load->model('pane');
+        if(!$panes = $this->pane->get_by_screen_id($infoscreen[0]->id)){
+            $this->_throwError('404', ERROR_NO_TURTLES);
+        }
+
+        $this->output->set_output(json_encode($panes));
+    }
 
     /**
      * Get all registered Turtles for the currently authenticated customer for a specific screen
