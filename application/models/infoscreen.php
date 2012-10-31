@@ -79,10 +79,20 @@ class InfoScreen extends REST_model
 			unset($turtle->turtle_id);
 			unset($turtle->turtle_option_id);
 					
-			$discs['modules']->{$turtle_id} = $turtle;  
+			$discs['turtles']->{$turtle_id} = $turtle;  
 		}
 
-		$discs['panes'] = null;
+		$this->load->model('pane');
+		$panes = $this->pane->get_by_screen_id($result->id);
+		foreach($panes as $pane){
+			$pane_id = $pane->id;
+			unset($pane->id);
+			unset($pane->infoscreen_id);
+			unset($pane->turtle_id);
+			unset($pane->turtle_option_id);
+					
+			$discs['panes']->{$pane_id} = $pane;  
+		}
 		$discs['plugins'] = null;
 		
 		

@@ -145,7 +145,8 @@ class API extends MY_Controller
         }catch(ErrorException $e){
             $this->_handleDatabaseException($e);
         }
-
+		
+		$this->output->set_header('Access-Control-Allow-Origin: *');
         $this->output->set_output($this->infoscreen->export_json($alias));
 	}
 }
