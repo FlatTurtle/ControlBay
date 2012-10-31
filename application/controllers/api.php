@@ -140,17 +140,11 @@ class API extends MY_Controller
 	 * Export DISCS JSON 
 	 */
 	function export_json_get($alias){
-        $this->authorization->authorize(AUTH_ADMIN);
-		
         try{
             $result = $this->infoscreen->get_by_alias($alias);
         }catch(ErrorException $e){
             $this->_handleDatabaseException($e);
         }
-		
-		// Check ownership
-        if($result[0]->customer_id != $this->authorization->customer_id)
-            $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
 
         $this->output->set_output($this->infoscreen->export_json($alias));
 	}

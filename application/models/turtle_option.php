@@ -6,12 +6,11 @@ class Turtle_option extends REST_Model
     function __construct()
     {
         parent::__construct();
-        $this->_table = 'turtle_link';
+        $this->_table = 'turtle_option';
     }
 
 	public function get_for_turtle($turtle_id){
-        $this->db->where('x.turtle_id', $turtle_id);
-        $this->db->join('turtle_option y', 'x.turtle_option_id = y.id', 'left');
+        $this->db->where('x.turtle_instance_id', $turtle_id);
         $query = $this->db->get($this->_table . ' x');
         if($this->db->_error_number())
             throw new ErrorException($this->db->_error_message());

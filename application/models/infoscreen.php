@@ -79,7 +79,7 @@ class InfoScreen extends REST_model
 			unset($turtle->turtle_id);
 			unset($turtle->turtle_option_id);
 					
-			$discs['turtles']->{$turtle_id} = $turtle;  
+			$discs['modules']->{$turtle_id} = $turtle;  
 		}
 
 		$discs['panes'] = null;

@@ -6,7 +6,7 @@ class Turtle extends REST_model
     function __construct()
     {
         parent::__construct();
-        $this->_table = 'turtle_link';
+        $this->_table = 'turtle_instance';
 		$this->load->model('turtle_option');
     }
 
@@ -44,7 +44,7 @@ class Turtle extends REST_model
     {
         unset($data['id']);
         unset($data['turtle_id']);
-        unset($data['turtle_option_id']);
+        unset($data['turtle_instance_id']);
         unset($data['infoscreen_id']);
         unset($data['module']);
         return $data;
