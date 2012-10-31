@@ -1,7 +1,7 @@
 <?php
 /**
  * © 2012 FlatTurtle bvba
- * Author: Nik Torfs
+ * Author: Nik Torfs, Michiel Vancoillie
  * Licence: AGPLv3
  */
 class Message extends MY_Controller
@@ -13,30 +13,35 @@ class Message extends MY_Controller
      * HTTP method: POST
      * POST vars: 'message' : 'some message'
      * Roles allowed: admin
-     * Url: example.com/plugin/message/add
      */
-    function add_post(){
+    function index_post($alias){
         $this->authorization->authorize(AUTH_ADMIN);
 
         if(!$message = $this->input->post('message'))
             $this->_throwError('400', ERROR_NO_MESSAGE_IN_POST);
 		
-        if(!$host = $this->input->post('host'))
-            $this->_throwError('400', "No hostname given");
+		$infoscreen = $this->infoscreen->get_by_alias($alias);
+		// Check ownership
+        if(!$this->infoscreen->isOwner($alias))
+            $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
 
-        $this->xmpp_lib->sendMessage($host, "Message.add('".$message."');");
+        $this->xmpp_lib->sendMessage($infoscreen[0]->hostname, "Message.add('".$message."');");
     }
 
     /**
      * Authorizes a call to remove a message from the screen
      * Translates it to xmmp
      *
-     * HTTP method: POST
+     * HTTP method: DELETE
      * Roles allowed: admin
      */
-    function remove_post(){
-        $this->authorization->authorize($this->authorization->host, AUTH_ADMIN);
-
-        $this->xmpp_lib->sendMessage($this->_host, "Message.remove();");
+    function index_delete($alias){
+        $this->authorization->authorize(AUTH_ADMIN);		
+		$infoscreen = $this->infoscreen->get_by_alias($alias);
+		// Check ownership
+        if(!$this->infoscreen->isOwner($alias))
+            $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
+		
+        $this->xmpp_lib->sendMessage($infoscreen[0]->hostname, "Message.remove();");
     }
 }

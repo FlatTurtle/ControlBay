@@ -1,7 +1,7 @@
 <?php
 /**
  * © 2012 FlatTurtle bvba
- * Author: Nik Torfs
+ * Author: Nik Torfs, Michiel Vancoillie
  * Licence: AGPLv3
  */
 class Switcher extends MY_Controller
@@ -12,15 +12,19 @@ class Switcher extends MY_Controller
      *
      * HTTP method: POST
      * Roles allowed: admin
-     * Url: example.com/plugin/switcher/focus
      */
-    function focus_post(){
+    function focus_post($alias){
         $this->authorization->authorize(AUTH_ADMIN);
 
         if(!$id = $this->input->post('turtle'))
             $this->_throwError('400', ERROR_NO_TURTLE_ID_IN_POST);
 
-        $this->xmpp_lib->sendMessage($this->authorization->host, "Switcher.turtle(" . $$id . ");");
+        $infoscreen = $this->infoscreen->get_by_alias($alias);
+		// Check ownership
+        if(!$this->infoscreen->isOwner($alias))
+            $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
+
+        $this->xmpp_lib->sendMessage($infoscreen[0]->hostname, "Switcher.turtle(" . $id . ");");
     }
 
     /**
@@ -29,12 +33,16 @@ class Switcher extends MY_Controller
      *
      * HTTP method: POST
      * Roles allowed: admin
-     * Url: example.com/plugin/switcher/rotate
      */
-    function rotate_post(){
+    function rotate_post($alias){
         $this->authorization->authorize(AUTH_ADMIN);
 
-        $this->xmpp_lib->sendMessage($this->authorization->host, "Switcher.rotate();");
+        $infoscreen = $this->infoscreen->get_by_alias($alias);
+		// Check ownership
+        if(!$this->infoscreen->isOwner($alias))
+            $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
+
+        $this->xmpp_lib->sendMessage($infoscreen[0]->hostname, "Switcher.rotate();");
     }
 
     /**
@@ -45,10 +53,15 @@ class Switcher extends MY_Controller
      * Roles allowed: admin
      * Url: example.com/plugin/switcher/start
      */
-    function start_post(){
+    function start_post($alias){
         $this->authorization->authorize(AUTH_ADMIN);
 
-        $this->xmpp_lib->sendMessage($this->authorization->host, "Switcher.start();");
+        $infoscreen = $this->infoscreen->get_by_alias($alias);
+		// Check ownership
+        if(!$this->infoscreen->isOwner($alias))
+            $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
+
+        $this->xmpp_lib->sendMessage($infoscreen[0]->hostname, "Switcher.start();");
     }
 
     /**
@@ -57,11 +70,15 @@ class Switcher extends MY_Controller
      *
      * HTTP method: POST
      * Roles allowed: admin
-     * Url: example.com/plugin/switcher/stop
      */
-    function stop_post($host){
+    function stop_post($alias){
         $this->authorization->authorize(AUTH_ADMIN);
 
-        $this->xmpp_lib->sendMessage($host, "Switcher.stop();");
+        $infoscreen = $this->infoscreen->get_by_alias($alias);
+		// Check ownership
+        if(!$this->infoscreen->isOwner($alias))
+            $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
+
+        $this->xmpp_lib->sendMessage($infoscreen[0]->hostname, "Switcher.stop();");
     }
 }

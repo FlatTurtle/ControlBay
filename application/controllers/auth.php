@@ -23,7 +23,6 @@ class Auth extends MY_Controller
         if(!is_numeric($pin))
             $this->_throwError('400', ERROR_PIN_NOT_NUM);
 
-        $this->load->model('infoscreen');
         try{
             $infoscreen = $this->infoscreen->get_by_pin($pin);
         }catch(ErrorException $e){

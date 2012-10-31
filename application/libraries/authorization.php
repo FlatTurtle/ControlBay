@@ -43,7 +43,6 @@ class Authorization
         }
 
         if(isset($dbtoken->infoscreen_id)){
-            $ci->load->model('infoscreen');
             $infoscreen = $ci->infoscreen->get($dbtoken->infoscreen_id);
             if(count($infoscreen) == 1)
                 $this->alias = $infoscreen[0]->alias;

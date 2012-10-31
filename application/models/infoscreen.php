@@ -9,6 +9,16 @@ class InfoScreen extends REST_model
         parent::__construct();
         $this->_table = 'infoscreen';
     }
+	
+	public function isOwner($alias){
+		$result = $this->get_by_alias($alias);
+        if($result[0]->customer_id != $this->authorization->customer_id){
+			if($result[0]->alias != $this->authorization->alias){
+				return false;
+			}
+		}
+		return true;
+	}
 
     public function get_by_customer_id($customer_id)
     {

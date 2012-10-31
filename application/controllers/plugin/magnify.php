@@ -1,7 +1,7 @@
 <?php
 /**
  * © 2012 FlatTurtle bvba
- * Author: Nik Torfs
+ * Author: Nik Torfs, Michiel Vancoillie
  * Licence: AGPLv3
  */
 class Magnify extends MY_Controller
@@ -13,9 +13,8 @@ class Magnify extends MY_Controller
      * HTTP method: POST
      * POST vars: 'turtle' : 'a turtle id'
      * Roles allowed: mobile, tablet, admin
-     * Url: example.com/plugin/magnify/turtle
      */
-    function turtle_post(){
+    function index_post($alias){
         $this->authorization->authorize(array(AUTH_MOBILE, AUTH_TABLET, AUTH_ADMIN));
 
         if(!$turtle = $this->input->post('turtle'))
@@ -23,7 +22,12 @@ class Magnify extends MY_Controller
 
         if(!is_numeric($turtle))
             $this->_throwError('400', ERROR_TURTLE_ID_NOT_NUMERIC);
+		
+		$infoscreen = $this->infoscreen->get_by_alias($alias);
+		// Check ownership
+        if(!$this->infoscreen->isOwner($alias))
+            $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
 
-        $this->xmpp_lib->sendMessage($this->authorization->host, "Magnify.turtle(".$turtle.");");
+        $this->xmpp_lib->sendMessage($infoscreen[0]->hostname, "Magnify.turtle(".$turtle.");");
     }
 }

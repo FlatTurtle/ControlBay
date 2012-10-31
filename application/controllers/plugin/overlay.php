@@ -1,7 +1,7 @@
 <?php
 /**
  * © 2012 FlatTurtle bvba
- * Author: Nik Torfs
+ * Author: Nik Torfs, Michiel Vancoillie
  * Licence: AGPLv3
  */
 class Overlay extends MY_Controller
@@ -13,9 +13,8 @@ class Overlay extends MY_Controller
      * HTTP method: POST
      * POST vars: 'url' : 'some image url'
      * Roles allowed: admin
-     * Url: example.com/plugin/overlay/add
      */
-    function add_post(){
+    function index_post($alias){
         $this->authorization->authorize(AUTH_ADMIN);
 
         if(!$url = $this->input->post('url'))
@@ -23,21 +22,30 @@ class Overlay extends MY_Controller
 
         if(!$timeout = $this->input->post('timeout'))
             $timeout = 0;
+		
+		$infoscreen = $this->infoscreen->get_by_alias($alias);
+		// Check ownership
+        if(!$this->infoscreen->isOwner($alias))
+            $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
 
-        $this->xmpp_lib->sendMessage($this->authorization->host, "Overlay.add('$url', $timeout);");
+        $this->xmpp_lib->sendMessage($infoscreen[0]->hostname, "Overlay.add('$url', $timeout);");
     }
 
     /**
      * Authorizes a call to remove an image from the screen
      * Translates it to xmmp
      *
-     * HTTP method: POST
+     * HTTP method: DELETE
      * Roles allowed: admin
-     * Url: example.com/plugin/overlay/remove
      */
-    function remove_post(){
+    function index_delete($alias){
         $this->authorization->authorize(AUTH_ADMIN);
+		
+		$infoscreen = $this->infoscreen->get_by_alias($alias);
+		// Check ownership
+        if(!$this->infoscreen->isOwner($alias))
+            $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
 
-        $this->xmpp_lib->sendMessage($this->authorization->host, "Overlay.remove();");
+        $this->xmpp_lib->sendMessage($infoscreen[0]->hostname, "Overlay.remove();");
     }
 }

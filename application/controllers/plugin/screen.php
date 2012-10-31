@@ -1,7 +1,7 @@
 <?php
 /**
  * © 2012 FlatTurtle bvba
- * Author: Nik Torfs
+ * Author: Nik Torfs, Michiel Vancoillie
  * Licence: AGPLv3
  */
 class Screen extends MY_Controller
@@ -14,18 +14,24 @@ class Screen extends MY_Controller
      * HTTP method: POST
      * POST vars: 'action' : 'on'
      * Roles allowed: admin
-     * Url: example.com/plugin/screen/power
      */
-    function power_post(){
+    function power_post($alias){
         $this->authorization->authorize(AUTH_ADMIN);
 
         if(!$action = $this->input->post('action'))
             $this->_throwError('400', ERROR_NO_ACTION_IN_POST);
 
-        if($action == "on")
-            $this->xmpp_lib->sendMessage($this->authorization->host, "application.enableScreen(true);");
-        else
-            $this->xmpp_lib->sendMessage($this->authorization->host, "application.enableScreen(false);");
+        if($action == "off")
+			$action = 'application.enableScreen(false)';
+		else
+			$action = 'application.enableScreen(true)';
+			
+		$infoscreen = $this->infoscreen->get_by_alias($alias);
+		// Check ownership
+        if(!$this->infoscreen->isOwner($alias))
+            $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
+
+        $this->xmpp_lib->sendMessage($infoscreen[0]->hostname, $action);
     }
 
     /**
@@ -34,11 +40,15 @@ class Screen extends MY_Controller
      *
      * HTTP method: POST
      * Roles allowed: admin
-     * Url: example.com/plugin/screen/reload
      */
-    function reload_post(){
+    function reload_post($alias){
         $this->authorization->authorize(AUTH_ADMIN);
 
-        $this->xmpp_lib->sendMessage($this->authorization->host, "location.reload(true);");
+        $infoscreen = $this->infoscreen->get_by_alias($alias);
+		// Check ownership
+        if(!$this->infoscreen->isOwner($alias))
+            $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
+
+        $this->xmpp_lib->sendMessage($infoscreen[0]->hostname, "location.reload(true);");
     }
 }

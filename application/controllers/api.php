@@ -19,8 +19,6 @@ class API extends MY_Controller
 		}
         $this->authorization->authorize(AUTH_ADMIN);
 
-        $this->load->model('infoscreen');
-
         try{
             $result = $this->infoscreen->get_by_customer_id($this->authorization->customer_id);
         }catch(ErrorException $e){
@@ -40,8 +38,7 @@ class API extends MY_Controller
      */
     function infoscreen_get($alias){
         $this->authorization->authorize(AUTH_ADMIN);
-
-        $this->load->model('infoscreen');
+		
         try{
             $result = $this->infoscreen->get_by_alias($alias);
         }catch(ErrorException $e){
@@ -49,7 +46,7 @@ class API extends MY_Controller
         }
 		
 		// Check ownership
-        if($result[0]->customer_id != $this->authorization->customer_id)
+        if(!$this->infoscreen->isOwner($alias))
             $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
 
         $this->output->set_output(json_encode($result));
@@ -76,18 +73,13 @@ class API extends MY_Controller
 
         if(!$alias)
             $alias = $this->authorization->alias;
-
-        $this->load->model('infoscreen');
+		
         if(!$infoscreen = $this->infoscreen->get_by_alias($alias))
             $this->_throwError('404', ERROR_NO_INFOSCREEN);
 		
 		// Check ownership
-		if($infoscreen[0]->customer_id != $this->authorization->customer_id){
-			if($infoscreen[0]->alias != $this->authorization->alias){
-				$this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
-			}
-		}
-
+        if(!$this->infoscreen->isOwner($alias))
+            $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
 
         $this->load->model('turtle');
         if(!$turtles = $this->turtle->get_by_screen_id_with_options($infoscreen[0]->id)){
@@ -138,12 +130,18 @@ class API extends MY_Controller
     }
 	
 	/**
+	 * Redirect to stable view
+	 */
+	function redirect_view($alias){
+		redirect(base_url().$alias.'/view/stable');
+	}
+	
+	/**
 	 * Export DISCS JSON 
 	 */
 	function export_json_get($alias){
         $this->authorization->authorize(AUTH_ADMIN);
 		
-		$this->load->model('infoscreen');
         try{
             $result = $this->infoscreen->get_by_alias($alias);
         }catch(ErrorException $e){

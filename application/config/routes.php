@@ -42,8 +42,11 @@ $route['404_override'] = '';
 $route['default_controller'] = 'api/infoscreens';
 $route['auth/(.*)'] = 'auth/$1';
 // Routes for aliases
+$route['(.*)/view'] = 'api/redirect_view/$1';
 $route['(.*)/turtles'] = 'api/turtles/$1';
 $route['(.*)/turtles/(.*)'] = 'api/turtle/$1/$2';
+$route['(.*)/plugins/(.*)/(.*)'] = 'plugin/$2/$3/$1';
+$route['(.*)/plugins/(.*)/*'] = 'plugin/$2/index/$1';
 $route['(.*).json'] = 'api/export_json/$1';
 $route['(.*)'] = 'api/infoscreen/$1';
 
