@@ -65,6 +65,9 @@ define('ERROR_DONT_MESS_WITH_KEY', "Your dedicated key is wrong, stop trying to 
 define('ERROR_TURTLE_ID_NOT_NUMERIC', "The turtle id you've given is not numeric");
 define('ERROR_INVALID_TOKEN', "The token you supplied is not valid!");
 define('ERROR_NO_TOKEN_IN_AUTHORIZATION', "Please provide your token in the authorization header");
+define('ERROR_DATA_NOT_VALID',"The given data is not valid");
+define('ERROR_NO_PANE',"There is no pane with that ID");
+define('ERROR_NO_TYPE',"No type has been specified, add a type with 'type' as key.");
 /*
  * Limit of token tables (cleanup of expired tokens will happen when this limit is reached)
  */

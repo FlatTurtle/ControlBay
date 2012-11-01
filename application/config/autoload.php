@@ -52,7 +52,7 @@ $autoload['packages'] = array();
 |	$autoload['libraries'] = array('database', 'session', 'xmlrpc');
 */
 
-$autoload['libraries'] = array('database','xmpp_lib','authorization');
+$autoload['libraries'] = array('database','xmpp_lib','authorization','extended_input');
 
 
 /*

@@ -29,6 +29,7 @@ class Pane extends REST_model
     {
         unset($data['id']);
         unset($data['infoscreen_id']);
+        unset($data['type']);
         return $data;
     }
 }

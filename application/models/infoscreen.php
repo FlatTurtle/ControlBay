@@ -2,7 +2,7 @@
 
 require_once APPPATH . "models/rest_model.php";
 
-class InfoScreen extends REST_model
+class Infoscreen extends REST_model
 {
     function __construct()
     {
@@ -131,7 +131,7 @@ class InfoScreen extends REST_model
         unset($data['id']);
         unset($data['customer_id']);
         unset($data['alias']);
-        unset($data['hostname']);
+        unset($data['pincode']);
         return $data;
     }
 }

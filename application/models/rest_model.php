@@ -30,7 +30,7 @@ abstract class REST_Model extends CI_Model
      *
      * @param $data associative array of field values
      * @throws ErrorException : if a database error occurs
-     * @return bool
+     * @return id of insert
      */
     function insert($data){
         if(!$this->isValid($data)){
@@ -40,6 +40,8 @@ abstract class REST_Model extends CI_Model
         $this->db->insert($this->_table, $data);
         if($this->db->_error_number())
             throw new ErrorException($this->db->_error_message());
+		
+		return $this->db->insert_id();
     }
 
     /**
@@ -78,14 +80,14 @@ abstract class REST_Model extends CI_Model
      * @throws ErrorException : if a database error occurs
      */
     function update($id, $data){
-        if(!$this->isValid($data)){
-            throw new ErrorException("the given data is not valid");
+        if(!is_array($data) || !$this->isValid($data) ){
+            throw new ErrorException(ERROR_DATA_NOT_VALID);
         }
 
         $data = $this->filter($data);
 
         $this->db->where('id', $id);
-        $this->db->update($data);
+        $this->db->update($this->_table, $data);
         if($this->db->_error_number())
             throw new ErrorException($this->db->_error_message());
     }
