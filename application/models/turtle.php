@@ -34,6 +34,32 @@ class Turtle extends REST_model
             throw new ErrorException($this->db->_error_message());
         return $query->result();
     }
+	
+	public function get_id_with_options($id)
+    {
+		$this->db->select("x.*, y.type");
+        $this->db->where('x.id', $id);
+        $this->db->join('turtle y', 'x.turtle_id = y.id', 'left');
+        $query = $this->db->get($this->_table . ' x');
+        if($this->db->_error_number())
+            throw new ErrorException($this->db->_error_message());
+		$result = $query->result();
+		foreach($result as $turtle){
+			$turtle->options = $this->turtle_option->get_for_turtle($turtle->id);
+		}
+        return $result;
+    }
+	
+	public function get_id_of_type($type){
+		$this->db->where('type', $type);
+        $query = $this->db->get('turtle');
+        if($this->db->_error_number())
+            throw new ErrorException($this->db->_error_message());
+		if($query->num_rows() != 1)
+			return false;
+		$result = $query->row();
+        return $result->id;
+	}
 
     /**
      * Filter columns that are not allowed to be changed from row

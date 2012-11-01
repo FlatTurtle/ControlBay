@@ -67,7 +67,10 @@ define('ERROR_INVALID_TOKEN', "The token you supplied is not valid!");
 define('ERROR_NO_TOKEN_IN_AUTHORIZATION', "Please provide your token in the authorization header");
 define('ERROR_DATA_NOT_VALID',"The given data is not valid");
 define('ERROR_NO_PANE',"There is no pane with that ID");
+define('ERROR_NO_PANE_PARAMETER',"No pane has been specified, add a pane with 'pane' as key.");
 define('ERROR_NO_TYPE',"No type has been specified, add a type with 'type' as key.");
+define('ERROR_NO_TURTLE_WITH_TYPE',"There is no turtle with that type.");
+define('ERROR_OPTIONS_NO_JSON',"Options should be formatted as a JSON array");
 /*
  * Limit of token tables (cleanup of expired tokens will happen when this limit is reached)
  */

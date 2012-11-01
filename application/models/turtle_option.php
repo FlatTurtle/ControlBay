@@ -21,6 +21,16 @@ class Turtle_option extends REST_Model
 		
 		return $result;
 	}
+	
+	public function get_by_key_for_turtle($key, $turtle_id){
+        $this->db->where('x.key', $key);
+        $this->db->where('x.turtle_instance_id', $turtle_id);
+        $query = $this->db->get($this->_table . ' x');
+        if($this->db->_error_number())
+            throw new ErrorException($this->db->_error_message());
+		return $query->result();
+	}
+
 
     /**
      * Filter columns that are not allowed to be changed from row
