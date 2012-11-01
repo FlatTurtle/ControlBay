@@ -13,6 +13,7 @@ class Turtle extends REST_model
 
     public function get_by_infoscreen_id_with_options($screen_id)
     {
+		$this->db->select("x.*, y.type");
         $this->db->where('x.infoscreen_id', $screen_id);
         $this->db->join('turtle y', 'x.turtle_id = y.id', 'left');
         $query = $this->db->get($this->_table . ' x');
