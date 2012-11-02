@@ -43,7 +43,7 @@ class API extends MY_Controller {
 		if (!$this->infoscreen->isOwner($alias))
 			$this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
 
-		$this->output->set_output(json_encode($result));
+		$this->output->set_output(json_encode($result[0]));
 	}
 
 	/**
