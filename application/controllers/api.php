@@ -63,6 +63,10 @@ class API extends MY_Controller {
 			$this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
 
 		$data = $this->input->post();
+		if (empty($data)){
+			$this->_throwError('404', ERROR_NO_PARAMETERS);
+		}
+		
 		try {
 			$this->infoscreen->update($result[0]->id, $data);
 		} catch (ErrorException $e) {
@@ -164,9 +168,15 @@ class API extends MY_Controller {
 		if (!$this->infoscreen->isOwner($alias))
 			$this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
 
-
 		$this->load->model('pane');
+		if (!$pane = $this->pane->get($id))
+			$this->_throwError('404', ERROR_NO_PANE);
+
 		$data = $this->input->post();
+		if (empty($data)){
+			$this->_throwError('404', ERROR_NO_PARAMETERS);
+		}
+		
 		try {
 			$this->pane->update($id, $data);
 		} catch (ErrorException $e) {
@@ -287,7 +297,7 @@ class API extends MY_Controller {
 
 		$this->load->model('turtle');
 		if (!$result = $this->turtle->get_id_with_options($id))
-			$this->_throwError('403', ERROR_NO_PANE);
+			$this->_throwError('403', ERROR_NO_TURTLE_WITH_ID);
 
 		$this->output->set_output(json_encode($result[0]));
 	}
@@ -307,12 +317,14 @@ class API extends MY_Controller {
 		// Check ownership
 		if (!$this->infoscreen->isOwner($alias))
 			$this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
-
+		
+		$this->load->model('turtle');
+		if (!$result = $this->turtle->get($id))
+			$this->_throwError('403', ERROR_NO_TURTLE_WITH_ID);
 
 		$data = $this->input->post();
 		$this->load->model('pane');
 		$this->load->model('turtle_option');
-		$this->load->model('turtle');
 		// Check pane ID
 		unset($data['pane_id']);
 		if (!empty($data['pane'])) {
@@ -328,7 +340,8 @@ class API extends MY_Controller {
 		unset($data['pane']);
 
 		try {
-			$this->turtle->update($id, $data);
+			if(!empty($data))
+				$this->turtle->update($id, $data);
 
 			// Check options
 			if (!empty($options)) {
