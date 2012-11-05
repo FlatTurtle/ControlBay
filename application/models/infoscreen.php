@@ -127,11 +127,26 @@ class Infoscreen extends REST_model
 	}
 	
 	/** 
-	 * Get the status of a plugin
+	 * Get the states of all plugin
+	 */
+	public function get_plugin_states($id){
+		$this->db->select('type, state');
+		$this->db->where('infoscreen_id', $id);
+		$plugin_state = $this->db->get('plugin')->result();
+		
+		if($plugin_state){
+			return $plugin_state;
+		}
+		
+		return null;
+	}
+	
+	/** 
+	 * Get the state of a plugin
 	 */
 	public function get_plugin_state($id, $type){
 		$this->db->select('state');
-		$this->db->where('id',$id);
+		$this->db->where('infoscreen_id',$id);
 		$this->db->where('type', strtolower($type));
 		$plugin_state = $this->db->get('plugin')->row();
 		

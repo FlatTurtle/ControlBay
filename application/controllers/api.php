@@ -2,10 +2,12 @@
 
 /**
  * © 2012 FlatTurtle bvba
- * Author: Nik Torfs, Michiel Vancoillie
+ * Author: Michiel Vancoillie
  * Licence: AGPLv3
  */
-class API extends MY_Controller {
+require_once APPPATH . "controllers/api_base.php";
+
+class API extends API_Base {
 
 	/**
 	 * Get all the infoscreens owned by the authenticated customer
@@ -35,15 +37,9 @@ class API extends MY_Controller {
 	 */
 	function infoscreen_get($alias) {
 		$this->authorization->authorize(AUTH_ADMIN);
+		$infoscreen = parent::validate_and_get_infoscreen($alias);
 
-		if (!$result = $this->infoscreen->get_by_alias($alias))
-			$this->_throwError('404', ERROR_NO_INFOSCREEN);
-
-		// Check ownership
-		if (!$this->infoscreen->isOwner($alias))
-			$this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
-
-		$this->output->set_output(json_encode($result[0]));
+		$this->output->set_output(json_encode($infoscreen));
 	}
 
 	/**
@@ -54,13 +50,7 @@ class API extends MY_Controller {
 	 */
 	function infoscreen_post($alias) {
 		$this->authorization->authorize(AUTH_ADMIN);
-
-		if (!$result = $this->infoscreen->get_by_alias($alias))
-			$this->_throwError('404', ERROR_NO_INFOSCREEN);
-
-		// Check ownership
-		if (!$this->infoscreen->isOwner($alias))
-			$this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
+		$infoscreen = parent::validate_and_get_infoscreen($alias);
 
 		$data = $this->input->post();
 		if (empty($data)){
@@ -68,10 +58,38 @@ class API extends MY_Controller {
 		}
 		
 		try {
-			$this->infoscreen->update($result[0]->id, $data);
+			$this->infoscreen->update($infoscreen->id, $data);
 		} catch (ErrorException $e) {
 			$this->_throwError('403', $e->getMessage());
 		}
+	}
+	
+	function infoscreen_plugin_states($alias) {
+		$this->authorization->authorize(AUTH_ADMIN);
+		$infoscreen = parent::validate_and_get_infoscreen($alias);
+
+		$data = $this->input->post();
+		if (empty($data)){
+			$this->_throwError('404', ERROR_NO_PARAMETERS);
+		}
+		
+		try {
+			$this->infoscreen->update($infoscreen->id, $data);
+		} catch (ErrorException $e) {
+			$this->_throwError('403', $e->getMessage());
+		}
+	}
+	
+	/**
+	 * Get all plugin states for a specific infoscreen owned by the authenticated customer
+	 * HTTP method: GET
+	 * Roles allowed: admin
+	 */
+	function plugin_states_get($alias) {
+		$this->authorization->authorize(AUTH_ADMIN);
+		$infoscreen = parent::validate_and_get_infoscreen($alias);
+
+		$this->output->set_output(json_encode($this->infoscreen->get_plugin_states($infoscreen->id)));
 	}
 
 	/**
@@ -82,19 +100,13 @@ class API extends MY_Controller {
 	 */
 	function panes_get($alias = false) {
 		$this->authorization->authorize(array(AUTH_ADMIN));
+		$infoscreen = parent::validate_and_get_infoscreen($alias);
 
 		if (!$alias)
 			$alias = $this->authorization->alias;
 
-		if (!$infoscreen = $this->infoscreen->get_by_alias($alias))
-			$this->_throwError('404', ERROR_NO_INFOSCREEN);
-
-		// Check ownership
-		if (!$this->infoscreen->isOwner($alias))
-			$this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
-
 		$this->load->model('pane');
-		if (!$panes = $this->pane->get_by_infoscreen_id($infoscreen[0]->id)) {
+		if (!$panes = $this->pane->get_by_infoscreen_id($infoscreen->id)) {
 			$this->_throwError('404', ERROR_NO_TURTLES);
 		}
 
@@ -108,20 +120,14 @@ class API extends MY_Controller {
 	 */
 	function panes_put($alias) {
 		$this->authorization->authorize(AUTH_ADMIN);
-
-		if (!$result = $this->infoscreen->get_by_alias($alias))
-			$this->_throwError('404', ERROR_NO_INFOSCREEN);
-
-		// Check ownership
-		if (!$this->infoscreen->isOwner($alias))
-			$this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
+		$infoscreen = parent::validate_and_get_infoscreen($alias);
 
 		$data = $this->extended_input->put();
 		if (empty($data['type']))
 			$this->_throwError('404', ERROR_NO_TYPE);
 
 		unset($data['id']);
-		$data['infoscreen_id'] = $result[0]->id;
+		$data['infoscreen_id'] = $infoscreen->id;
 		$this->load->model('pane');
 		try {
 			$id = $this->pane->insert($data);
@@ -138,19 +144,13 @@ class API extends MY_Controller {
 	 */
 	function pane_get($alias, $id) {
 		$this->authorization->authorize(AUTH_ADMIN);
-
-		if (!$result = $this->infoscreen->get_by_alias($alias))
-			$this->_throwError('404', ERROR_NO_INFOSCREEN);
-
-		// Check ownership
-		if (!$this->infoscreen->isOwner($alias))
-			$this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
-
+		$infoscreen = parent::validate_and_get_infoscreen($alias);
+		
 		$this->load->model('pane');
-		if (!$result = $this->pane->get($id))
+		if (!$pane = $this->pane->get($id))
 			$this->_throwError('403', ERROR_NO_PANE);
 
-		$this->output->set_output(json_encode($result[0]));
+		$this->output->set_output(json_encode($pane[0]));
 	}
 
 	/**
@@ -160,13 +160,7 @@ class API extends MY_Controller {
 	 */
 	function pane_post($alias, $id) {
 		$this->authorization->authorize(AUTH_ADMIN);
-
-		if (!$result = $this->infoscreen->get_by_alias($alias))
-			$this->_throwError('404', ERROR_NO_INFOSCREEN);
-
-		// Check ownership
-		if (!$this->infoscreen->isOwner($alias))
-			$this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
+		$infoscreen = parent::validate_and_get_infoscreen($alias);
 
 		$this->load->model('pane');
 		if (!$pane = $this->pane->get($id))
@@ -192,19 +186,13 @@ class API extends MY_Controller {
 	 */
 	function turtles_get($alias = false) {
 		$this->authorization->authorize(array(AUTH_ADMIN, AUTH_MOBILE, AUTH_TABLET));
+		$infoscreen = parent::validate_and_get_infoscreen($alias);
 
 		if (!$alias)
 			$alias = $this->authorization->alias;
 
-		if (!$infoscreen = $this->infoscreen->get_by_alias($alias))
-			$this->_throwError('404', ERROR_NO_INFOSCREEN);
-
-		// Check ownership
-		if (!$this->infoscreen->isOwner($alias))
-			$this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
-
 		$this->load->model('turtle');
-		if (!$turtles = $this->turtle->get_by_infoscreen_id_with_options($infoscreen[0]->id)) {
+		if (!$turtles = $this->turtle->get_by_infoscreen_id_with_options($infoscreen->id)) {
 			$this->_throwError('404', ERROR_NO_TURTLES);
 		}
 
@@ -219,13 +207,7 @@ class API extends MY_Controller {
 	 */
 	function turtles_put($alias) {
 		$this->authorization->authorize(AUTH_ADMIN);
-
-		if (!$result = $this->infoscreen->get_by_alias($alias))
-			$this->_throwError('404', ERROR_NO_INFOSCREEN);
-
-		// Check ownership
-		if (!$this->infoscreen->isOwner($alias))
-			$this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
+		$infoscreen = parent::validate_and_get_infoscreen($alias);
 
 		$this->load->model('turtle');
 		$this->load->model('turtle_option');
@@ -252,7 +234,7 @@ class API extends MY_Controller {
 		unset($data['id']);
 		$data['turtle_id'] = $turtle_id;
 		$data['pane_id'] = $pane[0]->id;
-		$data['infoscreen_id'] = $result[0]->id;
+		$data['infoscreen_id'] = $infoscreen->id;
 		try {
 			$id = $this->turtle->insert($data);
 
@@ -287,19 +269,13 @@ class API extends MY_Controller {
 	 */
 	function turtle_get($alias, $id) {
 		$this->authorization->authorize(AUTH_ADMIN);
-
-		if (!$infoscreen = $this->infoscreen->get_by_alias($alias))
-			$this->_throwError('404', ERROR_NO_INFOSCREEN);
-
-		// Check ownership
-		if (!$this->infoscreen->isOwner($alias))
-			$this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
-
+		$infoscreen = parent::validate_and_get_infoscreen($alias);
+		
 		$this->load->model('turtle');
-		if (!$result = $this->turtle->get_id_with_options($id))
+		if (!$turtle = $this->turtle->get_id_with_options($id))
 			$this->_throwError('403', ERROR_NO_TURTLE_WITH_ID);
 
-		$this->output->set_output(json_encode($result[0]));
+		$this->output->set_output(json_encode($turtle[0]));
 	}
 
 	/**
@@ -310,13 +286,7 @@ class API extends MY_Controller {
 	 */
 	function turtle_post($alias, $id) {
 		$this->authorization->authorize(AUTH_ADMIN);
-
-		if (!$result = $this->infoscreen->get_by_alias($alias))
-			$this->_throwError('404', ERROR_NO_INFOSCREEN);
-
-		// Check ownership
-		if (!$this->infoscreen->isOwner($alias))
-			$this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
+		$infoscreen = parent::validate_and_get_infoscreen($alias);
 		
 		$this->load->model('turtle');
 		if (!$result = $this->turtle->get($id))
@@ -398,23 +368,17 @@ class API extends MY_Controller {
 	 */
 	function jobs_get($alias = false) {
 		$this->authorization->authorize(array(AUTH_ADMIN, AUTH_MOBILE, AUTH_TABLET));
+		$infoscreen = parent::validate_and_get_infoscreen($alias);
 
 		if (!$alias)
 			$alias = $this->authorization->alias;
 
-		if (!$infoscreen = $this->infoscreen->get_by_alias($alias))
-			$this->_throwError('404', ERROR_NO_INFOSCREEN);
-
-		// Check ownership
-		if (!$this->infoscreen->isOwner($alias))
-			$this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
-
 		$this->load->model('jobtab');
-		if (!$panes = $this->jobtab->get_by_infoscreen_id($infoscreen[0]->id)) {
+		if (!$jobs = $this->jobtab->get_by_infoscreen_id($infoscreen->id)) {
 			$this->_throwError('404', ERROR_NO_TURTLES);
 		}
 
-		$this->output->set_output(json_encode($panes));
+		$this->output->set_output(json_encode($jobs));
 	}
 
 	/**
@@ -432,3 +396,5 @@ class API extends MY_Controller {
 	}
 
 }
+
+?>

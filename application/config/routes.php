@@ -48,6 +48,7 @@ $route['(.*)/panes/(.*)'] = 'api/pane/$1/$2';
 $route['(.*)/turtles'] = 'api/turtles/$1';
 $route['(.*)/turtles/(.*)'] = 'api/turtle/$1/$2';
 $route['(.*)/jobs'] = 'api/jobs/$1';
+$route['(.*)/plugins/*'] = 'api/plugin_states/$1';
 $route['(.*)/plugins/(.*)/(.*)'] = 'plugin/$2/$3/$1';
 $route['(.*)/plugins/(.*)/*'] = 'plugin/$2/index/$1';
 $route['(.*).json'] = 'api/export_json/$1';
