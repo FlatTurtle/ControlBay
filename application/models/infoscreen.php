@@ -10,6 +10,9 @@ class Infoscreen extends REST_model
         $this->_table = 'infoscreen';
     }
 	
+	/**
+	 * Check if authenticated user is owner of the infoscreen
+	 */
 	public function isOwner($alias){
 		$result = $this->get_by_alias($alias);
         if($result[0]->customer_id != $this->authorization->customer_id){
@@ -61,6 +64,9 @@ class Infoscreen extends REST_model
         return $query->result();
     }
 	
+	/**
+	 * Generate the DISCS JSON
+	 */
 	public function export_json($alias){
 		$query = $this->db->get_where($this->_table, array('alias' => $alias));
         if($this->db->_error_number())
@@ -119,12 +125,25 @@ class Infoscreen extends REST_model
 		
 		return json_encode($discs);
 	}
+	
+	/** 
+	 * Get the status of a plugin
+	 */
+	public function get_plugin_state($id, $type){
+		$this->db->select('state');
+		$this->db->where('id',$id);
+		$this->db->where('type', strtolower($type));
+		$plugin_state = $this->db->get('plugin')->row();
+		
+		if($plugin_state){
+			return $plugin_state->state;
+		}
+		
+		return 0;
+	}
 
     /**
      * Filter primary keys from row
-     *
-     * @param $data
-     * @return mixed
      */
     function filter($data)
     {

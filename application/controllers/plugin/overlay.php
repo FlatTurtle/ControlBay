@@ -1,51 +1,59 @@
 <?php
+
 /**
  * © 2012 FlatTurtle bvba
- * Author: Nik Torfs, Michiel Vancoillie
+ * Author: Michiel Vancoillie
  * Licence: AGPLv3
  */
-class Overlay extends MY_Controller
-{
-    /**
-     * Authorizes a call to display an image on the screen
-     * Translates it to xmmp
-     *
-     * HTTP method: POST
-     * POST vars: 'url' : 'some image url'
-     * Roles allowed: admin
-     */
-    function index_post($alias){
-        $this->authorization->authorize(AUTH_ADMIN);
+require_once APPPATH . "controllers/plugin/plugin_base.php";
 
-        if(!$url = $this->input->post('url'))
-            $this->_throwError('400', ERROR_NO_URL_IN_POST);
+class Overlay extends Plugin_Base {
 
-        if(!$timeout = $this->input->post('timeout'))
-            $timeout = 0;
-		
-		$infoscreen = $this->infoscreen->get_by_alias($alias);
-		// Check ownership
-        if(!$this->infoscreen->isOwner($alias))
-            $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
+	private $type = 'overlay';
 
-        $this->xmpp_lib->sendMessage($infoscreen[0]->hostname, "Overlay.add('$url', $timeout);");
-    }
+	/**
+	 * Get status of the clock for an infoscreen
+	 *
+	 * HTTP method: GET
+	 * Roles allowed: admin
+	 */
+	public function index_get($alias) {
+		$this->authorization->authorize(AUTH_ADMIN);
+		echo parent::get_state($alias, $this->type);
+	}
 
-    /**
-     * Authorizes a call to remove an image from the screen
-     * Translates it to xmmp
-     *
-     * HTTP method: DELETE
-     * Roles allowed: admin
-     */
-    function index_delete($alias){
-        $this->authorization->authorize(AUTH_ADMIN);
-		
-		$infoscreen = $this->infoscreen->get_by_alias($alias);
-		// Check ownership
-        if(!$this->infoscreen->isOwner($alias))
-            $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
+	/**
+	 * Display an image on the infoscreen
+	 *
+	 * HTTP method: POST
+	 * Roles allowed: admin
+	 */
+	public function index_post($alias) {
+		$this->authorization->authorize(AUTH_ADMIN);
+		$infoscreen = parent::validate_and_get_infoscreen($alias);
 
-        $this->xmpp_lib->sendMessage($infoscreen[0]->hostname, "Overlay.remove();");
-    }
+		if (!$url = $this->input->post('url'))
+			$this->_throwError('400', ERROR_NO_URL_IN_POST);
+
+		if (!$timeout = $this->input->post('timeout'))
+			$timeout = 0;
+
+		$this->xmpp_lib->sendMessage($infoscreen->hostname, "Overlay.add('$url', $timeout);");
+	}
+
+	/**
+	 * Remove the image from the infoscreen
+	 *
+	 * HTTP method: DELETE
+	 * Roles allowed: admin
+	 */
+	public function index_delete($alias) {
+		$this->authorization->authorize(AUTH_ADMIN);
+		$infoscreen = parent::validate_and_get_infoscreen($alias);
+
+		$this->xmpp_lib->sendMessage($infoscreen->hostname, "Overlay.remove();");
+	}
+
 }
+
+?>

@@ -1,54 +1,49 @@
 <?php
+
 /**
  * © 2012 FlatTurtle bvba
- * Author: Nik Torfs, Michiel Vancoillie
+ * Author: Michiel Vancoillie
  * Licence: AGPLv3
  */
-class Screen extends MY_Controller
-{
+require_once APPPATH . "controllers/plugin/plugin_base.php";
 
-    /**
-     * Authorizes a call to turn the screen on or off
-     * Translates it to xmmp
-     *
-     * HTTP method: POST
-     * POST vars: 'action' : 'on'
-     * Roles allowed: admin
-     */
-    function power_post($alias){
-        $this->authorization->authorize(AUTH_ADMIN);
+class Screen extends Plugin_Base {
 
-        if(!$action = $this->input->post('action'))
-            $this->_throwError('400', ERROR_NO_ACTION_IN_POST);
+	/**
+	 * Turn the screen on or off
+	 *
+	 * HTTP method: POST
+	 * POST vars: 'action' : 'on'
+	 * Roles allowed: admin
+	 */
+	function power_post($alias) {
+		$this->authorization->authorize(AUTH_ADMIN);
+		$infoscreen = parent::validate_and_get_infoscreen($alias);
 
-        if($action == "off")
+		if (!$action = $this->input->post('action'))
+			$this->_throwError('400', ERROR_NO_ACTION_IN_POST);
+
+		if ($action == "off")
 			$action = 'application.enableScreen(false)';
 		else
 			$action = 'application.enableScreen(true)';
-			
-		$infoscreen = $this->infoscreen->get_by_alias($alias);
-		// Check ownership
-        if(!$this->infoscreen->isOwner($alias))
-            $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
 
-        $this->xmpp_lib->sendMessage($infoscreen[0]->hostname, $action);
-    }
+		$this->xmpp_lib->sendMessage($infoscreen->hostname, $action);
+	}
 
-    /**
-     * Authorizes a call to reload the screen
-     * Translates it to xmmp
-     *
-     * HTTP method: POST
-     * Roles allowed: admin
-     */
-    function reload_post($alias){
-        $this->authorization->authorize(AUTH_ADMIN);
+	/**
+	 * Reload the screen
+	 *
+	 * HTTP method: POST
+	 * Roles allowed: admin
+	 */
+	function reload_post($alias) {
+		$this->authorization->authorize(AUTH_ADMIN);
+		$infoscreen = parent::validate_and_get_infoscreen($alias);
 
-        $infoscreen = $this->infoscreen->get_by_alias($alias);
-		// Check ownership
-        if(!$this->infoscreen->isOwner($alias))
-            $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
+		$this->xmpp_lib->sendMessage($infoscreen->hostname, "location.reload(true);");
+	}
 
-        $this->xmpp_lib->sendMessage($infoscreen[0]->hostname, "location.reload(true);");
-    }
 }
+
+?>

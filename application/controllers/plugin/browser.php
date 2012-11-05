@@ -1,31 +1,30 @@
 <?php
+
 /**
  * © 2012 FlatTurtle bvba
- * Author: Nik Torfs, Michiel Vancoillie
+ * Author: Michiel Vancoillie
  * Licence: AGPLv3
  */
-class Browser extends MY_Controller
-{
+require_once APPPATH . "controllers/plugin/plugin_base.php";
 
-    /**
-     * Authorizes a client call to display another website on the infoscreen
-     * Translates the call to an xmpp message
-     *
-     * HTTP method: POST
-     * POST vars: 'url': 'a url'
-     * Roles allowed: admin
-     */
-    function browse_post($alias){
-        $this->authorization->authorize(AUTH_ADMIN);
+class Browser extends Plugin_Base {
 
-        if(!$url = $this->input->post('url'))
-            $this->_throwError('400', ERROR_NO_URL_IN_POST);
-		
-		$infoscreen = $this->infoscreen->get_by_alias($alias);
-		// Check ownership
-        if(!$this->infoscreen->isOwner($alias))
-            $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
+	/**
+	 * Display another URL on the infoscreen
+	 *
+	 * HTTP method: POST
+	 * Roles allowed: admin
+	 */
+	function browse_post($alias) {
+		$this->authorization->authorize(AUTH_ADMIN);
+		$infoscreen = parent::validate_and_get_infoscreen($alias);
 
-        $this->xmpp_lib->sendMessage($infoscreen[0]->hostname, "location='" . $url . "';");
-    }
+		if (!$url = $this->input->post('url'))
+			$this->_throwError('400', ERROR_NO_URL_IN_POST);
+
+		$this->xmpp_lib->sendMessage($infoscreen->hostname, "location='" . $url . "';");
+	}
+
 }
+
+?>

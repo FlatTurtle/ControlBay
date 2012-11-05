@@ -1,47 +1,44 @@
 <?php
+
 /**
  * © 2012 FlatTurtle bvba
- * Author: Nik Torfs, Michiel Vancoillie
+ * Author: Michiel Vancoillie
  * Licence: AGPLv3
  */
-class Message extends MY_Controller
-{
-    /**
-     * Authorizes a call to display a message on the screen
-     * Translates it to xmmp
-     *
-     * HTTP method: POST
-     * POST vars: 'message' : 'some message'
-     * Roles allowed: admin
-     */
-    function index_post($alias){
-        $this->authorization->authorize(AUTH_ADMIN);
+require_once APPPATH . "controllers/plugin/plugin_base.php";
 
-        if(!$message = $this->input->post('message'))
-            $this->_throwError('400', ERROR_NO_MESSAGE_IN_POST);
-		
-		$infoscreen = $this->infoscreen->get_by_alias($alias);
-		// Check ownership
-        if(!$this->infoscreen->isOwner($alias))
-            $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
+class Message extends Plugin_Base {
 
-        $this->xmpp_lib->sendMessage($infoscreen[0]->hostname, "Message.add('".$message."');");
-    }
+	/**
+	 * Display a message on the screen
+	 *
+	 * HTTP method: POST
+	 * POST vars: 'message' : 'some message'
+	 * Roles allowed: admin
+	 */
+	function index_post($alias) {
+		$this->authorization->authorize(AUTH_ADMIN);
+		$infoscreen = parent::validate_and_get_infoscreen($alias);
 
-    /**
-     * Authorizes a call to remove a message from the screen
-     * Translates it to xmmp
-     *
-     * HTTP method: DELETE
-     * Roles allowed: admin
-     */
-    function index_delete($alias){
-        $this->authorization->authorize(AUTH_ADMIN);		
-		$infoscreen = $this->infoscreen->get_by_alias($alias);
-		// Check ownership
-        if(!$this->infoscreen->isOwner($alias))
-            $this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
-		
-        $this->xmpp_lib->sendMessage($infoscreen[0]->hostname, "Message.remove();");
-    }
+		if (!$message = $this->input->post('message'))
+			$this->_throwError('400', ERROR_NO_MESSAGE_IN_POST);
+
+		$this->xmpp_lib->sendMessage($infoscreen->hostname, "Message.add('" . $message . "');");
+	}
+
+	/**
+	 * Remove the message from the screen
+	 *
+	 * HTTP method: DELETE
+	 * Roles allowed: admin
+	 */
+	function index_delete($alias) {
+		$this->authorization->authorize(AUTH_ADMIN);
+		$infoscreen = parent::validate_and_get_infoscreen($alias);
+
+		$this->xmpp_lib->sendMessage($infoscreen->hostname, "Message.remove();");
+	}
+
 }
+
+?>
