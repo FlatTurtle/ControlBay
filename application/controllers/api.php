@@ -88,8 +88,13 @@ class API extends API_Base {
 	function plugin_states_get($alias) {
 		$this->authorization->authorize(AUTH_ADMIN);
 		$infoscreen = parent::validate_and_get_infoscreen($alias);
+		
+		$data = '';
+		foreach($this->infoscreen->get_plugin_states($infoscreen->id) as $plugin_state){
+			$data[$plugin_state->type] = $plugin_state->state;
+		}
 
-		$this->output->set_output(json_encode($this->infoscreen->get_plugin_states($infoscreen->id)));
+		$this->output->set_output(json_encode($data));
 	}
 
 	/**
