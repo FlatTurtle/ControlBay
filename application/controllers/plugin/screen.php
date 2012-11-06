@@ -9,6 +9,18 @@ require_once APPPATH . "controllers/plugin/plugin_base.php";
 
 class Screen extends Plugin_Base {
 
+	private $type = 'screen';
+	/**
+	 * Get the status of the screen
+	 *
+	 * HTTP method: GET
+	 * Roles allowed: admin
+	 */
+	function power_get($alias) {
+		$this->authorization->authorize(AUTH_ADMIN);
+		echo parent::get_state($alias, $this->type);
+	}
+	
 	/**
 	 * Turn the screen on or off
 	 *
