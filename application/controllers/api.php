@@ -64,22 +64,6 @@ class API extends API_Base {
 		}
 	}
 	
-	function infoscreen_plugin_states($alias) {
-		$this->authorization->authorize(AUTH_ADMIN);
-		$infoscreen = parent::validate_and_get_infoscreen($alias);
-
-		$data = $this->input->post();
-		if (empty($data)){
-			$this->_throwError('404', ERROR_NO_PARAMETERS);
-		}
-		
-		try {
-			$this->infoscreen->update($infoscreen->id, $data);
-		} catch (ErrorException $e) {
-			$this->_throwError('403', $e->getMessage());
-		}
-	}
-	
 	/**
 	 * Get all plugin states for a specific infoscreen owned by the authenticated customer
 	 * HTTP method: GET
@@ -89,11 +73,7 @@ class API extends API_Base {
 		$this->authorization->authorize(AUTH_ADMIN);
 		$infoscreen = parent::validate_and_get_infoscreen($alias);
 		
-		$data = '';
-		foreach($this->infoscreen->get_plugin_states($infoscreen->id) as $plugin_state){
-			$data[$plugin_state->type] = $plugin_state->state;
-		}
-
+		$data = $this->infoscreen->get_plugin_states($infoscreen->id);
 		$this->output->set_output(json_encode($data));
 	}
 

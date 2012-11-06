@@ -75,6 +75,7 @@ class Infoscreen extends REST_model
 
 		
 		$discs['interface'] = $result;
+		$discs['interface']->plugins = $this->get_plugin_states($result->id);
 	
 		$this->load->model('turtle');
 		$turtles = $this->turtle->get_by_infoscreen_id_with_options($result->id);
@@ -132,10 +133,15 @@ class Infoscreen extends REST_model
 	public function get_plugin_states($id){
 		$this->db->select('type, state');
 		$this->db->where('infoscreen_id', $id);
-		$plugin_state = $this->db->get('plugin')->result();
+		$plugin_states = $this->db->get('plugin')->result();
 		
-		if($plugin_state){
-			return $plugin_state;
+		if($plugin_states){
+			$data = '';
+			foreach($plugin_states as $plugin_state){
+				$data[$plugin_state->type] = $plugin_state->state;
+			}
+			
+			return $data;
 		}
 		
 		return null;
