@@ -160,7 +160,7 @@ class Infoscreen extends REST_model
 			return $plugin_state->state;
 		}
 		
-		return 0;
+		return null;
 	}
 
     /**

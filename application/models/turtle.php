@@ -10,6 +10,20 @@ class Turtle extends REST_model
 		$this->load->model('turtle_option');
     }
 
+	public function get_all_turtles(){
+        $query = $this->db->get('turtle');
+        if($this->db->_error_number())
+            throw new ErrorException($this->db->_error_message());
+		if($query->num_rows() < 1)
+			return false;
+		$turtles = $query->result();
+		foreach($turtles as $turtle){
+			if(isset($turtle->options)){
+				$turtle->options = explode(',', $turtle->options);
+			}
+		}
+        return $turtles;
+	}
 
     public function get_by_infoscreen_id_with_options($screen_id)
     {

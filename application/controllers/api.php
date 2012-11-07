@@ -63,6 +63,16 @@ class API extends API_Base {
 			$this->_throwError('403', $e->getMessage());
 		}
 	}
+
+	/**
+	 * Get all available turtles with the available options
+	 * HTTP method: GET
+	 */
+	function list_turtles() {
+		$this->load->model('turtle');
+		$data = $this->turtle->get_all_turtles();
+		$this->output->set_output(json_encode($data));
+	}
 	
 	/**
 	 * Get all plugin states for a specific infoscreen owned by the authenticated customer
@@ -76,6 +86,7 @@ class API extends API_Base {
 		$data = $this->infoscreen->get_plugin_states($infoscreen->id);
 		$this->output->set_output(json_encode($data));
 	}
+	
 
 	/**
 	 * Get all registered panes for the currently authenticated customer for a specific screen
