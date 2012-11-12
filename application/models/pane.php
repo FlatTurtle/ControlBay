@@ -13,6 +13,8 @@ class Pane extends REST_model
 
     public function get_by_infoscreen_id($screen_id)
     {
+        $this->db->order_by('type','asc');
+        $this->db->order_by('order','asc');
         $query = $this->db->get_where($this->_table, array('infoscreen_id' => $screen_id));
         if($this->db->_error_number())
             throw new ErrorException($this->db->_error_message());

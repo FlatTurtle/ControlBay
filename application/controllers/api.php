@@ -57,6 +57,14 @@ class API extends API_Base {
 			$this->_throwError('404', ERROR_NO_PARAMETERS);
 		}
 		
+		if(!empty($data['color'])){
+			$this->xmpp_lib->sendMessage($infoscreen->hostname, "Interface.color('" . $data['color'] . "');");
+		}
+		
+		if(!empty($data['logo'])){
+			$this->xmpp_lib->sendMessage($infoscreen->hostname, "Interface.logo('" . $data['logo'] . "?".  rand(0, 9999)."');");
+		}
+		
 		try {
 			$this->infoscreen->update($infoscreen->id, $data);
 		} catch (ErrorException $e) {

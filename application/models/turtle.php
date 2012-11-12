@@ -30,6 +30,8 @@ class Turtle extends REST_model
 		$this->db->select("x.*, y.name, y.type");
         $this->db->where('x.infoscreen_id', $screen_id);
         $this->db->join('turtle y', 'x.turtle_id = y.id', 'left');
+        $this->db->order_by('x.pane_id','asc');
+        $this->db->order_by('x.order','asc');
         $query = $this->db->get($this->_table . ' x');
         if($this->db->_error_number())
             throw new ErrorException($this->db->_error_message());
@@ -43,6 +45,8 @@ class Turtle extends REST_model
     public function get_by_infoscreen_id($screen_id)
     {
         $this->db->join('turtle y', 'x.turtle_id = y.id', 'left');
+        $this->db->order_by('x.pane_id','asc');
+        $this->db->order_by('x.order','asc');
         $query = $this->db->get_where($this->_table . ' x', array('infoscreen_id' => $screen_id));
         if($this->db->_error_number())
             throw new ErrorException($this->db->_error_message());
@@ -55,6 +59,8 @@ class Turtle extends REST_model
         $this->db->join('turtle y', 'x.turtle_id = y.id', 'left');
         $this->db->join('pane z', 'x.pane_id = z.id', 'left');
         $this->db->where('z.type', $pane_type);
+        $this->db->order_by('x.pane_id','asc');
+        $this->db->order_by('x.order','asc');
         $query = $this->db->get($this->_table . ' x');
         if($this->db->_error_number())
             throw new ErrorException($this->db->_error_message());
