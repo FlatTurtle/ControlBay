@@ -188,8 +188,14 @@ class API extends API_Base {
 			$alias = $this->authorization->alias;
 
 		$this->load->model('turtle');
-		if (!$turtles = $this->turtle->get_by_infoscreen_id_with_options($infoscreen->id)) {
-			$this->_throwError('404', ERROR_NO_TURTLES);
+		if($this->input->get('pane_type')){
+			if (!$turtles = $this->turtle->get_by_pane_type_with_options($this->input->get('pane_type'))) {
+				$this->_throwError('404', ERROR_NO_TURTLES_PANE_TYPE);
+			}
+		}else{
+			if (!$turtles = $this->turtle->get_by_infoscreen_id_with_options($infoscreen->id)) {
+				$this->_throwError('404', ERROR_NO_TURTLES);
+			}
 		}
 
 		$this->output->set_output(json_encode($turtles));

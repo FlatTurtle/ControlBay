@@ -43,12 +43,28 @@ class Turtle extends REST_model
     public function get_by_infoscreen_id($screen_id)
     {
         $this->db->join('turtle y', 'x.turtle_id = y.id', 'left');
-        $query = $this->db->get_where($this->_table, array('infoscreen_id' => $screen_id));
+        $query = $this->db->get_where($this->_table . ' x', array('infoscreen_id' => $screen_id));
         if($this->db->_error_number())
             throw new ErrorException($this->db->_error_message());
         return $query->result();
     }
 	
+	public function get_by_pane_type_with_options($pane_type)
+    {
+		$this->db->select('x.*, y.type');
+        $this->db->join('turtle y', 'x.turtle_id = y.id', 'left');
+        $this->db->join('pane z', 'x.pane_id = z.id', 'left');
+        $this->db->where('z.type', $pane_type);
+        $query = $this->db->get($this->_table . ' x');
+        if($this->db->_error_number())
+            throw new ErrorException($this->db->_error_message());
+		$result = $query->result();
+		foreach($result as $turtle){
+			$turtle->options = $this->turtle_option->get_for_turtle($turtle->id);
+		}
+        return $result;
+    }	
+
 	public function get_id_with_options($id)
     {
 		$this->db->select("x.*, y.type");
