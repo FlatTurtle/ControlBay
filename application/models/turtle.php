@@ -11,6 +11,7 @@ class Turtle extends REST_model
     }
 
 	public function get_all_turtles(){
+        $this->db->where('allow_left', 1);
         $query = $this->db->get('turtle');
         if($this->db->_error_number())
             throw new ErrorException($this->db->_error_message());
