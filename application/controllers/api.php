@@ -251,14 +251,14 @@ class API extends API_Base {
 			// Check options
 			if (!empty($options)) {
 				$options = json_decode($options);
-				if ($options == null || !is_array($options))
+				if ($options == null || !is_object($options))
 					$this->_throwError('404', ERROR_OPTIONS_NO_JSON);
 
-				foreach ($options as $option) {
-					if (!empty($option->key) && !empty($option->value)) {
+				foreach ($options as $key => $value) {
+					if (!empty($key) && !empty($value)) {
 						$data = array();
-						$data['key'] = $option->key;
-						$data['value'] = $option->value;
+						$data['key'] = $key;
+						$data['value'] = $value;
 						$data['turtle_instance_id'] = $id;
 						$this->turtle_option->insert($data);
 					}
@@ -326,32 +326,30 @@ class API extends API_Base {
 			// Check options
 			if (!empty($options)) {
 				$options = json_decode($options);
-				if ($options == null || !is_array($options))
+				if ($options == null || !is_object($options))
 					$this->_throwError('404', ERROR_OPTIONS_NO_JSON);
 
-				foreach ($options as $option) {
-					if (!empty($option->key)) {
-						$to_json[$option->key] = $option->value;
-					
+				foreach ($options as $key => $value) {
+					if (!empty($key)) {
 						$data = array();
-						$data['key'] = $option->key;
-						$data['value'] = $option->value;
+						$data['key'] = $key;
+						$data['value'] = $value;
 						$data['turtle_instance_id'] = $id;
 						// Update, delete or insert option
 						if($turtle_option = $this->turtle_option->get_by_key_for_turtle($data['key'],$id)){
-							if(!empty($option->value))
+							if(!empty($value))
 								$this->turtle_option->update($turtle_option[0]->id,$data);
 							else
 								$this->turtle_option->delete($turtle_option[0]->id);
 						}else{
-							if(!empty($option->value))
+							if(!empty($value))
 								$this->turtle_option->insert($data);
 						}
 					}
 				}
 				
-				$to_json = json_encode($to_json);
-				$this->xmpp_lib->sendMessage($infoscreen->hostname, "Turtles.options(".$id.",'" . $to_json . "');");
+				$options = json_encode($options);
+				$this->xmpp_lib->sendMessage($infoscreen->hostname, "Turtles.options(".$id.",'" . $options . "');");
 			}
 		} catch (ErrorException $e) {
 			$this->_throwError('403', $e->getMessage());
