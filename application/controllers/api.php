@@ -331,6 +331,8 @@ class API extends API_Base {
 
 				foreach ($options as $option) {
 					if (!empty($option->key)) {
+						$to_json[$option->key] = $option->value;
+					
 						$data = array();
 						$data['key'] = $option->key;
 						$data['value'] = $option->value;
@@ -347,6 +349,9 @@ class API extends API_Base {
 						}
 					}
 				}
+				
+				$to_json = json_encode($to_json);
+				$this->xmpp_lib->sendMessage($infoscreen->hostname, "Turtles.options(".$id.",'" . $to_json . "');");
 			}
 		} catch (ErrorException $e) {
 			$this->_throwError('403', $e->getMessage());
