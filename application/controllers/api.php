@@ -349,7 +349,7 @@ class API extends API_Base {
 				}
 				
 				$options = json_encode($options);
-				$this->xmpp_lib->sendMessage($infoscreen->hostname, "Turtles.options(".$id.",'" . $options . "');");
+				$this->xmpp_lib->sendMessage($infoscreen->hostname, "Turtles.options(".$id."," . $options . ");");
 			}
 		} catch (ErrorException $e) {
 			$this->_throwError('403', $e->getMessage());
