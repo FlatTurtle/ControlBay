@@ -31,7 +31,7 @@ class Clock extends Plugin_Base{
         $this->authorization->authorize(AUTH_ADMIN);
 		$infoscreen = parent::validate_and_get_infoscreen($alias);
 		
-        $this->xmpp_lib->sendMessage($infoscreen->hostname, "Clock.add();");
+        $this->xmpp_lib->sendMessage($infoscreen->hostname, "Clock.enable();");
     }
 
     /**
@@ -44,6 +44,6 @@ class Clock extends Plugin_Base{
         $this->authorization->authorize(AUTH_ADMIN);
 		$infoscreen = parent::validate_and_get_infoscreen($alias);
 
-        $this->xmpp_lib->sendMessage($infoscreen->hostname, "Clock.remove();");
+        $this->xmpp_lib->sendMessage($infoscreen->hostname, "Clock.disable();");
     }
 }

@@ -36,9 +36,9 @@ class Screen extends Plugin_Base {
 			$this->_throwError('400', ERROR_NO_ACTION_IN_POST);
 
 		if ($action == "off")
-			$action = 'application.enableScreen(false)';
+			$action = 'Power.disable();';
 		else
-			$action = 'application.enableScreen(true)';
+			$action = 'Power.enable();';
 
 		$this->xmpp_lib->sendMessage($infoscreen->hostname, $action);
 	}

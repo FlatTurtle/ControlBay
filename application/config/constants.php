@@ -68,6 +68,7 @@ define('ERROR_NO_TOKEN_IN_AUTHORIZATION', "Please provide your token in the auth
 define('ERROR_DATA_NOT_VALID',"The given data is not valid.");
 define('ERROR_NO_PANE',"There is no pane with that ID.");
 define('ERROR_NO_PANE_PARAMETER',"No pane has been specified, add a pane with 'pane' as key.");
+define('ERROR_PANE_ID_NOT_NUMERIC', "The pane ID you've given is not numeric.");
 define('ERROR_NO_TYPE',"No type has been specified, add a type with 'type' as key.");
 define('ERROR_NO_TURTLE_WITH_TYPE',"There is no turtle with that type.");
 define('ERROR_NO_TURTLE_WITH_ID',"There is no turtle with that ID.");

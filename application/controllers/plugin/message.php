@@ -23,7 +23,7 @@ class Message extends Plugin_Base {
 		if (!$message = $this->input->post('message'))
 			$this->_throwError('400', ERROR_NO_MESSAGE_IN_POST);
 
-		$this->xmpp_lib->sendMessage($infoscreen->hostname, "Message.add('" . $message . "');");
+		$this->xmpp_lib->sendMessage($infoscreen->hostname, "Message.enable('" . $message . "');");
 	}
 
 	/**
@@ -36,7 +36,7 @@ class Message extends Plugin_Base {
 		$this->authorization->authorize(AUTH_ADMIN);
 		$infoscreen = parent::validate_and_get_infoscreen($alias);
 
-		$this->xmpp_lib->sendMessage($infoscreen->hostname, "Message.remove();");
+		$this->xmpp_lib->sendMessage($infoscreen->hostname, "Message.disable();");
 	}
 
 }
