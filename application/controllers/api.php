@@ -348,6 +348,10 @@ class API extends API_Base {
 					}
 				}
 				
+				if(!empty($options->order)){
+					$this->xmpp_lib->sendMessage($infoscreen->hostname, "Turtles.order(".$id.", ". $options->order .");");
+				}
+				
 				$options = json_encode($options);
 				$this->xmpp_lib->sendMessage($infoscreen->hostname, "Turtles.options(".$id."," . $options . ");");
 			}
@@ -364,6 +368,14 @@ class API extends API_Base {
 	 */
 	function turtle_delete($alias, $id) {
 		$this->authorization->authorize(AUTH_ADMIN);
+		$infoscreen = parent::validate_and_get_infoscreen($alias);
+
+		$this->load->model('turtle');
+		if (!$turtle = $this->turtle->get($id))
+			$this->_throwError('403', ERROR_NO_TURTLE_WITH_ID);
+		
+		// Delete the turtle instance
+		$this->turtle->delete($turtle[0]);
 	}
 
 	/**

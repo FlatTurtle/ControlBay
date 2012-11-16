@@ -98,6 +98,15 @@ class Turtle extends REST_model
         return $result->id;
 	}
 
+	public function delete($turtle){
+		// Remove turtle options
+		$this->db->where('turtle_instance_id', $turtle->id);
+		$this->db->delete('turtle_option');
+		// Remove turtle instance
+		$this->db->where('id', $turtle->id);
+		$this->db->delete('turtle_instance');
+	}
+	
     /**
      * Filter columns that are not allowed to be changed from row
      *
