@@ -44,7 +44,7 @@ class API extends API_Base {
 
 	/**
 	 * Change the details of the given infoscreen
-	 * 
+	 *
 	 * HTTP method: POST
 	 * Roles allowed: admin
 	 */
@@ -56,15 +56,15 @@ class API extends API_Base {
 		if (empty($data)){
 			$this->_throwError('404', ERROR_NO_PARAMETERS);
 		}
-		
+
 		if(!empty($data['color'])){
 			$this->xmpp_lib->sendMessage($infoscreen->hostname, "Interface.color('" . $data['color'] . "');");
 		}
-		
+
 		if(!empty($data['logo'])){
 			$this->xmpp_lib->sendMessage($infoscreen->hostname, "Interface.logo('" . $data['logo'] . "?".  rand(0, 9999)."');");
 		}
-		
+
 		try {
 			$this->infoscreen->update($infoscreen->id, $data);
 		} catch (ErrorException $e) {
@@ -81,7 +81,7 @@ class API extends API_Base {
 		$data = $this->turtle->get_all_turtles();
 		$this->output->set_output(json_encode($data));
 	}
-	
+
 	/**
 	 * Get all plugin states for a specific infoscreen owned by the authenticated customer
 	 * HTTP method: GET
@@ -90,11 +90,11 @@ class API extends API_Base {
 	function plugin_states_get($alias) {
 		$this->authorization->authorize(AUTH_ADMIN);
 		$infoscreen = parent::validate_and_get_infoscreen($alias);
-		
+
 		$data = $this->infoscreen->get_plugin_states($infoscreen->id);
 		$this->output->set_output(json_encode($data));
 	}
-	
+
 
 	/**
 	 * Get all registered panes for the currently authenticated customer for a specific screen
@@ -149,7 +149,7 @@ class API extends API_Base {
 	function pane_get($alias, $id) {
 		$this->authorization->authorize(AUTH_ADMIN);
 		$infoscreen = parent::validate_and_get_infoscreen($alias);
-		
+
 		$this->load->model('pane');
 		if (!$pane = $this->pane->get($id))
 			$this->_throwError('403', ERROR_NO_PANE);
@@ -174,7 +174,7 @@ class API extends API_Base {
 		if (empty($data)){
 			$this->_throwError('404', ERROR_NO_PARAMETERS);
 		}
-		
+
 		try {
 			$this->pane->update($id, $data);
 		} catch (ErrorException $e) {
@@ -240,7 +240,7 @@ class API extends API_Base {
 		$options = $data['options'];
 		unset($data['options']);
 		unset($data['type']);
-		unset($data['pane']);		
+		unset($data['pane']);
 		unset($data['id']);
 		$data['turtle_id'] = $turtle_id;
 		$data['pane_id'] = $pane[0]->id;
@@ -280,7 +280,7 @@ class API extends API_Base {
 	function turtle_get($alias, $id) {
 		$this->authorization->authorize(AUTH_ADMIN);
 		$infoscreen = parent::validate_and_get_infoscreen($alias);
-		
+
 		$this->load->model('turtle');
 		if (!$turtle = $this->turtle->get_id_with_options($id))
 			$this->_throwError('403', ERROR_NO_TURTLE_WITH_ID);
@@ -297,7 +297,7 @@ class API extends API_Base {
 	function turtle_post($alias, $id) {
 		$this->authorization->authorize(AUTH_ADMIN);
 		$infoscreen = parent::validate_and_get_infoscreen($alias);
-		
+
 		$this->load->model('turtle');
 		if (!$result = $this->turtle->get($id))
 			$this->_throwError('403', ERROR_NO_TURTLE_WITH_ID);
@@ -314,7 +314,7 @@ class API extends API_Base {
 			else
 				$data["pane_id"] = $pane[0]->id;
 		}
-		
+
 		$options = $data['options'];
 		unset($data['options']);
 		unset($data['pane']);
@@ -347,14 +347,41 @@ class API extends API_Base {
 						}
 					}
 				}
-				
+
 				if(!empty($options->order)){
 					$this->xmpp_lib->sendMessage($infoscreen->hostname, "Turtles.order(".$id.", ". $options->order .");");
 				}
-				
+
 				$options = json_encode($options);
 				$this->xmpp_lib->sendMessage($infoscreen->hostname, "Turtles.options(".$id."," . $options . ");");
 			}
+		} catch (ErrorException $e) {
+			$this->_throwError('403', $e->getMessage());
+		}
+	}
+
+	/**
+	 * Update turtle order from a screen owned by the authenticated customer
+	 *
+	 * HTTP method: POST
+	 * Roles allowed: admin
+	 */
+	function turtle_order_post($alias, $id) {
+		$this->authorization->authorize(AUTH_ADMIN);
+		$infoscreen = parent::validate_and_get_infoscreen($alias);
+
+		$this->load->model('turtle');
+		if (!$result = $this->turtle->get($id))
+			$this->_throwError('403', ERROR_NO_TURTLE_WITH_ID);
+
+		if(!$this->input->post('order')){
+			$this->_throwError('403', ERROR_NO_PARAMETERS);
+		}
+
+		$data['order'] = $this->input->post('order');
+		try {
+			$this->turtle->update($id, $data);
+			$this->xmpp_lib->sendMessage($infoscreen->hostname, "Turtles.order(".$id."," . $data['order'] . ");");
 		} catch (ErrorException $e) {
 			$this->_throwError('403', $e->getMessage());
 		}
@@ -373,7 +400,7 @@ class API extends API_Base {
 		$this->load->model('turtle');
 		if (!$turtle = $this->turtle->get($id))
 			$this->_throwError('403', ERROR_NO_TURTLE_WITH_ID);
-		
+
 		// Delete the turtle instance
 		$this->turtle->delete($turtle[0]);
 	}
@@ -407,7 +434,7 @@ class API extends API_Base {
 	}
 
 	/**
-	 * Export DISCS JSON 
+	 * Export DISCS JSON
 	 */
 	function export_json_get($alias) {
 		try {
