@@ -374,11 +374,11 @@ class API extends API_Base {
 		if (!$result = $this->turtle->get($id))
 			$this->_throwError('403', ERROR_NO_TURTLE_WITH_ID);
 
+		$data['order'] = $this->input->post('order');
 		if(!$this->input->post('order')){
-			$this->_throwError('403', ERROR_NO_PARAMETERS);
+			$data['order'];
 		}
 
-		$data['order'] = $this->input->post('order');
 		try {
 			$this->turtle->update($id, $data);
 			$this->xmpp_lib->sendMessage($infoscreen->hostname, "Turtles.order(".$id."," . $data['order'] . ");");
