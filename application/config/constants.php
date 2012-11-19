@@ -67,6 +67,8 @@ define('ERROR_INVALID_TOKEN', "The token you supplied is not valid!");
 define('ERROR_NO_TOKEN_IN_AUTHORIZATION', "Please provide your token in the authorization header.");
 define('ERROR_DATA_NOT_VALID',"The given data is not valid.");
 define('ERROR_NO_PANE',"There is no pane with that ID.");
+define('ERROR_NO_PANES',"There are no panes linked to that infoscreen.");
+define('ERROR_NO_PANES_TYPE', "There are no panes with that type.");
 define('ERROR_NO_PANE_PARAMETER',"No pane has been specified, add a pane with 'pane' as key.");
 define('ERROR_PANE_ID_NOT_NUMERIC', "The pane ID you've given is not numeric.");
 define('ERROR_NO_TYPE',"No type has been specified, add a type with 'type' as key.");
