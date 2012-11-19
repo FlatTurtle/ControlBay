@@ -269,7 +269,11 @@ class API extends API_Base {
 				}
 			}
 
-			echo $this->turtle_get($alias, $id);
+			$turtle_json =  $this->turtle_get($alias, $id);
+			$turtle = json_decode($turtle_json);
+			$this->xmpp_lib->sendMessage($infoscreen->hostname, "Turtles.grow('".$turtle->type."'," . $id . ",'". json_encode($turtle->options) ."');");
+
+			echo $turtle_json;
 		} catch (ErrorException $e) {
 			$this->_throwError('403', $e->getMessage());
 		}
