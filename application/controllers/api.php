@@ -270,7 +270,7 @@ class API extends API_Base {
 			}
 
 			$turtle = $this->turtle->get_id_with_options($id);
-			$this->xmpp_lib->sendMessage($infoscreen->hostname, "Turtles.grow('".$turtle[0]->type."'," . $id . ", 0,". json_encode($turtle[0]->options) .");");
+			$this->xmpp_lib->sendMessage($infoscreen->hostname, "Turtles.grow('".$turtle[0]->type."'," . $id . ", ".$turtle[0]->pane_id.", 0,". json_encode($turtle[0]->options) .");");
 
 			$this->output->set_output(json_encode($turtle[0]));
 			//echo $turtle_json;
