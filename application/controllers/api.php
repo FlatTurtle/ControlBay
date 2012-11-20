@@ -411,6 +411,8 @@ class API extends API_Base {
 
 		// Delete the turtle instance
 		$this->turtle->delete($turtle[0]);
+
+		$this->xmpp_lib->sendMessage($infoscreen->hostname, "Turtles.kill(".$id.");");
 	}
 
 	/**
