@@ -1,3 +1,21 @@
 RewriteEngine on
-RewriteCond $1 !^(index\.php|images|robots\.txt)
+
+# Rewrite views
+# *************
+
+RewriteCond $1 !^(index\.php|images|view|robots\.txt) [NC]
+RewriteCond $2 ^view$ [NC]
+# Redirect /view to /view/stable/
+RewriteRule ^(.*?)/([^/]*?)/?$ /$1/$2/stable/ [R=301,L]
+# Redirect to trailing slash
+RewriteRule ^(.*?)/([^/]*?)/((?:[0-9]+\.[0-9]+)|stable)$ /$1/$2/$3/ [R=301,L]
+# Rewrite index to /view/{version}
+RewriteRule ^(.*?)/([^/]*?)/((?:[0-9]+\.[0-9]+)|stable)/$ view/$3/index.php?alias=$1 [L]
+# Rewrite other files
+RewriteRule ^(.*?)/([^/]*?)/((?:[0-9]+\.[0-9]+)|stable)/(.*)$ view/$3/$4 [L,QSA]
+
+# Rewrite for API
+# ***************
+
+RewriteCond $1 !^(index\.php|images|view|robots\.txt) [NC]
 RewriteRule ^(.*)$ index.php/$1 [L]

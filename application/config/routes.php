@@ -43,7 +43,6 @@ $route['default_controller'] = 'api/infoscreens';
 $route['auth/(.*)'] = 'auth/$1';
 // Routes for aliases
 $route['turtles/*'] = 'api/list_turtles';
-$route['(.*)/view'] = 'api/redirect_view/$1';
 $route['(.*)/panes'] = 'api/panes/$1';
 $route['(.*)/panes/(.*)'] = 'api/pane/$1/$2';
 $route['(.*)/turtles'] = 'api/turtles/$1';
