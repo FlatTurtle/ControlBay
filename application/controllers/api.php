@@ -201,7 +201,7 @@ class API extends API_Base {
 
 		$this->load->model('turtle');
 		if($this->input->get('pane_type')){
-			if (!$turtles = $this->turtle->get_by_pane_type_with_options($this->input->get('pane_type'))) {
+			if (!$turtles = $this->turtle->get_by_pane_type_with_options($infoscreen->id, $this->input->get('pane_type'))) {
 				$this->_throwError('404', ERROR_NO_TURTLES_PANE_TYPE);
 			}
 		}else{
@@ -384,7 +384,7 @@ class API extends API_Base {
 
 		$data['order'] = $this->input->post('order');
 		if(!$this->input->post('order')){
-			$data['order'];
+			$data['order'] = 0;
 		}
 
 		try {
