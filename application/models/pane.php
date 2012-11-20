@@ -21,9 +21,9 @@ class Pane extends REST_model
 		return $query->result();
 	}
 
-	public function get_by_type($type){
+	public function get_by_type($screen_id, $type){
 		$this->db->order_by('order','asc');
-		$query = $this->db->get_where($this->_table, array('type' => $type));
+		$query = $this->db->get_where($this->_table, array('type' => $type, 'infoscreen_id' => $screen_id));
 		if($this->db->_error_number())
 			throw new ErrorException($this->db->_error_message());
 		return $query->result();

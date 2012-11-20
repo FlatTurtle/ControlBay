@@ -111,7 +111,7 @@ class API extends API_Base {
 
 		$this->load->model('pane');
 		if($this->input->get('type')){
-			if (!$panes = $this->pane->get_by_type($this->input->get('type'))) {
+			if (!$panes = $this->pane->get_by_type($infoscreen->id, $this->input->get('type'))) {
 				$this->_throwError('404', ERROR_NO_PANES_TYPE);
 			}
 		}elseif(!$panes = $this->pane->get_by_infoscreen_id($infoscreen->id)) {
