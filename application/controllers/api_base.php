@@ -16,7 +16,7 @@ class API_Base extends MY_Controller {
 
 		// Check ownership
 		if (!$this->infoscreen->isOwner($alias))
-			$this->_throwError('403', ERROR_NO_OWNERSHIP_SCREEN);
+			$this->_throwError('401', ERROR_NO_OWNERSHIP_SCREEN);
 
 		return $infoscreen[0];
 	}

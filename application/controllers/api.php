@@ -54,7 +54,7 @@ class API extends API_Base {
 
 		$data = $this->input->post();
 		if (empty($data)){
-			$this->_throwError('404', ERROR_NO_PARAMETERS);
+			$this->_throwError('400', ERROR_NO_PARAMETERS);
 		}
 
 		if(!empty($data['color'])){
@@ -68,7 +68,7 @@ class API extends API_Base {
 		try {
 			$this->infoscreen->update($infoscreen->id, $data);
 		} catch (ErrorException $e) {
-			$this->_throwError('403', $e->getMessage());
+			$this->_throwError('500', $e->getMessage());
 		}
 	}
 
@@ -132,7 +132,7 @@ class API extends API_Base {
 
 		$data = $this->extended_input->put();
 		if (empty($data['type']))
-			$this->_throwError('404', ERROR_NO_TYPE);
+			$this->_throwError('400', ERROR_NO_TYPE);
 
 		unset($data['id']);
 		$data['infoscreen_id'] = $infoscreen->id;
@@ -141,7 +141,7 @@ class API extends API_Base {
 			$id = $this->pane->insert($data);
 			$this->pane_get($alias, $id);
 		} catch (ErrorException $e) {
-			$this->_throwError('403', $e->getMessage());
+			$this->_throwError('500', $e->getMessage());
 		}
 	}
 
@@ -156,7 +156,7 @@ class API extends API_Base {
 
 		$this->load->model('pane');
 		if (!$pane = $this->pane->get($id))
-			$this->_throwError('403', ERROR_NO_PANE);
+			$this->_throwError('404', ERROR_NO_PANE);
 
 		$this->output->set_output(json_encode($pane[0]));
 	}
@@ -170,19 +170,19 @@ class API extends API_Base {
 		$this->authorization->authorize(AUTH_ADMIN);
 		$infoscreen = parent::validate_and_get_infoscreen($alias);
 
+		$data = $this->input->post();
+		if (empty($data)){
+			$this->_throwError('400', ERROR_NO_PARAMETERS);
+		}
+
 		$this->load->model('pane');
 		if (!$pane = $this->pane->get($id))
 			$this->_throwError('404', ERROR_NO_PANE);
 
-		$data = $this->input->post();
-		if (empty($data)){
-			$this->_throwError('404', ERROR_NO_PARAMETERS);
-		}
-
 		try {
 			$this->pane->update($id, $data);
 		} catch (ErrorException $e) {
-			$this->_throwError('403', $e->getMessage());
+			$this->_throwError('500', $e->getMessage());
 		}
 	}
 
@@ -230,13 +230,13 @@ class API extends API_Base {
 
 		// Check turtle type
 		if (empty($data['type']))
-			$this->_throwError('404', ERROR_NO_TYPE);
+			$this->_throwError('400', ERROR_NO_TYPE);
 		if (!$turtle_id = $this->turtle->get_id_of_type($data['type']))
 			$this->_throwError('404', ERROR_NO_TURTLE_WITH_TYPE);
 
 		// Check pane ID
 		if (empty($data['pane']))
-			$this->_throwError('404', ERROR_NO_PANE_PARAMETER);
+			$this->_throwError('400', ERROR_NO_PANE_PARAMETER);
 		$pane = $this->pane->get($data['pane']);
 		if (empty($pane[0]->id))
 			$this->_throwError('404', ERROR_NO_PANE);
@@ -256,7 +256,7 @@ class API extends API_Base {
 			if (!empty($options)) {
 				$options = json_decode($options);
 				if ($options == null || !is_object($options))
-					$this->_throwError('404', ERROR_OPTIONS_NO_JSON);
+					$this->_throwError('400', ERROR_OPTIONS_NO_JSON);
 
 				foreach ($options as $key => $value) {
 					if (!empty($key) && !empty($value)) {
@@ -275,7 +275,7 @@ class API extends API_Base {
 			$this->output->set_output(json_encode($turtle[0]));
 			//echo $turtle_json;
 		} catch (ErrorException $e) {
-			$this->_throwError('403', $e->getMessage());
+			$this->_throwError('500', $e->getMessage());
 		}
 	}
 
@@ -291,7 +291,7 @@ class API extends API_Base {
 
 		$this->load->model('turtle');
 		if (!$turtle = $this->turtle->get_id_with_options($id))
-			$this->_throwError('403', ERROR_NO_TURTLE_WITH_ID);
+			$this->_throwError('404', ERROR_NO_TURTLE_WITH_ID);
 
 		$this->output->set_output(json_encode($turtle[0]));
 	}
@@ -308,7 +308,7 @@ class API extends API_Base {
 
 		$this->load->model('turtle');
 		if (!$result = $this->turtle->get($id))
-			$this->_throwError('403', ERROR_NO_TURTLE_WITH_ID);
+			$this->_throwError('404', ERROR_NO_TURTLE_WITH_ID);
 
 		$data = $this->input->post();
 		$this->load->model('pane');
@@ -335,7 +335,7 @@ class API extends API_Base {
 			if (!empty($options)) {
 				$options = json_decode($options);
 				if ($options == null || !is_object($options))
-					$this->_throwError('404', ERROR_OPTIONS_NO_JSON);
+					$this->_throwError('400', ERROR_OPTIONS_NO_JSON);
 
 				foreach ($options as $key => $value) {
 					if (!empty($key)) {
@@ -364,7 +364,7 @@ class API extends API_Base {
 				$this->xmpp_lib->sendMessage($infoscreen->hostname, "Turtles.options(".$id."," . $options . ");");
 			}
 		} catch (ErrorException $e) {
-			$this->_throwError('403', $e->getMessage());
+			$this->_throwError('500', $e->getMessage());
 		}
 	}
 
@@ -380,7 +380,7 @@ class API extends API_Base {
 
 		$this->load->model('turtle');
 		if (!$result = $this->turtle->get($id))
-			$this->_throwError('403', ERROR_NO_TURTLE_WITH_ID);
+			$this->_throwError('404', ERROR_NO_TURTLE_WITH_ID);
 
 		$data['order'] = $this->input->post('order');
 		if(!$this->input->post('order')){
@@ -391,7 +391,7 @@ class API extends API_Base {
 			$this->turtle->update($id, $data);
 			$this->xmpp_lib->sendMessage($infoscreen->hostname, "Turtles.order(".$id."," . $data['order'] . ");");
 		} catch (ErrorException $e) {
-			$this->_throwError('403', $e->getMessage());
+			$this->_throwError('500', $e->getMessage());
 		}
 	}
 
@@ -407,7 +407,7 @@ class API extends API_Base {
 
 		$this->load->model('turtle');
 		if (!$turtle = $this->turtle->get($id))
-			$this->_throwError('403', ERROR_NO_TURTLE_WITH_ID);
+			$this->_throwError('404', ERROR_NO_TURTLE_WITH_ID);
 
 		// Delete the turtle instance
 		$this->turtle->delete($turtle[0]);
