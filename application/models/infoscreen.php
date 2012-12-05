@@ -9,7 +9,7 @@ class Infoscreen extends REST_model
         parent::__construct();
         $this->_table = 'infoscreen';
     }
-	
+
 	/**
 	 * Check if authenticated user is owner of the infoscreen
 	 */
@@ -30,7 +30,7 @@ class Infoscreen extends REST_model
             throw new ErrorException($this->db->_error_message());
         return $query->result();
     }
-	
+
     public function get_by_alias($alias)
     {
         $query = $this->db->get_where($this->_table, array('alias' => $alias));
@@ -63,7 +63,7 @@ class Infoscreen extends REST_model
             throw new ErrorException($this->db->_error_message());
         return $query->result();
     }
-	
+
 	/**
 	 * Generate the DISCS JSON
 	 */
@@ -73,10 +73,10 @@ class Infoscreen extends REST_model
             throw new ErrorException($this->db->_error_message());
 		$result = $query->row();
 
-		
+
 		$discs['interface'] = $result;
-		$discs['interface']->plugins = $this->get_plugin_states($result->id);
-	
+		$discs['plugins'] = $this->get_plugin_states($result->id);
+
 		$this->load->model('turtle');
 		$turtles = $this->turtle->get_by_infoscreen_id_with_options($result->id);
 		foreach($turtles as $turtle){
@@ -87,8 +87,8 @@ class Infoscreen extends REST_model
 			unset($turtle->turtle_option_id);
 			$turtle->pane = $turtle->pane_id;
 			unset($turtle->pane_id);
-					
-			$discs['turtles']->{$turtle_id} = $turtle;  
+
+			$discs['turtles']->{$turtle_id} = $turtle;
 		}
 
 		$this->load->model('pane');
@@ -99,11 +99,11 @@ class Infoscreen extends REST_model
 			unset($pane->infoscreen_id);
 			unset($pane->turtle_id);
 			unset($pane->turtle_option_id);
-					
-			$discs['panes']->{$pane_id} = $pane;  
+
+			$discs['panes']->{$pane_id} = $pane;
 		}
-		
-		
+
+
 		$this->load->model('jobtab');
 		$jobs = $this->jobtab->get_by_infoscreen_id($result->id);
 		foreach($jobs as $job){
@@ -111,43 +111,41 @@ class Infoscreen extends REST_model
 			unset($job->id);
 			unset($job->infoscreen_id);
 			unset($job->job_id);
-					
-			$discs['jobs']->{$job_id} = $job;  
+
+			$discs['jobs']->{$job_id} = $job;
 		}
-		
-		$discs['plugins'] = null;
-		
-		
+
+
 		unset($discs['interface']->id);
 		unset($discs['interface']->customer_id);
 		unset($discs['interface']->alias);
 		unset($discs['interface']->pincode);
 		unset($discs['interface']->hostname);
-		
+
 		return json_encode($discs);
 	}
-	
-	/** 
+
+	/**
 	 * Get the states of all plugin
 	 */
 	public function get_plugin_states($id){
 		$this->db->select('type, state');
 		$this->db->where('infoscreen_id', $id);
 		$plugin_states = $this->db->get('plugin')->result();
-		
+
 		if($plugin_states){
 			$data = '';
 			foreach($plugin_states as $plugin_state){
 				$data[$plugin_state->type] = $plugin_state->state;
 			}
-			
+
 			return $data;
 		}
-		
+
 		return null;
 	}
-	
-	/** 
+
+	/**
 	 * Get the state of a plugin
 	 */
 	public function get_plugin_state($id, $type){
@@ -155,11 +153,11 @@ class Infoscreen extends REST_model
 		$this->db->where('infoscreen_id',$id);
 		$this->db->where('type', strtolower($type));
 		$plugin_state = $this->db->get('plugin')->row();
-		
+
 		if($plugin_state){
 			return $plugin_state->state;
 		}
-		
+
 		return null;
 	}
 
