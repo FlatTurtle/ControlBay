@@ -161,6 +161,29 @@ class Infoscreen extends REST_model
 		return null;
 	}
 
+	/**
+	 * Set the state of a plugin
+	 */
+	public function set_plugin_state($id, $type, $state){
+		$data['state'] = $state;
+		if($this->get_plugin_state($id, $type) == null){
+			$data['infoscreen_id'] = $id;
+			$data['type'] = strtolower(trim($type));
+			return $this->db->insert('plugin',$data);
+		}else{
+			$this->db->where('infoscreen_id',$id);
+			$this->db->where('type', strtolower($type));
+			return $this->db->update('plugin',$data);
+		}
+	}
+
+	/**
+	 * Disable a plugin
+	 */
+	public function disable_plugin($id, $type){
+		$this->set_plugin_state($id, $type, 0);
+	}
+
     /**
      * Filter primary keys from row
      */

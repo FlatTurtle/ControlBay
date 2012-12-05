@@ -7,9 +7,9 @@
 require_once APPPATH . "controllers/plugin/plugin_base.php";
 
 class Clock extends Plugin_Base{
-	
+
 	private $type = 'clock';
-	
+
 	/**
      * Get status of the clock for an infoscreen
      *
@@ -30,7 +30,9 @@ class Clock extends Plugin_Base{
     public function index_post($alias){
         $this->authorization->authorize(AUTH_ADMIN);
 		$infoscreen = parent::validate_and_get_infoscreen($alias);
-		
+
+        $this->infoscreen->set_plugin_state($infoscreen->id, $this->type, 1);
+
         $this->xmpp_lib->sendMessage($infoscreen->hostname, "Clock.enable();");
     }
 
@@ -43,6 +45,7 @@ class Clock extends Plugin_Base{
     public function index_delete($alias){
         $this->authorization->authorize(AUTH_ADMIN);
 		$infoscreen = parent::validate_and_get_infoscreen($alias);
+        $this->infoscreen->disable_plugin($infoscreen->id, $this->type);
 
         $this->xmpp_lib->sendMessage($infoscreen->hostname, "Clock.disable();");
     }

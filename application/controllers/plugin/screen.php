@@ -9,7 +9,7 @@ require_once APPPATH . "controllers/plugin/plugin_base.php";
 
 class Screen extends Plugin_Base {
 
-	private $type = 'screen';
+	private $type = 'power';
 	/**
 	 * Get the status of the screen
 	 *
@@ -20,7 +20,7 @@ class Screen extends Plugin_Base {
 		$this->authorization->authorize(AUTH_ADMIN);
 		echo parent::get_state($alias, $this->type);
 	}
-	
+
 	/**
 	 * Turn the screen on or off
 	 *
@@ -35,10 +35,13 @@ class Screen extends Plugin_Base {
 		if (!$action = $this->input->post('action'))
 			$this->_throwError('400', ERROR_NO_ACTION_IN_POST);
 
-		if ($action == "off")
+		if ($action == "off"){
+			$this->infoscreen->disable_plugin($infoscreen->id, $this->type);
 			$action = 'Power.disable();';
-		else
+		}else{
+			$this->infoscreen->set_plugin_state($infoscreen->id, $this->type, 1);
 			$action = 'Power.enable();';
+		}
 
 		$this->xmpp_lib->sendMessage($infoscreen->hostname, $action);
 	}
