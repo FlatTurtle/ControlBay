@@ -55,7 +55,7 @@ class Authorization
         }
 
         if(!$this->correctRole($this->role, $rolesToEnforce))
-            $this->_throwError('403', ERROR_ROLE);
+            $this->_throwError('401', ERROR_ROLE);
 
         return true;
     }
