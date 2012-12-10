@@ -117,36 +117,13 @@ class Auth extends MY_Controller {
 		$data['infoscreen_id'] = $screen_id;
 		$data['user_agent'] = $this->input->user_agent();
 		$data['ip'] = $this->input->ip_address();
-		if ($this->_isTablet()) {
-			$this->_removeOthersOnScreen($screen_id);
-			$data['role'] = AUTH_TABLET;
-			$data['expiration'] = Public_token::getTabletExpiration();
-		} else {
-			$data['role'] = AUTH_MOBILE;
-			$data['expiration'] = Public_token::getMobileExpiration();
-		}
+
+		$this->_removeOthersOnScreen($screen_id);
+		$data['role'] = AUTH_TABLET;
+		$data['expiration'] = Public_token::getTabletExpiration();
+
 		$this->public_token->insert($data);
 		return $data['token'];
-	}
-
-	/**
-	 * Check if the post body contains a tablet key
-	 * If it does it checks the key with the key defined in the config files
-	 *
-	 * If the keys are not the same it sends an unauthorized message,
-	 * if a wrong key is given there is probably someone trying to get authenticated as tablet without being one
-	 *
-	 * @return bool | true if the keys are the same
-	 *              | false if there is no key in the post
-	 */
-	private function _isTablet() {
-		if (!$key = $this->input->post('dedicated_key'))
-			return false;
-
-		if ($key == $this->config->item('tablet_key'))
-			return true;
-
-		$this->_throwError('403', ERROR_DONT_MESS_WITH_KEY);
 	}
 
 	/**
