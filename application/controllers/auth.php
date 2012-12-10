@@ -114,7 +114,7 @@ class Auth extends MY_Controller {
 	 */
 	private function _storePublicToken($screen_id) {
 		$data['token'] = sha1(time() . uniqid('', true));
-		$data['screen_id'] = $screen_id;
+		$data['infoscreen_id'] = $screen_id;
 		$data['user_agent'] = $this->input->user_agent();
 		$data['ip'] = $this->input->ip_address();
 		if ($this->_isTablet()) {
