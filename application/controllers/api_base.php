@@ -10,7 +10,14 @@ class API_Base extends MY_Controller {
 	/**
 	 * Validate a request and return infoscreen from alias
 	 */
-	protected function validate_and_get_infoscreen($alias) {
+	protected function validate_and_get_infoscreen($roles, $alias) {
+		$response = $this->authorization->authorize($roles);
+
+		// Get alias for tablets
+		if(!is_bool($response)){
+			$alias = $response;
+		}
+
 		if (!$infoscreen = $this->infoscreen->get_by_alias($alias))
 			$this->_throwError('404', ERROR_NO_INFOSCREEN);
 

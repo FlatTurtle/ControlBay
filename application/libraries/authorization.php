@@ -57,7 +57,11 @@ class Authorization
         if(!$this->correctRole($this->role, $rolesToEnforce))
             $this->_throwError('401', ERROR_ROLE);
 
-        return true;
+        // Proper return for tablets
+        if(!empty($this->alias))
+            return $this->alias;
+        else
+            return true;
     }
 
     /**

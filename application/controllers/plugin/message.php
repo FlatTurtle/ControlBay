@@ -17,8 +17,7 @@ class Message extends Plugin_Base {
 	 * Roles allowed: admin
 	 */
 	function index_post($alias) {
-		$this->authorization->authorize(AUTH_ADMIN);
-		$infoscreen = parent::validate_and_get_infoscreen($alias);
+        $infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
 
 		if (!$message = $this->input->post('message'))
 			$this->_throwError('400', ERROR_NO_MESSAGE_IN_POST);
@@ -33,8 +32,7 @@ class Message extends Plugin_Base {
 	 * Roles allowed: admin
 	 */
 	function index_delete($alias) {
-		$this->authorization->authorize(AUTH_ADMIN);
-		$infoscreen = parent::validate_and_get_infoscreen($alias);
+        $infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
 
 		$this->xmpp_lib->sendMessage($infoscreen->hostname, "Message.disable();");
 	}

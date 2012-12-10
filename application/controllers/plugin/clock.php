@@ -17,7 +17,6 @@ class Clock extends Plugin_Base{
      * Roles allowed: admin
      */
     public function index_get($alias){
-        $this->authorization->authorize(AUTH_ADMIN);
 		echo parent::get_state($alias, $this->type);
     }
 
@@ -28,8 +27,7 @@ class Clock extends Plugin_Base{
      * Roles allowed: admin
      */
     public function index_post($alias){
-        $this->authorization->authorize(AUTH_ADMIN);
-		$infoscreen = parent::validate_and_get_infoscreen($alias);
+		$infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
 
         $this->infoscreen->set_plugin_state($infoscreen->id, $this->type, 1);
 
@@ -43,8 +41,7 @@ class Clock extends Plugin_Base{
      * Roles allowed: admin
      */
     public function index_delete($alias){
-        $this->authorization->authorize(AUTH_ADMIN);
-		$infoscreen = parent::validate_and_get_infoscreen($alias);
+        $infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
         $this->infoscreen->disable_plugin($infoscreen->id, $this->type);
 
         $this->xmpp_lib->sendMessage($infoscreen->hostname, "Clock.disable();");

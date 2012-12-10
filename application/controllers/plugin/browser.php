@@ -16,8 +16,7 @@ class Browser extends Plugin_Base {
 	 * Roles allowed: admin
 	 */
 	function browse_post($alias) {
-		$this->authorization->authorize(AUTH_ADMIN);
-		$infoscreen = parent::validate_and_get_infoscreen($alias);
+		$infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
 
 		if (!$url = $this->input->post('url'))
 			$this->_throwError('400', ERROR_NO_URL_IN_POST);

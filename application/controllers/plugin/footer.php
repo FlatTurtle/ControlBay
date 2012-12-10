@@ -18,7 +18,6 @@ class Footer extends Plugin_Base {
 	 * Roles allowed: admin
 	 */
 	public function index_get($alias){
-		$this->authorization->authorize(AUTH_ADMIN);
 		echo parent::get_state($alias, $this->type);
 	}
 
@@ -30,8 +29,7 @@ class Footer extends Plugin_Base {
 	 * Roles allowed: admin
 	 */
 	function index_post($alias) {
-		$this->authorization->authorize(AUTH_ADMIN);
-		$infoscreen = parent::validate_and_get_infoscreen($alias);
+        $infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
 
 		if (!$value = $this->input->post('value'))
 			$this->_throwError('400', ERROR_NO_PARAMETERS);
@@ -48,8 +46,7 @@ class Footer extends Plugin_Base {
 	 * Roles allowed: admin
 	 */
 	function index_delete($alias) {
-		$this->authorization->authorize(AUTH_ADMIN);
-		$infoscreen = parent::validate_and_get_infoscreen($alias);
+        $infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
 		$this->infoscreen->disable_plugin($infoscreen->id, $this->type);
 
 		$this->xmpp_lib->sendMessage($infoscreen->hostname, "Footer.disable();");

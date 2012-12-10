@@ -16,8 +16,7 @@ class Switcher extends Plugin_Base {
 	 * Roles allowed: admin
 	 */
 	function focus_post($alias) {
-		$this->authorization->authorize(AUTH_ADMIN);
-		$infoscreen = parent::validate_and_get_infoscreen($alias);
+		$infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
 
 		if (!$pane = $this->input->post('pane'))
 			$this->_throwError('400', ERROR_NO_PANE_PARAMETER);
@@ -35,8 +34,7 @@ class Switcher extends Plugin_Base {
 	 * Roles allowed: admin
 	 */
 	function rotate_post($alias) {
-		$this->authorization->authorize(array(AUTH_ADMIN, AUTH_TABLET));
-		$infoscreen = parent::validate_and_get_infoscreen($alias);
+		$infoscreen = parent::validate_and_get_infoscreen(array(AUTH_ADMIN, AUTH_TABLET), $alias);
 
 		if (!$type = $this->input->post('type'))
 			$this->_throwError('400', ERROR_NO_PARAMETERS);
