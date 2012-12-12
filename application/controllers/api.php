@@ -186,7 +186,7 @@ class API extends API_Base {
 	 * Roles allowed: admin
 	 */
 	function turtles_get($alias = false) {
-        $infoscreen = parent::validate_and_get_infoscreen(array(AUTH_ADMIN, AUTH_MOBILE, AUTH_TABLET), $alias);
+        $infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
 
 		if (!$alias)
 			$alias = $this->authorization->alias;

@@ -76,6 +76,7 @@ define('ERROR_NO_TURTLE_WITH_TYPE',"There is no turtle with that type.");
 define('ERROR_NO_TURTLE_WITH_ID',"There is no turtle with that ID.");
 define('ERROR_OPTIONS_NO_JSON',"Options should be formatted as a JSON object.");
 define('ERROR_NO_PARAMETERS',"This endpoint requires at least one parameter.");
+define('ERROR_MISSING_PARAMETER',"Your request is missing a parameter.");
 define('ERROR_NO_TURTLES_PANE_TYPE', "There are no turtles with that pane type.");
 
 /*

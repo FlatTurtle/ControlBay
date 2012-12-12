@@ -39,7 +39,7 @@ class Switcher extends Plugin_Base {
 		if (!$type = $this->input->post('type'))
 			$this->_throwError('400', ERROR_NO_PARAMETERS);
 
-		$this->xmpp_lib->sendMessage($infoscreen->hostname, "Panes.rotate(" . $type . ");");
+		$this->xmpp_lib->sendMessage($infoscreen->hostname, "Panes.rotate('" . $type . "');");
 	}
 
 }
