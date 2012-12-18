@@ -42,7 +42,7 @@ class Route extends Plugin_Base {
 
 		if($route_turtle == null) return;
 
-		$this->xmpp_lib->sendMessage($infoscreen->hostname, "Panes.fullscreen(". $panes[0]->id.", 30000);");
+		$this->xmpp_lib->sendMessage($infoscreen->hostname, "Panes.fullscreen(". $panes[0]->id.", 25000);");
 		$this->xmpp_lib->sendMessage($infoscreen->hostname, "Turtles.options(".$route_turtle->id.",{from:'" . $from . "', to:'" . $to . "'});");
 	}
 
@@ -72,7 +72,7 @@ class Route extends Plugin_Base {
 
 		if($route_turtle == null) return;
 
-		$this->xmpp_lib->sendMessage($infoscreen->hostname, "Panes.fullscreen(". $panes[0]->id.", 20000);");
+		$this->xmpp_lib->sendMessage($infoscreen->hostname, "Panes.fullscreen(". $panes[0]->id.", 25000);");
 		$this->xmpp_lib->sendMessage($infoscreen->hostname, "Turtles.options(".$route_turtle->id.",{station:'" . $station . "', type:'" . $type . "'});");
 	}
 
