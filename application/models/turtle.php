@@ -45,6 +45,7 @@ class Turtle extends REST_model
 
 	public function get_by_infoscreen_id($screen_id)
 	{
+		$this->db->select("x.*, y.name, y.type");
 		$this->db->join('turtle y', 'x.turtle_id = y.id', 'left');
 		$this->db->order_by('x.pane_id','asc');
 		$this->db->order_by('x.order','asc');
