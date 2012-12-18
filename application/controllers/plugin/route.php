@@ -76,6 +76,21 @@ class Route extends Plugin_Base {
 		$this->xmpp_lib->sendMessage($infoscreen->hostname, "Turtles.options(".$route_turtle->id.",{station:'" . $station . "', type:'" . $type . "'});");
 	}
 
+	/**
+	 * Display a fullscreen turtle for the requested NMBS station
+	 */
+	function board_post($alias) {
+		$infoscreen = parent::validate_and_get_infoscreen(array(AUTH_ADMIN, AUTH_TABLET), $alias);
+
+		if (!$type = $this->input->post('type'))
+			$this->_throwError('400', ERROR_MISSING_PARAMETER);
+
+		if (!$station = $this->input->post('station'))
+			$this->_throwError('400', ERROR_MISSING_PARAMETER);
+
+		$this->xmpp_lib->sendMessage($infoscreen->hostname, "Message.enable('" . $type . " - " . $station . "');");
+	}
+
 }
 
 ?>
