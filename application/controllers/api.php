@@ -55,12 +55,22 @@ class API extends API_Base {
 			$this->_throwError('400', ERROR_NO_PARAMETERS);
 		}
 
+		$message = "";
+
+		if(!empty($data['longitude'])){
+			// TODO update location
+		}
+
 		if(!empty($data['color'])){
-			$this->xmpp_lib->sendMessage($infoscreen->hostname, "Interface.color('" . $data['color'] . "');");
+			$message .= "Interface.color('" . $data['color'] . "');";
 		}
 
 		if(!empty($data['logo'])){
-			$this->xmpp_lib->sendMessage($infoscreen->hostname, "Interface.logo('" . $data['logo'] . "?".  rand(0, 9999)."');");
+			$message .= "Interface.logo('" . $data['logo'] . "?".  rand(0, 9999)."');";
+		}
+
+		if(!empty($message)){
+			$this->xmpp_lib->sendMessage($infoscreen->hostname, $message);
 		}
 
 		try {
@@ -345,12 +355,15 @@ class API extends API_Base {
 					}
 				}
 
+				$message = "";
+
 				if(!empty($options->order)){
-					$this->xmpp_lib->sendMessage($infoscreen->hostname, "Turtles.order(".$id.", ". $options->order .");");
+					$message .= "Turtles.order(".$id.", ". $options->order .");";
 				}
 
 				$options = json_encode($options);
-				$this->xmpp_lib->sendMessage($infoscreen->hostname, "Turtles.options(".$id."," . $options . ");");
+				$message .= "Turtles.options(".$id."," . $options . ");";
+				$this->xmpp_lib->sendMessage($infoscreen->hostname, $message);
 			}
 		} catch (ErrorException $e) {
 			$this->_throwError('500', $e->getMessage());
