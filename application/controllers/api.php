@@ -81,6 +81,21 @@ class API extends API_Base {
 	}
 
 	/**
+	 * Get a certain option
+	 * HTTP method: GET
+	 */
+	function option_get() {
+		$this->load->model('option');
+		$name = $this->input->get("name");
+		if (empty($name)){
+			$this->_throwError('400', ERROR_NO_PARAMETERS);
+		}
+
+		$data = $this->option->get_by_name($name);
+		$this->output->set_output(json_encode($data));
+	}
+
+	/**
 	 * Get all available turtles with the available options
 	 * HTTP method: GET
 	 */

@@ -9,8 +9,6 @@ require_once APPPATH . "controllers/plugin/plugin_base.php";
 
 class Footer extends Plugin_Base {
 
-	private $type = 'footer';
-
 	/**
 	 * Get value of footer
 	 *
@@ -31,10 +29,13 @@ class Footer extends Plugin_Base {
 	function index_post($alias) {
         $infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
 
+		if (!$type = $this->input->post('type'))
+			$this->_throwError('400', ERROR_MISSING_PARAMETER);
 		if (!$value = $this->input->post('value'))
-			$this->_throwError('400', ERROR_NO_PARAMETERS);
+			$this->_throwError('400', ERROR_MISSING_PARAMETER);
 
-		$this->infoscreen->set_plugin_state($infoscreen->id, $this->type, $value);
+		$this->infoscreen->set_plugin_state($infoscreen->id, 'footer_type', $type);
+		$this->infoscreen->set_plugin_state($infoscreen->id, 'footer', $value);
 
 		$this->xmpp_lib->sendMessage($infoscreen->hostname, "Footer.enable('" . $value . "');");
 	}
@@ -47,7 +48,9 @@ class Footer extends Plugin_Base {
 	 */
 	function index_delete($alias) {
         $infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
-		$this->infoscreen->disable_plugin($infoscreen->id, $this->type);
+
+        $this->infoscreen->set_plugin_state($infoscreen->id, 'footer_type', 'none');
+        $this->infoscreen->set_plugin_state($infoscreen->id, 'footer', ' ');
 
 		$this->xmpp_lib->sendMessage($infoscreen->hostname, "Footer.disable();");
 	}
