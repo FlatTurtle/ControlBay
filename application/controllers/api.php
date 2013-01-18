@@ -199,6 +199,7 @@ class API extends API_Base {
 
 		try {
 			$this->pane->update($id, $data);
+			$this->xmpp_lib->sendMessage($infoscreen->hostname, "Panes.options(". $id . ", ". json_encode($data) .");");
 		} catch (ErrorException $e) {
 			$this->_throwError('500', $e->getMessage());
 		}
