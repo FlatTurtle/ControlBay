@@ -57,8 +57,12 @@ class API extends API_Base {
 
 		$message = "";
 
-		if(!empty($data['longitude'])){
-			// TODO update location
+		if(!empty($data['location'])){
+			$options = new stdClass();
+			$options->location = $data['location'];
+			$options->longitude = $data['longitude'];
+			$options->latitude = $data['latitude'];
+			$message .= "Screen.update(".json_encode($options).");";
 		}
 
 		if(!empty($data['color'])){
