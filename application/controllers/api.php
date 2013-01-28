@@ -36,7 +36,7 @@ class API extends API_Base {
 	 * Roles allowed: admin
 	 */
 	function infoscreen_get($alias) {
-        $infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
+		$infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
 
 		$this->output->set_output(json_encode($infoscreen));
 	}
@@ -48,7 +48,7 @@ class API extends API_Base {
 	 * Roles allowed: admin
 	 */
 	function infoscreen_post($alias) {
-        $infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
+		$infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
 
 		$data = $this->input->post();
 		if (empty($data)){
@@ -115,7 +115,7 @@ class API extends API_Base {
 	 * Roles allowed: admin
 	 */
 	function plugin_states_get($alias) {
-        $infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
+		$infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
 
 		$data = $this->infoscreen->get_plugin_states($infoscreen->id);
 		$this->output->set_output(json_encode($data));
@@ -129,7 +129,7 @@ class API extends API_Base {
 	 * Roles allowed: admin
 	 */
 	function panes_get($alias = false) {
-        $infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
+		$infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
 
 		if (!$alias)
 			$alias = $this->authorization->alias;
@@ -152,7 +152,7 @@ class API extends API_Base {
 	 * Roles allowed: admin
 	 */
 	function panes_put($alias) {
-        $infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
+		$infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
 
 		$data = $this->extended_input->put();
 		if (empty($data['type']))
@@ -175,7 +175,7 @@ class API extends API_Base {
 	 * Roles allowed: admin
 	 */
 	function pane_get($alias, $id) {
-        $infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
+		$infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
 
 		$this->load->model('pane');
 		if (!$pane = $this->pane->get($id))
@@ -190,7 +190,7 @@ class API extends API_Base {
 	 * Roles allowed: admin
 	 */
 	function pane_post($alias, $id) {
-        $infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
+		$infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
 
 		$data = $this->input->post();
 		if (empty($data)){
@@ -210,13 +210,30 @@ class API extends API_Base {
 	}
 
 	/**
+	 * Delete a specific pane owned by the authenticated customer
+	 * Roles allowed: admin
+	 */
+	function pane_delete($alias, $id) {
+		$infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
+
+		$this->load->model('pane');
+		if (!$pane = $this->pane->get($id))
+			$this->_throwError('404', ERROR_NO_PANE);
+
+		$this->pane->delete($id);
+
+
+		$this->xmpp_lib->sendMessage($infoscreen->hostname, "Panes.remove(". $id . ");");
+	}
+
+	/**
 	 * Get all registered turtles for the currently authenticated customer for a specific screen
 	 *
 	 * HTTP method: GET
 	 * Roles allowed: admin
 	 */
 	function turtles_get($alias = false) {
-        $infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
+		$infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
 
 		if (!$alias)
 			$alias = $this->authorization->alias;
@@ -242,7 +259,7 @@ class API extends API_Base {
 	 * Roles allowed: admin
 	 */
 	function turtles_put($alias) {
-        $infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
+		$infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
 
 		$this->load->model('turtle');
 		$this->load->model('turtle_option');
@@ -307,7 +324,7 @@ class API extends API_Base {
 	 * Roles allowed: admin
 	 */
 	function turtle_get($alias, $id) {
-        $infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
+		$infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
 
 		$this->load->model('turtle');
 		if (!$turtle = $this->turtle->get_id_with_options($id))
@@ -323,7 +340,7 @@ class API extends API_Base {
 	 * Roles allowed: admin
 	 */
 	function turtle_post($alias, $id) {
-        $infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
+		$infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
 
 		$this->load->model('turtle');
 		if (!$result = $this->turtle->get($id))
@@ -397,7 +414,7 @@ class API extends API_Base {
 	 * Roles allowed: admin
 	 */
 	function turtle_order_post($alias, $id) {
-        $infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
+		$infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
 
 		$this->load->model('turtle');
 		if (!$result = $this->turtle->get($id))
@@ -423,7 +440,7 @@ class API extends API_Base {
 	 * Roles allowed: admin
 	 */
 	function turtle_delete($alias, $id) {
-        $infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
+		$infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
 
 		$this->load->model('turtle');
 		if (!$turtle = $this->turtle->get($id))
@@ -442,7 +459,7 @@ class API extends API_Base {
 	 * Roles allowed: admin
 	 */
 	function jobs_get($alias = false) {
-        $infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
+		$infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
 
 		if (!$alias)
 			$alias = $this->authorization->alias;
