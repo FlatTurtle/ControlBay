@@ -158,9 +158,13 @@ class API extends API_Base {
 		if (empty($data['type']))
 			$this->_throwError('400', ERROR_NO_TYPE);
 
+
 		$turtles = "";
-		try{
+		if (!empty($data['turtles'])){
 			$turtles = json_decode($data['turtles']);
+		}
+
+		try{
 		}catch(ErrorException $e){}
 		unset($data['id']);
 		unset($data['turtles']);
@@ -168,6 +172,8 @@ class API extends API_Base {
 
 		$this->load->model('pane');
 		try {
+			$message = "";
+
 			$id = $this->pane->insert($data);
 			$data['duration'] = 15000;
 			$data['order'] = 0;
@@ -195,7 +201,7 @@ class API extends API_Base {
 								$data['order'] = 0;
 
 							try {
-								$id = $this->turtle->insert($data);
+								$turtle_id = $this->turtle->insert($data);
 								// Add it with empty options
 								$message .= "Turtles.grow('".$turtle_type."'," . $turtle_id . ", ".$id.", 0, {});";
 							}catch(ErrorException $e){
@@ -206,6 +212,7 @@ class API extends API_Base {
 					}
 				}
 			}
+			echo $message;
 
 			// Add everything live
 			$this->xmpp_lib->sendMessage($infoscreen->hostname, $message);
