@@ -212,7 +212,6 @@ class API extends API_Base {
 					}
 				}
 			}
-			echo $message;
 
 			// Add everything live
 			$this->xmpp_lib->sendMessage($infoscreen->hostname, $message);
@@ -365,7 +364,6 @@ class API extends API_Base {
 			$this->xmpp_lib->sendMessage($infoscreen->hostname, "Turtles.grow('".$turtle[0]->type."'," . $id . ", ".$turtle[0]->pane_id.", 0,". json_encode($turtle[0]->options) .");");
 
 			$this->output->set_output(json_encode($turtle[0]));
-			//echo $turtle_json;
 		} catch (ErrorException $e) {
 			$this->_throwError('500', $e->getMessage());
 		}
