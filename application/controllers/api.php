@@ -158,11 +158,58 @@ class API extends API_Base {
 		if (empty($data['type']))
 			$this->_throwError('400', ERROR_NO_TYPE);
 
+		$turtles = "";
+		try{
+			$turtles = json_decode($data['turtles']);
+		}catch(ErrorException $e){}
 		unset($data['id']);
+		unset($data['turtles']);
 		$data['infoscreen_id'] = $infoscreen->id;
+
 		$this->load->model('pane');
 		try {
 			$id = $this->pane->insert($data);
+			$data['duration'] = 15000;
+			$data['order'] = 0;
+			$pane_data = json_encode($data);
+			$message .= "Panes.add('$id',".$pane_data.");";
+
+			// Add turtles when given
+			if($turtles){
+				$this->load->model('turtle');
+
+				foreach($turtles as $turtle){
+					$turtle->type;
+
+					// Check turtle type
+					if (!empty($turtle->type)){
+						$turtle_type = $turtle->type;
+
+						if ($turtle_id = $this->turtle->get_id_of_type($turtle_type)){
+							$data = array();
+							$data['turtle_id'] = $turtle_id;
+							$data['pane_id'] = $id;
+							$data['infoscreen_id'] = $infoscreen->id;
+							$data['order'] = $turtle->order;
+							if(!is_numeric($data['order']))
+								$data['order'] = 0;
+
+							try {
+								$id = $this->turtle->insert($data);
+								// Add it with empty options
+								$message .= "Turtles.grow('".$turtle_type."'," . $turtle_id . ", ".$id.", 0, {});";
+							}catch(ErrorException $e){
+
+							}
+						}
+
+					}
+				}
+			}
+
+			// Add everything live
+			$this->xmpp_lib->sendMessage($infoscreen->hostname, $message);
+
 			$this->pane_get($alias, $id);
 		} catch (ErrorException $e) {
 			$this->_throwError('500', $e->getMessage());
