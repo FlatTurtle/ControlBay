@@ -1,12 +1,12 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 require_once APPPATH . "models/rest_model.php";
-class Admin_token extends REST_Model
+class User_token extends REST_Model
 {
     function __construct()
     {
         parent::__construct();
-        $this->_table = 'admin_token';
+        $this->_table = 'user_token';
     }
 
 
@@ -41,7 +41,7 @@ class Admin_token extends REST_Model
             throw new ErrorException($this->db->_error_message());
     }
 
-    public static function getAdminExpiration()
+    public static function getUserExpiration()
     {
         $datetime = new DateTime();
         $interval = DateInterval::createFromDateString('60 minutes');

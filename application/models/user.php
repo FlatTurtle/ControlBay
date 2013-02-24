@@ -1,12 +1,12 @@
 <?php if (!defined('BASEPATH')) exit('No direct script access allowed');
 
 require_once APPPATH . "models/rest_model.php";
-class Customer extends REST_Model
+class User extends REST_Model
 {
     function __construct()
     {
         parent::__construct();
-        $this->_table = 'customer';
+        $this->_table = 'user';
     }
 
     public function get_by_username($username)

@@ -67,8 +67,8 @@ class Auth extends MY_Controller {
 		if (!$password = $this->input->post('password'))
 			$this->_throwError('400', ERROR_NO_PASSWORD);
 
-		$this->load->model('customer');
-		$userRow = $this->customer->get_by_username($username);
+		$this->load->model('user');
+		$userRow = $this->user->get_by_username($username);
 
 		// no user found with that username -> forbidden
 		if (count($userRow) < 1)
@@ -78,19 +78,19 @@ class Auth extends MY_Controller {
 		if (!$this->phpass_lib->checkPassword($password, $userRow[0]->password))
 			$this->_throwError("403", ERROR_WRONG_USERNAME_PASSWORD);
 
-		$this->load->model('admin_token');
-		if ($this->admin_token->count() > TOKEN_TABLE_LIMIT) {
-			$this->admin_token->delete_expired();
+		$this->load->model('user_token');
+		if ($this->user_token->count() > TOKEN_TABLE_LIMIT) {
+			$this->user_token->delete_expired();
 		}
 		// if user already had a token remove it from the database
 		if ($token = $this->input->post('token')) {
-			$dbtokens = $this->admin_token->get_by_token($token);
+			$dbtokens = $this->user_token->get_by_token($token);
 			if (count($dbtokens) == 1) {
-				$this->admin_token->delete($dbtokens[0]->id);
+				$this->user_token->delete($dbtokens[0]->id);
 			}
 		}
 
-		$token = $this->_storeAdminToken($userRow[0]);
+		$token = $this->_storeUserToken($userRow[0]);
 		$this->output->set_output(json_encode($token));
 	}
 
@@ -107,7 +107,7 @@ class Auth extends MY_Controller {
 	}
 
 	/**
-	 * Create a new entry in the admin_tokens table and return the newly created token
+	 * Create a new entry in the user_tokens table and return the newly created token
 	 *
 	 * @param $screen_id the screen that the new token references
 	 * @return mixed the newly created token
@@ -143,19 +143,19 @@ class Auth extends MY_Controller {
 	}
 
 	/**
-	 * Create a new entry in the admin_tokens table and return the newly created token
+	 * Create a new entry in the user_tokens table and return the newly created token
 	 *
 	 * @param $user the users database info
 	 * @return mixed the created token
 	 */
-	private function _storeAdminToken($user) {
+	private function _storeUserToken($user) {
 		$data['token'] = sha1(time() . uniqid('', true));
 		$data['user_agent'] = $this->input->user_agent();
 		$data['ip'] = $this->input->ip_address();
-		$data['expiration'] = Admin_token::getAdminExpiration();
-		$data['customer_id'] = $user->id;
+		$data['expiration'] = User_token::getUserExpiration();
+		$data['user_id'] = $user->id;
 		try {
-			$this->admin_token->insert($data);
+			$this->user_token->insert($data);
 		} catch (ErrorException $e) {
 			$this->_handleDatabaseException($e);
 		}

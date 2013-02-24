@@ -10,7 +10,7 @@ require_once APPPATH . "controllers/api_base.php";
 class API extends API_Base {
 
 	/**
-	 * Get all the infoscreens owned by the authenticated customer
+	 * Get all the infoscreens owned by the authenticated user
 	 *
 	 * HTTP method: GET
 	 * Roles allowed: admin
@@ -22,7 +22,7 @@ class API extends API_Base {
 		$this->authorization->authorize(AUTH_ADMIN);
 
 		try {
-			$result = $this->infoscreen->get_by_customer_id($this->authorization->customer_id);
+			$result = $this->infoscreen->get_by_user_id($this->authorization->user_id);
 		} catch (ErrorException $e) {
 			$this->_handleDatabaseException($e);
 		}
@@ -31,7 +31,7 @@ class API extends API_Base {
 	}
 
 	/**
-	 * Get a specific infoscreen owned by the authenticated customer
+	 * Get a specific infoscreen owned by the authenticated user
 	 * HTTP method: GET
 	 * Roles allowed: admin
 	 */
@@ -110,7 +110,7 @@ class API extends API_Base {
 	}
 
 	/**
-	 * Get all plugin states for a specific infoscreen owned by the authenticated customer
+	 * Get all plugin states for a specific infoscreen owned by the authenticated user
 	 * HTTP method: GET
 	 * Roles allowed: admin
 	 */
@@ -123,7 +123,7 @@ class API extends API_Base {
 
 
 	/**
-	 * Get all registered panes for the currently authenticated customer for a specific screen
+	 * Get all registered panes for the currently authenticated user for a specific screen
 	 *
 	 * HTTP method: GET
 	 * Roles allowed: admin
@@ -147,7 +147,7 @@ class API extends API_Base {
 	}
 
 	/**
-	 * Add a pane for an infoscreen owned by the authenticated customer
+	 * Add a pane for an infoscreen owned by the authenticated user
 	 * HTTP method: PUT
 	 * Roles allowed: admin
 	 */
@@ -223,7 +223,7 @@ class API extends API_Base {
 	}
 
 	/**
-	 * Get a specific pane owned by the authenticated customer
+	 * Get a specific pane owned by the authenticated user
 	 * HTTP method: GET
 	 * Roles allowed: admin
 	 */
@@ -238,7 +238,7 @@ class API extends API_Base {
 	}
 
 	/**
-	 * Update a specific pane owned by the authenticated customer
+	 * Update a specific pane owned by the authenticated user
 	 * HTTP method: POST
 	 * Roles allowed: admin
 	 */
@@ -263,7 +263,7 @@ class API extends API_Base {
 	}
 
 	/**
-	 * Delete a specific pane owned by the authenticated customer
+	 * Delete a specific pane owned by the authenticated user
 	 * Roles allowed: admin
 	 */
 	function pane_delete($alias, $id) {
@@ -280,7 +280,7 @@ class API extends API_Base {
 	}
 
 	/**
-	 * Get all registered turtles for the currently authenticated customer for a specific screen
+	 * Get all registered turtles for the currently authenticated user for a specific screen
 	 *
 	 * HTTP method: GET
 	 * Roles allowed: admin
@@ -306,7 +306,7 @@ class API extends API_Base {
 	}
 
 	/**
-	 * Add a turtle for the currently authenticated customer for a specific screen
+	 * Add a turtle for the currently authenticated user for a specific screen
 	 *
 	 * HTTP method: PUT
 	 * Roles allowed: admin
@@ -370,7 +370,7 @@ class API extends API_Base {
 	}
 
 	/**
-	 * Get a specific turtle with turtle options registered to the currently authenticated customer
+	 * Get a specific turtle with turtle options registered to the currently authenticated user
 	 *
 	 * HTTP method: GET
 	 * Roles allowed: admin
@@ -386,7 +386,7 @@ class API extends API_Base {
 	}
 
 	/**
-	 * Update turtle from a screen owned by the authenticated customer
+	 * Update turtle from a screen owned by the authenticated user
 	 *
 	 * HTTP method: POST
 	 * Roles allowed: admin
@@ -460,7 +460,7 @@ class API extends API_Base {
 	}
 
 	/**
-	 * Update turtle order from a screen owned by the authenticated customer
+	 * Update turtle order from a screen owned by the authenticated user
 	 *
 	 * HTTP method: POST
 	 * Roles allowed: admin
@@ -486,7 +486,7 @@ class API extends API_Base {
 	}
 
 	/**
-	 * Remove a turtle from a screen owned by the authenticated customer
+	 * Remove a turtle from a screen owned by the authenticated user
 	 *
 	 * HTTP method: DELETE
 	 * Roles allowed: admin
@@ -505,7 +505,7 @@ class API extends API_Base {
 	}
 
 	/**
-	 * Get all jobs for the currently authenticated customer for a specific screen
+	 * Get all jobs for the currently authenticated user for a specific screen
 	 *
 	 * HTTP method: GET
 	 * Roles allowed: admin

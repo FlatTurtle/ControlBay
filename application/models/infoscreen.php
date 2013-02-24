@@ -10,25 +10,66 @@ class Infoscreen extends REST_model
         $this->_table = 'infoscreen';
     }
 
-	/**
-	 * Check if authenticated user is owner of the infoscreen
-	 */
-	public function isOwner($alias){
-		$result = $this->get_by_alias($alias);
-        if($result[0]->customer_id != $this->authorization->customer_id){
-			if($result[0]->alias != $this->authorization->alias){
-				return false;
-			}
-		}
-		return true;
-	}
+    /**
+     * Check if authenticated user is owner of the infoscreen
+     */
+    public function isOwner($alias){
+        $result = $this->get_by_alias($alias);
+        $result = $result[0];
 
-    public function get_by_customer_id($customer_id)
+        if($this->authorization->admin){
+            return true;
+        }else{
+            # ID based
+            $this->db->where(array('user_id' => $this->authorization->user_id,
+                                         "infoscreen_id" => $result->id));
+            $owner_id = $this->db->get("infoscreen_link");
+            # GROUP based
+            $this->db->where(array('user_id' => $this->authorization->user_id,
+                                         "infoscreen_group" => $result->group));
+            $this->db->where("infoscreen_group IS NOT NULL");
+            $owner_group = $this->db->get("infoscreen_link");
+            if( $owner_id->num_rows() == 1 ||
+                $owner_group->num_rows() == 1 ||
+                $result->alias == $this->authorization->alias ){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public function get_by_user_id($user_id)
     {
-        $query = $this->db->get_where($this->_table, array('customer_id' => $customer_id));
+        $this->load->model('user');
+        $user = $this->user->get($user_id);
+        $user = $user[0];
         if($this->db->_error_number())
             throw new ErrorException($this->db->_error_message());
-        return $query->result();
+
+        $infoscreens = array();
+        $query = $this->db->get_where("infoscreen_link", array('user_id' => $user_id));
+
+        if($user->rights == 1){
+            // User is administrator get all
+            $infoscreens = $this->db->get($this->_table);
+            $infoscreens = $infoscreens->result();
+        }else{
+            $auth_rules = $query->result();
+            foreach($auth_rules as $auth_rule){
+                if($auth_rule->infoscreen_id != NULL){
+                    // ID based authentication
+                    array_push($infoscreens, $this->db->get_where($this->_table, array('id' => $auth_rule->infoscreen_id))->row());
+                }elseif($auth_rule->infoscreen_group != NULL){
+                    // Group based authentication
+                    $infoscreens = $this->db->get_where($this->_table, array('group' => $auth_rule->infoscreen_group));
+                    $infoscreens = $infoscreens->result();
+                }
+            }
+        }
+
+        if($this->db->_error_number())
+            throw new ErrorException($this->db->_error_message());
+        return $infoscreens;
     }
 
     public function get_by_alias($alias)
@@ -64,124 +105,124 @@ class Infoscreen extends REST_model
         return $query->result();
     }
 
-	/**
-	 * Generate the DISCS JSON
-	 */
-	public function export_json($alias){
-		$query = $this->db->get_where($this->_table, array('alias' => $alias));
+    /**
+     * Generate the DISCS JSON
+     */
+    public function export_json($alias){
+        $query = $this->db->get_where($this->_table, array('alias' => $alias));
         if($this->db->_error_number())
             throw new ErrorException($this->db->_error_message());
-		$result = $query->row();
+        $result = $query->row();
 
 
-		$discs['interface'] = $result;
-		$discs['plugins'] = $this->get_plugin_states($result->id);
+        $discs['interface'] = $result;
+        $discs['plugins'] = $this->get_plugin_states($result->id);
 
-		$this->load->model('turtle');
-		$turtles = $this->turtle->get_by_infoscreen_id_with_options($result->id);
-		foreach($turtles as $turtle){
-			$turtle_id = $turtle->id;
-			unset($turtle->id);
-			unset($turtle->infoscreen_id);
-			unset($turtle->turtle_id);
-			unset($turtle->turtle_option_id);
-			$turtle->pane = $turtle->pane_id;
-			unset($turtle->pane_id);
+        $this->load->model('turtle');
+        $turtles = $this->turtle->get_by_infoscreen_id_with_options($result->id);
+        foreach($turtles as $turtle){
+            $turtle_id = $turtle->id;
+            unset($turtle->id);
+            unset($turtle->infoscreen_id);
+            unset($turtle->turtle_id);
+            unset($turtle->turtle_option_id);
+            $turtle->pane = $turtle->pane_id;
+            unset($turtle->pane_id);
 
-			$discs['turtles']->{$turtle_id} = $turtle;
-		}
+            $discs['turtles']->{$turtle_id} = $turtle;
+        }
 
-		$this->load->model('pane');
-		$panes = $this->pane->get_by_infoscreen_id($result->id);
-		foreach($panes as $pane){
-			$pane_id = $pane->id;
-			unset($pane->id);
-			unset($pane->infoscreen_id);
-			unset($pane->turtle_id);
-			unset($pane->turtle_option_id);
+        $this->load->model('pane');
+        $panes = $this->pane->get_by_infoscreen_id($result->id);
+        foreach($panes as $pane){
+            $pane_id = $pane->id;
+            unset($pane->id);
+            unset($pane->infoscreen_id);
+            unset($pane->turtle_id);
+            unset($pane->turtle_option_id);
 
-			$discs['panes']->{$pane_id} = $pane;
-		}
-
-
-		$this->load->model('jobtab');
-		$jobs = $this->jobtab->get_by_infoscreen_id($result->id);
-		foreach($jobs as $job){
-			$job_id = $job->id;
-			unset($job->id);
-			unset($job->infoscreen_id);
-			unset($job->job_id);
-
-			$discs['jobs']->{$job_id} = $job;
-		}
+            $discs['panes']->{$pane_id} = $pane;
+        }
 
 
-		unset($discs['interface']->id);
-		unset($discs['interface']->customer_id);
-		unset($discs['interface']->alias);
-		unset($discs['interface']->pincode);
+        $this->load->model('jobtab');
+        $jobs = $this->jobtab->get_by_infoscreen_id($result->id);
+        foreach($jobs as $job){
+            $job_id = $job->id;
+            unset($job->id);
+            unset($job->infoscreen_id);
+            unset($job->job_id);
 
-		return json_encode($discs);
-	}
+            $discs['jobs']->{$job_id} = $job;
+        }
 
-	/**
-	 * Get the states of all plugin
-	 */
-	public function get_plugin_states($id){
-		$this->db->select('type, state');
-		$this->db->where('infoscreen_id', $id);
-		$plugin_states = $this->db->get('plugin')->result();
 
-		if($plugin_states){
-			$data = '';
-			foreach($plugin_states as $plugin_state){
-				$data[$plugin_state->type] = $plugin_state->state;
-			}
+        unset($discs['interface']->id);
+        unset($discs['interface']->user_id);
+        unset($discs['interface']->alias);
+        unset($discs['interface']->pincode);
 
-			return $data;
-		}
+        return json_encode($discs);
+    }
 
-		return null;
-	}
+    /**
+     * Get the states of all plugin
+     */
+    public function get_plugin_states($id){
+        $this->db->select('type, state');
+        $this->db->where('infoscreen_id', $id);
+        $plugin_states = $this->db->get('plugin')->result();
 
-	/**
-	 * Get the state of a plugin
-	 */
-	public function get_plugin_state($id, $type){
-		$this->db->select('state');
-		$this->db->where('infoscreen_id',$id);
-		$this->db->where('type', strtolower($type));
-		$plugin_state = $this->db->get('plugin')->row();
+        if($plugin_states){
+            $data = '';
+            foreach($plugin_states as $plugin_state){
+                $data[$plugin_state->type] = $plugin_state->state;
+            }
 
-		if($plugin_state){
-			return $plugin_state->state;
-		}
+            return $data;
+        }
 
-		return null;
-	}
+        return null;
+    }
 
-	/**
-	 * Set the state of a plugin
-	 */
-	public function set_plugin_state($id, $type, $state){
-		$data['state'] = $state;
-		if($this->get_plugin_state($id, $type) == null){
-			$data['infoscreen_id'] = $id;
-			$data['type'] = strtolower(trim($type));
-			return $this->db->insert('plugin',$data);
-		}else{
-			$this->db->where('infoscreen_id',$id);
-			$this->db->where('type', strtolower($type));
-			return $this->db->update('plugin',$data);
-		}
-	}
+    /**
+     * Get the state of a plugin
+     */
+    public function get_plugin_state($id, $type){
+        $this->db->select('state');
+        $this->db->where('infoscreen_id',$id);
+        $this->db->where('type', strtolower($type));
+        $plugin_state = $this->db->get('plugin')->row();
 
-	/**
-	 * Disable a plugin
-	 */
-	public function disable_plugin($id, $type){
-		$this->set_plugin_state($id, $type, 0);
-	}
+        if($plugin_state){
+            return $plugin_state->state;
+        }
+
+        return null;
+    }
+
+    /**
+     * Set the state of a plugin
+     */
+    public function set_plugin_state($id, $type, $state){
+        $data['state'] = $state;
+        if($this->get_plugin_state($id, $type) == null){
+            $data['infoscreen_id'] = $id;
+            $data['type'] = strtolower(trim($type));
+            return $this->db->insert('plugin',$data);
+        }else{
+            $this->db->where('infoscreen_id',$id);
+            $this->db->where('type', strtolower($type));
+            return $this->db->update('plugin',$data);
+        }
+    }
+
+    /**
+     * Disable a plugin
+     */
+    public function disable_plugin($id, $type){
+        $this->set_plugin_state($id, $type, 0);
+    }
 
     /**
      * Filter primary keys from row
@@ -189,7 +230,7 @@ class Infoscreen extends REST_model
     function filter($data)
     {
         unset($data['id']);
-        unset($data['customer_id']);
+        unset($data['user_id']);
         unset($data['alias']);
         unset($data['pincode']);
         return $data;
