@@ -279,6 +279,32 @@ class API extends API_Base {
 		$this->xmpp_lib->sendMessage($infoscreen->hostname, "Panes.remove(". $id . ");");
 	}
 
+    /**
+     * Update panes order from a screen owned by the authenticated user
+     *
+     * HTTP method: POST
+     * Roles allowed: admin
+     */
+    function panes_order_post($alias, $id) {
+        $infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
+
+        $this->load->model('pane');
+        if (!$result = $this->pane->get($id))
+            $this->_throwError('404', ERROR_NO_PANE);
+
+        $data['order'] = $this->input->post('order');
+        if(!$this->input->post('order')){
+            $data['order'] = 0;
+        }
+
+        try {
+            $this->pane->update($id, $data);
+            //$this->xmpp_lib->sendMessage($infoscreen->hostname, "Panes.order(".$id."," . $data['order'] . ");");
+        } catch (ErrorException $e) {
+            $this->_throwError('500', $e->getMessage());
+        }
+    }
+
 	/**
 	 * Get all registered turtles for the currently authenticated user for a specific screen
 	 *

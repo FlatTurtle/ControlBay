@@ -45,6 +45,7 @@ $route['auth/(.*)'] = 'auth/$1';
 $route['turtles/*'] = 'api/list_turtles';
 $route['option/?'] = "api/option";
 $route['(.*)/panes'] = 'api/panes/$1';
+$route['(.*)/panes/order/(.*)'] = 'api/panes_order/$1/$2';
 $route['(.*)/panes/(.*)'] = 'api/pane/$1/$2';
 $route['(.*)/turtles'] = 'api/turtles/$1';
 $route['(.*)/turtles/order/(.*)'] = 'api/turtle_order/$1/$2';
