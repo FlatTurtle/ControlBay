@@ -75,6 +75,7 @@ class API extends API_Base {
 
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
 
                 foreach($turtles as $turtle){
                     if(!empty($turtle->options['time_walk'])){
@@ -92,7 +93,7 @@ class API extends API_Base {
                                 }
                             }
                         }elseif($turtle->type == "delijn" ){
-                            curl_setopt($ch, CURLOPT_URL, "http://data.irail.be/DeLijn/Stations.json?name=". urlencode($turtle->options['location']));
+                            curl_setopt($ch, CURLOPT_URL, "http://data.irail.be/DeLijn/Stations.json?name=". urlencode(strtolower($turtle->options['location'])));
                             $getData = json_decode(curl_exec($ch))->Stations;
 
                             foreach($getData as $station){
@@ -102,7 +103,20 @@ class API extends API_Base {
                                 }
                             }
                         }elseif($turtle->type == "mivb" ){
-                            curl_setopt($ch, CURLOPT_URL, "http://data.irail.be/MIVBSTIB/Stations.json?name=". urlencode($turtle->options['location']));
+                            $loc = strtolower($turtle->options['location']);
+                            $loc_split = explode(' ', $loc);
+                            if(count($loc_split) > 1){
+                                $loc_max = "";
+                                foreach($loc_split as $s){
+                                    if(strlen($s) > strlen($loc_max)){
+                                        $loc_max = $s;
+                                    }
+                                }
+                                $loc = $loc_max;
+                            }
+
+                            $url =  "http://data.irail.be/MIVBSTIB/Stations.json?name=". urlencode($loc);
+                            curl_setopt($ch, CURLOPT_URL, $url);
                             $getData = json_decode(curl_exec($ch))->Stations;
 
                             foreach($getData as $station){
@@ -113,22 +127,27 @@ class API extends API_Base {
                             }
                         }
 
-                        curl_setopt($ch, CURLOPT_URL, "https://data.flatturtle.com/Geo/Distance/".$from."/".$to.".json");
-                        $getData = json_decode(curl_exec($ch));
-                        $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+
                         $option_data = array();
                         $option_data['key'] = "time_walk";
                         $option_data['value'] = -1;
+                        $option_data['turtle_instance_id'] = $turtle->id;
 
-                        if(!empty($getData->Distance->rows[0]->elements[0]->duration->value)){
-                            $option_data['value'] = ($getData->Distance->rows[0]->elements[0]->duration->value/60);
-                        }
+                        if($to != null){
+                            curl_setopt($ch, CURLOPT_URL, "https://data.flatturtle.com/Geo/Distance/".$from."/".$to.".json");
+                            $getData = json_decode(curl_exec($ch));
+                            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-                        // Update, delete or insert option
-                        if($turtle_option = $this->turtle_option->get_by_key_for_turtle('time_walk',$turtle->id)){
-                            $this->turtle_option->update($turtle_option[0]->id,$option_data);
-                        }else{
-                            $this->turtle_option->insert($option_data);
+                            if(!empty($getData->Distance->rows[0]->elements[0]->duration->value)){
+                                $option_data['value'] = ($getData->Distance->rows[0]->elements[0]->duration->value/60);
+                            }
+
+                            // Update, delete or insert option
+                            if($turtle_option = $this->turtle_option->get_by_key_for_turtle('time_walk',$turtle->id)){
+                                $this->turtle_option->update($turtle_option[0]->id,$option_data);
+                            }else{
+                                $this->turtle_option->insert($option_data);
+                            }
                         }
 
                         $message .= "Turtles.options(".$turtle->id.",{'time_walk': ".  $option_data['value'] ."});";
