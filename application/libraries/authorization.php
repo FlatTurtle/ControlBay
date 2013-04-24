@@ -10,7 +10,6 @@ class Authorization
 {
     public $role;
     public $alias;
-    public $admin;
     public $user_id;
 
     /**
@@ -20,8 +19,6 @@ class Authorization
      * @return true if the authorization is successful
      */
     function authorize($rolesToEnforce){
-
-
         $ci =& get_instance();
         if(!$token = $ci->input->get_request_header('Authorization'))
             $this->_throwError('400', ERROR_NO_TOKEN_IN_AUTHORIZATION);
@@ -36,12 +33,13 @@ class Authorization
         $dbtoken = $dbtoken[0];
         $user = $ci->user->get($dbtoken->user_id);
 
-        if($user[0]->rights == 1){
-            // Admin user
+        if($user[0]->rights == 100){
+            // Superadmin user
             $this->user_id = $dbtoken->user_id;
-            $this->admin = true;
+            $this->role = AUTH_SUPER_ADMIN;
             return true;
         }else{
+            // Regular users
             if( $dbtoken->expiration < date('Y-m-d H:i:s', time()) ||
                 $dbtoken->ip != $ci->input->ip_address() ||
                 $dbtoken->user_agent != $ci->input->user_agent())

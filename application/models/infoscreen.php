@@ -17,7 +17,7 @@ class Infoscreen extends REST_model
         $result = $this->get_by_alias($alias);
         $result = $result[0];
 
-        if($this->authorization->admin){
+        if($this->authorization->role == AUTH_SUPER_ADMIN){
             return true;
         }else{
             # ID based
@@ -49,8 +49,8 @@ class Infoscreen extends REST_model
         $infoscreens = array();
         $query = $this->db->get_where("infoscreen_link", array('user_id' => $user_id));
 
-        if($user->rights == 1){
-            // User is administrator get all
+        if($this->authorization->role == AUTH_SUPER_ADMIN){
+            // User is superadmin, get all
             $infoscreens = $this->db->get($this->_table);
             $infoscreens = $infoscreens->result();
         }else{
@@ -230,9 +230,6 @@ class Infoscreen extends REST_model
     function filter($data)
     {
         unset($data['id']);
-        unset($data['user_id']);
-        unset($data['alias']);
-        unset($data['pincode']);
         return $data;
     }
 }
