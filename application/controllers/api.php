@@ -61,10 +61,11 @@ class API extends API_Base {
             unset($data['pincode']);
             unset($data['alias']);
         }else{
-            if(isset($data['pincode']) && $data['pincode'] == 0 || strlen($data['pincode']) < 4){
+            $data['pincode'] = intval($data['pincode']);
+            if($data['pincode'] < 1000){
                 $data['pincode'] = null;
             }
-            if(isset($data['hostname']) && $data['hostname'] == 0 || strlen($data['hostname']) < 2){
+            if(isset($data['hostname']) && strlen($data['hostname']) < 2){
                 $data['hostname'] = null;
             }
         }
