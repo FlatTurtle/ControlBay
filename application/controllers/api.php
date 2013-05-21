@@ -31,6 +31,17 @@ class API extends API_Base {
     }
 
     /**
+     * Get a specific infoscreen from tablet
+     * HTTP method: GET
+     * Roles allowed: tablet
+     */
+    function infoscreen_by_pin() {
+        $infoscreen = parent::validate_and_get_infoscreen(AUTH_TABLET, null);
+
+        $this->output->set_output(json_encode($infoscreen));
+    }
+
+    /**
      * Get a specific infoscreen owned by the authenticated user
      * HTTP method: GET
      * Roles allowed: admin

@@ -31,9 +31,11 @@ class Authorization
                 $this->_throwError('403', ERROR_INVALID_TOKEN);
 
         $dbtoken = $dbtoken[0];
-        $user = $ci->user->get($dbtoken->user_id);
+        if(!empty($dbtoken->user_id)){
+            $user = $ci->user->get($dbtoken->user_id);
+        }
 
-        if($user[0]->rights == 100){
+        if(!empty($user) && $user[0]->rights == 100){
             // Superadmin user
             $this->user_id = $dbtoken->user_id;
             $this->role = AUTH_SUPER_ADMIN;
