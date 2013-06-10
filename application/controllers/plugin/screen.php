@@ -52,6 +52,8 @@ class Screen extends Plugin_Base {
         if (!$infoscreen = $this->infoscreen->get_by_alias($alias))
             $this->_throwError('404', ERROR_NO_INFOSCREEN);
 
+        $infoscreen = $infoscreen[0];
+
         $action = $this->input->post('state');
         if(!empty($action)){
             $state = $action;
