@@ -34,14 +34,40 @@ class Screen extends Plugin_Base {
             $this->_throwError('400', ERROR_NO_ACTION_IN_POST);
 
         if ($action == "off"){
-            $this->infoscreen->disable_plugin($infoscreen->id, $this->type);
-            $action = 'Power.disable();';
+            $command = 'Power.disable();';
         }else{
-            $this->infoscreen->set_plugin_state($infoscreen->id, $this->type, 1);
-            $action = 'Power.enable();';
+            $command = 'Power.enable();';
         }
 
-        $this->xmpp_lib->sendMessage($infoscreen->hostname, $action);
+        // Save state
+        $this->power_state_post($alias, $action);
+        // Issue command
+        $this->xmpp_lib->sendMessage($infoscreen->hostname, $command);
+    }
+
+    /**
+     * Save plugin state for power
+     */
+    function power_state_post($alias, $state = null){
+        if (!$infoscreen = $this->infoscreen->get_by_alias($alias))
+            $this->_throwError('404', ERROR_NO_INFOSCREEN);
+
+        $action = $this->input->post('state');
+        if(!empty($action)){
+            $state = $action;
+        }
+
+        if($state == null){
+            return;
+        }
+
+        if($state == "off"){
+            $state = 0;
+        }else{
+            $state = 1;
+        }
+
+        $this->infoscreen->set_plugin_state($infoscreen->id, $this->type, $state);
     }
 
     /**

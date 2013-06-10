@@ -159,7 +159,6 @@ class Infoscreen extends REST_model
 
         unset($discs['interface']->id);
         unset($discs['interface']->user_id);
-        unset($discs['interface']->alias);
         unset($discs['interface']->pincode);
 
         return json_encode($discs);
