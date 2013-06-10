@@ -23,18 +23,17 @@ class Extended_Input extends CI_Input {
     }
 
     function delete($index = '', $xss_clean = FALSE) {
-		if(!empty($index))
-			return $this->_fetch_from_array($this->delete, $index, $xss_clean);
-		else
-			return $this->delete;
+        if(!empty($index))
+            return $this->_fetch_from_array($this->delete, $index, $xss_clean);
+        else
+            return $this->delete;
     }
 
     function put($index = '', $xss_clean = FALSE) {
-		if(!empty($index))
-	        return $this->_fetch_from_array($this->put, $index, $xss_clean);
-		else
-			return $this->put;
+        if(!empty($index))
+            return $this->_fetch_from_array($this->put, $index, $xss_clean);
+        else
+            return $this->put;
     }
 
 }
-?>

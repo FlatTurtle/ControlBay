@@ -81,5 +81,3 @@ class Route extends Plugin_Base {
     }
 
 }
-
-?>

@@ -9,27 +9,27 @@ class Turtle_option extends REST_Model
         $this->_table = 'turtle_option';
     }
 
-	public function get_for_turtle($turtle_id){
+    public function get_for_turtle($turtle_id){
         $this->db->where('x.turtle_instance_id', $turtle_id);
         $query = $this->db->get($this->_table . ' x');
         if($this->db->_error_number())
             throw new ErrorException($this->db->_error_message());
-		$result =  array();
-		foreach($query->result() as $turtle_option){
-			$result[$turtle_option->key] = $turtle_option->value;
-		}
-		
-		return $result;
-	}
-	
-	public function get_by_key_for_turtle($key, $turtle_id){
+        $result =  array();
+        foreach($query->result() as $turtle_option){
+            $result[$turtle_option->key] = $turtle_option->value;
+        }
+
+        return $result;
+    }
+
+    public function get_by_key_for_turtle($key, $turtle_id){
         $this->db->where('x.key', $key);
         $this->db->where('x.turtle_instance_id', $turtle_id);
         $query = $this->db->get($this->_table . ' x');
         if($this->db->_error_number())
             throw new ErrorException($this->db->_error_message());
-		return $query->result();
-	}
+        return $query->result();
+    }
 
 
     /**

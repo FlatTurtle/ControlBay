@@ -60,10 +60,10 @@ class Authorization
                     $this->alias = $infoscreen[0]->alias;
                 else
                     $this->_throwError('403', ERROR_INVALID_TOKEN);
-    			$this->role = $dbtoken->role;
+                $this->role = $dbtoken->role;
             }else{
                 $this->user_id = $dbtoken->user_id;
-    			$this->role = AUTH_ADMIN;
+                $this->role = AUTH_ADMIN;
             }
 
             if(!$this->correctRole($this->role, $rolesToEnforce))

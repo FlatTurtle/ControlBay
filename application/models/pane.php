@@ -3,42 +3,42 @@
 require_once APPPATH . "models/rest_model.php";
 class Pane extends REST_model
 {
-	function __construct()
-	{
-		parent::__construct();
-		$this->_table = 'pane';
-		$this->load->model('turtle_option');
-	}
+    function __construct()
+    {
+        parent::__construct();
+        $this->_table = 'pane';
+        $this->load->model('turtle_option');
+    }
 
 
-	public function get_by_infoscreen_id($screen_id)
-	{
-		$this->db->order_by('order','asc');
-		$query = $this->db->get_where($this->_table, array('infoscreen_id' => $screen_id));
-		if($this->db->_error_number())
-			throw new ErrorException($this->db->_error_message());
-		return $query->result();
-	}
+    public function get_by_infoscreen_id($screen_id)
+    {
+        $this->db->order_by('order','asc');
+        $query = $this->db->get_where($this->_table, array('infoscreen_id' => $screen_id));
+        if($this->db->_error_number())
+            throw new ErrorException($this->db->_error_message());
+        return $query->result();
+    }
 
-	public function get_by_type($screen_id, $type){
-		$this->db->order_by('order','asc');
-		$query = $this->db->get_where($this->_table, array('type' => $type, 'infoscreen_id' => $screen_id));
-		if($this->db->_error_number())
-			throw new ErrorException($this->db->_error_message());
-		return $query->result();
-	}
+    public function get_by_type($screen_id, $type){
+        $this->db->order_by('order','asc');
+        $query = $this->db->get_where($this->_table, array('type' => $type, 'infoscreen_id' => $screen_id));
+        if($this->db->_error_number())
+            throw new ErrorException($this->db->_error_message());
+        return $query->result();
+    }
 
-	/**
-	 * Filter columns that are not allowed to be changed from row
-	 *
-	 * @param $data
-	 * @return mixed
-	 */
-	function filter($data)
-	{
-		unset($data['id']);
-		unset($data['infoscreen_id']);
-		unset($data['type']);
-		return $data;
-	}
+    /**
+     * Filter columns that are not allowed to be changed from row
+     *
+     * @param $data
+     * @return mixed
+     */
+    function filter($data)
+    {
+        unset($data['id']);
+        unset($data['infoscreen_id']);
+        unset($data['type']);
+        return $data;
+    }
 }

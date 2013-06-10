@@ -689,5 +689,3 @@ class API extends API_Base {
     }
 
 }
-
-?>

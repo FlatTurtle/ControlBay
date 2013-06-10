@@ -40,8 +40,8 @@ abstract class REST_Model extends CI_Model
         $this->db->insert($this->_table, $data);
         if($this->db->_error_number())
             throw new ErrorException($this->db->_error_message());
-		
-		return $this->db->insert_id();
+
+        return $this->db->insert_id();
     }
 
     /**

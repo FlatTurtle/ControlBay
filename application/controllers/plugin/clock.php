@@ -8,16 +8,16 @@ require_once APPPATH . "controllers/plugin/plugin_base.php";
 
 class Clock extends Plugin_Base{
 
-	private $type = 'clock';
+    private $type = 'clock';
 
-	/**
+    /**
      * Get status of the clock for an infoscreen
      *
      * HTTP method: GET
      * Roles allowed: admin
      */
     public function index_get($alias){
-		echo parent::get_state($alias, $this->type);
+        echo parent::get_state($alias, $this->type);
     }
 
     /**
@@ -27,7 +27,7 @@ class Clock extends Plugin_Base{
      * Roles allowed: admin
      */
     public function index_post($alias){
-		$infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
+        $infoscreen = parent::validate_and_get_infoscreen(AUTH_ADMIN, $alias);
 
         $this->infoscreen->set_plugin_state($infoscreen->id, $this->type, 1);
 
