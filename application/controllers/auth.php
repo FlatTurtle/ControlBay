@@ -46,7 +46,33 @@ class Auth extends MY_Controller {
         } catch (ErrorException $e) {
             $this->_handleDatabaseException($e);
         }
+
         $this->output->set_output(json_encode($token));
+    }
+
+    /**
+     * Get alias from PIN
+     */
+    function alias_post(){
+        // no pin parameter in POST -> 400 bad request
+        if (!$pin = $this->input->post('pin'))
+            $this->_throwError('400', ERROR_NO_PIN);
+
+        // pincode not numeric -> 400 bad request
+        if (!is_numeric($pin))
+            $this->_throwError('400', ERROR_PIN_NOT_NUM);
+
+        try {
+            $infoscreen = $this->infoscreen->get_by_pin($pin);
+        } catch (ErrorException $e) {
+            $this->_handleDatabaseException($e);
+        }
+
+        // no screen with that pincode -> 403 unauthorized
+        if (count($infoscreen) < 1)
+            $this->_throwError('403', ERROR_WRONG_PIN);
+
+        $this->output->set_output(json_encode($infoscreen[0]->alias));
     }
 
     /**
