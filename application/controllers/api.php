@@ -583,13 +583,15 @@ class API extends API_Base {
                         $data['turtle_instance_id'] = $id;
                         // Update, delete or insert option
                         if($turtle_option = $this->turtle_option->get_by_key_for_turtle($data['key'],$id)){
-                            if(!empty($value))
+                            if(!empty($value)){
                                 $this->turtle_option->update($turtle_option[0]->id,$data);
-                            else
+                            }else{
                                 $this->turtle_option->delete($turtle_option[0]->id);
+                            }
                         }else{
-                            if(!empty($value))
+                            if(!empty($value)){
                                 $this->turtle_option->insert($data);
+                            }
                         }
                     }
                 }

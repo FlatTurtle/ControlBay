@@ -129,6 +129,9 @@ class Infoscreen extends REST_model
             $turtle->pane = $turtle->pane_id;
             unset($turtle->pane_id);
 
+            if(!isset($discs['turtles'])){
+                $discs['turtles'] = new stdClass();
+            }
             $discs['turtles']->{$turtle_id} = $turtle;
         }
 
@@ -141,6 +144,9 @@ class Infoscreen extends REST_model
             unset($pane->turtle_id);
             unset($pane->turtle_option_id);
 
+            if(!isset($discs['panes'])){
+                $discs['panes'] = new stdClass();
+            }
             $discs['panes']->{$pane_id} = $pane;
         }
 
@@ -153,6 +159,9 @@ class Infoscreen extends REST_model
             unset($job->infoscreen_id);
             unset($job->job_id);
 
+            if(!isset($discs['jobs'])){
+                $discs['jobs'] = new stdClass();
+            }
             $discs['jobs']->{$job_id} = $job;
         }
 
