@@ -34,7 +34,7 @@ class Screen extends Plugin_Base {
             $this->_throwError('400', ERROR_NO_ACTION_IN_POST);
 
         if ($action == "off"){
-            $command = 'Power.disable();';
+            $command = 'Power.disable(true);';
         }else{
             $command = 'Power.enable();';
         }
