@@ -15,9 +15,8 @@ class XMPP_lib
      * @param $msg the message to send
      */
     function sendMessage($host, $msg){
-        $msg = str_replace("\"","\\\"", $msg);
         $msg = str_replace("$","\\$", $msg);
-
-        exec("php " . APPPATH . "libraries/xmpp/sendxmpp.php \"$host@botnet.corp.flatturtle.com\" \"$msg\"");
+        $msg = escapeshellarg($msg);
+        exec("php " . APPPATH . "libraries/xmpp/sendxmpp.php '$host@botnet.corp.flatturtle.com' $msg");
     }
 }
