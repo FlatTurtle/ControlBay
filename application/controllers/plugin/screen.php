@@ -34,8 +34,14 @@ class Screen extends Plugin_Base {
             $this->_throwError('400', ERROR_NO_ACTION_IN_POST);
 
         if ($action == "off"){
-            $command = 'Power.disable(true);';
+            // manual disable power
+            // add master power to database --> so no power jobs in .json files
+            $this->infoscreen->set_plugin_state($infoscreen->id, "masterPower", 1);
+            $command = 'Power.disable();';
         }else{
+            // manual enable power
+            // set master power to 0
+            $this->infoscreen->set_plugin_state($infoscreen->id, "masterPower", 0);
             $command = 'Power.enable();';
         }
 

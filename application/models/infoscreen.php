@@ -114,7 +114,6 @@ class Infoscreen extends REST_model
             throw new ErrorException($this->db->_error_message());
         $result = $query->row();
 
-
         $discs['interface'] = $result;
         $discs['plugins'] = $this->get_plugin_states($result->id);
 
@@ -150,6 +149,8 @@ class Infoscreen extends REST_model
             $discs['panes']->{$pane_id} = $pane;
         }
 
+        // Check if master power is set
+        $master_power_state = $this->get_plugin_state($result->id, "masterPower");
 
         $this->load->model('jobtab');
         $jobs = $this->jobtab->get_by_infoscreen_id($result->id);
@@ -162,7 +163,15 @@ class Infoscreen extends REST_model
             if(!isset($discs['jobs'])){
                 $discs['jobs'] = new stdClass();
             }
-            $discs['jobs']->{$job_id} = $job;
+
+            if($master_power_state && $master_power_state == 1 &&
+                ($job->name == "screen_on" || $job->name == "screen_off")){
+                // don't add job if master power state is on
+                // and if the job is turning the screen on or off
+            }else{
+                $discs['jobs']->{$job_id} = $job;
+            }
+
         }
 
 
