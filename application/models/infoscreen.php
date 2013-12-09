@@ -174,6 +174,10 @@ class Infoscreen extends REST_model
 
         }
 
+        $this->load->model('cluster');
+        $cluster = $this->cluster->get_by_infoscreen_id($result->id);
+        $result->clustername = $cluster[0]->clustername;
+
 
         unset($discs['interface']->id);
         unset($discs['interface']->user_id);
