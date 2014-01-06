@@ -3,49 +3,55 @@ API
 
 All of the FlatTurtle turtles in your database can be added, changed and removed using ControlBay. 
 
-/auth/{}
---------
-
-/turtles
---------
-List the available turtles
-
-/option
--------
-
-/{infoscreen_alias}/panes
---------------
-
-/{infoscreen_alias}/panes/order/{pane_id}
-------------------------------
-
-/{infoscreen_alias}/panes/{pane_id}
+Unauthenticated requests
 ------------------------
+* /auth/`{}`
 
-/{infoscreen_alias}/turtles
-----------------
+  TODO
 
-/{infoscreen_alias}/turtles/order/{turtle_id}
-----------------------------------
+* /turtles
+  
+  `GET` List the available turtles with their individual configuration options
 
-/{infoscreen_alias}/turtles/{turtle_id}
-----------------------------
+* /option/?name=`{option_name}`
 
-/{infoscreen_alias}/jobs
-------------------------
+  `GET` Get information about a specific option 
 
-/{infoscreen_alias}/plugins/
-----------------------------
+Authenticated requests
+----------------------
 
-/{infoscreen_alias}/plugins/{}/{}/
-----------------------------------
+* /`{infoscreen_alias}`/panes
 
-/{infoscreen_alias}/plugins/{}/
--------------------------------
+  `GET` Get all registered panes for a specific infoscreen
+  
+  `PUT` Add a pane to the given infoscreen
+  
+  
+*  /`{infoscreen_alias}`/panes/order/`{pane_id}`
 
-/{infoscreen_alias}.json
-------------------------
-Returns the DISCS json for that infoscreen
+  `POST` Update the order for the specified pane on the specified screen
+  
+  Payload:
+  * `order`: integer specifying the new order
+  
+* /`{infoscreen_alias}`/panes/`{pane_id}`
 
-/{infoscreen_alias}
--------------------
+* /`{infoscreen_alias}`/turtles
+
+* /`{infoscreen_alias}`/turtles/order/`{turtle_id}`
+
+* /`{infoscreen_alias}`/turtles/`{turtle_id}`
+
+* /`{infoscreen_alias}`/jobs
+
+* /`{infoscreen_alias}`/plugins/
+
+* /`{infoscreen_alias}`/plugins/`{}`/`{}`/
+
+* /`{infoscreen_alias}`/plugins/`{}`/
+
+* /`{infoscreen_alias}`.json
+
+  Returns the DISCS json for that infoscreen
+
+* /`{infoscreen_alias}`
