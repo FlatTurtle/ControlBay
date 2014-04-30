@@ -28,4 +28,4 @@ Current supported databases are MySQL (4.1+), MySQLi, MS SQL, Postgres, Oracle, 
 Copyright and license
 =====================
 
-© 2012 - Flatturtle
+© 2012-2014 - Flatturtle
