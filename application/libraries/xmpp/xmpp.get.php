@@ -129,6 +129,16 @@
         }
         
         public static function proceed($arr, $jaxl) {
+	    /* HACK: disable peer check for php 5.6 */
+            $default_opts = [
+                'ssl' => [
+                    'allow_self_signed' => true,
+                    'verify_peer' => false,
+		    'verify_peer_name' => false,
+	        ],
+            ];
+            stream_context_set_default($default_opts);
+
             if($arr['xmlns'] == "urn:ietf:params:xml:ns:xmpp-tls") {
                 if(!@stream_socket_enable_crypto($jaxl->stream, true, STREAM_CRYPTO_METHOD_TLS_CLIENT))
                     stream_socket_enable_crypto($jaxl->stream, true, STREAM_CRYPTO_METHOD_SSLv3_CLIENT);
